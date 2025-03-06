@@ -1,10 +1,32 @@
-import { LiteralIoType, LiteralType } from "kryo/literal";
-import { TsEnumType } from "kryo/ts-enum";
-import { Ucs2StringType } from "kryo/ucs2-string";
-import { registerErrMochaTests, registerMochaSuites, TestItem } from "kryo-testing";
+import {describe} from "node:test";
 
-import { QsReader } from "../../lib/qs-reader.mjs";
-import { QsWriter } from "../../lib/qs-writer.mjs";
+import type {LiteralIoType} from "kryo/literal";
+import {LiteralType} from "kryo/literal";
+import {TsEnumType} from "kryo/ts-enum";
+import {Ucs2StringType} from "kryo/ucs2-string";
+import type {TestItem} from "kryo-testing";
+import {registerErrMochaTests, registerMochaSuites} from "kryo-testing";
+
+import {QsReader} from "../../lib/qs-reader.mts";
+import {QsWriter} from "../../lib/qs-writer.mts";
+
+const Red: unique symbol = Symbol("Red");
+const Green: unique symbol = Symbol("Green");
+const Blue: unique symbol = Symbol("Blue");
+
+const Color = {
+  Red,
+  Green,
+  Blue,
+} as const;
+
+type Color = typeof Color[keyof typeof Color];
+
+declare namespace Color {
+  type Red = typeof Color.Red;
+  type Green = typeof Color.Green;
+  type Blue = typeof Color.Blue;
+}
 
 describe("kryo-qs | Literal", function () {
   const QS_READER: QsReader = new QsReader();
@@ -60,12 +82,6 @@ describe("kryo-qs | Literal", function () {
   });
 
   describe("Literal<Color.Red>", function () {
-    enum Color {
-      Red,
-      Green,
-      Blue,
-    }
-
     const $ColorRed: LiteralIoType<Color.Red> = new LiteralType<Color.Red>({
       type: new TsEnumType({enum: Color}),
       value: Color.Red,
@@ -80,8 +96,8 @@ describe("kryo-qs | Literal", function () {
         ],
       },
       {
-        name: "0",
-        value: 0,
+        name: "Symbol(Red)",
+        value: Red,
         io: [
           {writer: QS_WRITER, reader: QS_READER, raw: "_=Red"},
         ],

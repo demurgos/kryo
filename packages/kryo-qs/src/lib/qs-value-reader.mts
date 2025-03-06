@@ -2,20 +2,23 @@
  * @module kryo/readers/qs-value
  */
 
-import {CheckId, KryoContext, Reader, ReadVisitor, Result, writeError} from "kryo";
-import {BaseTypeCheck} from "kryo/checks/base-type";
+import type {CheckId, KryoContext, Reader, ReadVisitor, Result} from "kryo";
+import {writeError} from "kryo";
+import type {BaseTypeCheck} from "kryo/checks/base-type";
 import {CheckKind} from "kryo/checks/check-kind";
-import {PropertyKeyCheck} from "kryo/checks/property-key";
+import type {PropertyKeyCheck} from "kryo/checks/property-key";
 import {JsonReader} from "kryo-json/json-reader";
 
-export class QsValueReader implements Reader<any> {
+import type {QsValue} from "./qs-value.mts";
+
+export class QsValueReader implements Reader<QsValue> {
   trustInput?: boolean | undefined;
 
   constructor(trust?: boolean) {
     this.trustInput = trust;
   }
 
-  readAny<T>(cx: KryoContext, input: unknown, visitor: ReadVisitor<T>): Result<T, CheckId> {
+  readAny<T>(cx: KryoContext, input: QsValue, visitor: ReadVisitor<T>): Result<T, CheckId> {
     switch (typeof input) {
       case "boolean":
         return visitor.fromBoolean(input);
@@ -26,22 +29,31 @@ export class QsValueReader implements Reader<any> {
           ? visitor.fromNull()
           : visitor.fromMap(new Map(Object.keys(input).map(k => [k, Reflect.get(input, k)] as [string, unknown])), this, this);
       default:
-        return writeError(cx, {check: CheckKind.BaseType, expected: ["Array", "Boolean", "Null", "Object", "UsvString", "Ucs2String"]} satisfies BaseTypeCheck);
+        return writeError(cx, {
+          check: CheckKind.BaseType,
+          expected: ["Array", "Boolean", "Null", "Object", "UsvString", "Ucs2String"]
+        } satisfies BaseTypeCheck);
     }
   }
 
-  readBoolean<T>(cx: KryoContext, input: unknown, visitor: ReadVisitor<T>): Result<T, CheckId> {
+  readBoolean<T>(cx: KryoContext, input: QsValue, visitor: ReadVisitor<T>): Result<T, CheckId> {
     if (input !== "true" && input !== "false") {
       return writeError(cx, {check: CheckKind.BaseType, expected: ["Boolean"]} satisfies BaseTypeCheck);
     }
     return visitor.fromBoolean(input === "true");
   }
 
-  readBytes<T>(cx: KryoContext, input: unknown, visitor: ReadVisitor<T>): Result<T, CheckId> {
+  readBytes<T>(cx: KryoContext, input: QsValue, visitor: ReadVisitor<T>): Result<T, CheckId> {
     if (typeof input !== "string") {
-      return writeError(cx, {check: CheckKind.BaseType, expected: ["Ucs2String", "UsvString", "Bytes"]} satisfies BaseTypeCheck);
+      return writeError(cx, {
+        check: CheckKind.BaseType,
+        expected: ["Ucs2String", "UsvString", "Bytes"]
+      } satisfies BaseTypeCheck);
     } else if (!/^(?:[0-9a-f]{2})*$/.test(input)) {
-      return writeError(cx, {check: CheckKind.BaseType, expected: ["Ucs2String", "UsvString", "Bytes"]} satisfies BaseTypeCheck);
+      return writeError(cx, {
+        check: CheckKind.BaseType,
+        expected: ["Ucs2String", "UsvString", "Bytes"]
+      } satisfies BaseTypeCheck);
     }
     const len: number = input.length / 2;
     const result: Uint8Array = new Uint8Array(len);
@@ -51,7 +63,7 @@ export class QsValueReader implements Reader<any> {
     return visitor.fromBytes(result);
   }
 
-  readDate<T>(cx: KryoContext, input: unknown, visitor: ReadVisitor<T>): Result<T, CheckId> {
+  readDate<T>(cx: KryoContext, input: QsValue, visitor: ReadVisitor<T>): Result<T, CheckId> {
     if (this.trustInput) {
       return visitor.fromDate(new Date(input as number | string));
     }
@@ -60,10 +72,13 @@ export class QsValueReader implements Reader<any> {
       return visitor.fromDate(new Date(input));
     }
 
-    return writeError(cx, {check: CheckKind.BaseType, expected: ["Ucs2String", "Float64", "Sint53", "UsvString"]} satisfies BaseTypeCheck);
+    return writeError(cx, {
+      check: CheckKind.BaseType,
+      expected: ["Ucs2String", "Float64", "Sint53", "UsvString"]
+    } satisfies BaseTypeCheck);
   }
 
-  readRecord<T>(cx: KryoContext, input: unknown, visitor: ReadVisitor<T>): Result<T, CheckId> {
+  readRecord<T>(cx: KryoContext, input: QsValue, visitor: ReadVisitor<T>): Result<T, CheckId> {
     if (typeof input !== "object" || input === null) {
       return writeError(cx, {check: CheckKind.BaseType, expected: ["Record"]} satisfies BaseTypeCheck);
     }
@@ -74,7 +89,7 @@ export class QsValueReader implements Reader<any> {
     return visitor.fromMap(inputMap, this, this);
   }
 
-  readFloat64<T>(cx: KryoContext, input: unknown, visitor: ReadVisitor<T>): Result<T, CheckId> {
+  readFloat64<T>(cx: KryoContext, input: QsValue, visitor: ReadVisitor<T>): Result<T, CheckId> {
     const specialValues: Map<unknown, number> = new Map([
       ["-0", -0],
       ["NaN", NaN],
@@ -92,7 +107,7 @@ export class QsValueReader implements Reader<any> {
     }
   }
 
-  readList<T>(cx: KryoContext, input: unknown, visitor: ReadVisitor<T>): Result<T, CheckId> {
+  readList<T>(cx: KryoContext, input: QsValue, visitor: ReadVisitor<T>): Result<T, CheckId> {
     if (input === undefined) {
       return visitor.fromList([], this);
     }
@@ -102,7 +117,7 @@ export class QsValueReader implements Reader<any> {
     return visitor.fromList(input, this);
   }
 
-  readMap<T>(cx: KryoContext, input: unknown, visitor: ReadVisitor<T>): Result<T, CheckId> {
+  readMap<T>(cx: KryoContext, input: QsValue, visitor: ReadVisitor<T>): Result<T, CheckId> {
     if (typeof input !== "object" || input === null) {
       return writeError(cx, {check: CheckKind.BaseType, expected: ["Record"]} satisfies BaseTypeCheck);
     }
@@ -125,7 +140,7 @@ export class QsValueReader implements Reader<any> {
     return visitor.fromMap(inputMap, jsonReader, this);
   }
 
-  readNull<T>(cx: KryoContext, input: unknown, visitor: ReadVisitor<T>): Result<T, CheckId> {
+  readNull<T>(cx: KryoContext, input: QsValue, visitor: ReadVisitor<T>): Result<T, CheckId> {
     if (this.trustInput) {
       return visitor.fromNull();
     }
@@ -135,7 +150,7 @@ export class QsValueReader implements Reader<any> {
     return visitor.fromNull();
   }
 
-  readString<T>(cx: KryoContext, input: unknown, visitor: ReadVisitor<T>): Result<T, CheckId> {
+  readString<T>(cx: KryoContext, input: QsValue, visitor: ReadVisitor<T>): Result<T, CheckId> {
     if (typeof input !== "string") {
       return writeError(cx, {check: CheckKind.BaseType, expected: ["Ucs2String", "UsvString"]} satisfies BaseTypeCheck);
     }

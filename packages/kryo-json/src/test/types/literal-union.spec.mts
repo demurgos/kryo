@@ -1,9 +1,12 @@
-import { LiteralUnionType } from "kryo/literal-union";
-import { Ucs2StringType } from "kryo/ucs2-string";
-import { registerErrMochaTests, registerMochaSuites, TestItem } from "kryo-testing";
+import {describe} from "node:test";
 
-import { JSON_READER } from "../../lib/json-reader.mjs";
-import { JSON_WRITER } from "../../lib/json-writer.mjs";
+import {LiteralUnionType} from "kryo/literal-union";
+import {Ucs2StringType} from "kryo/ucs2-string";
+import type {TestItem} from "kryo-testing";
+import {registerErrMochaTests, registerMochaSuites} from "kryo-testing";
+
+import {JSON_READER} from "../../lib/json-reader.mts";
+import {JSON_WRITER} from "../../lib/json-writer.mts";
 
 describe("kryo-json | LiteralUnion", function () {
   describe("\"foo\" | \"bar\" | \"baz\"", function () {

@@ -1,7 +1,9 @@
-import { assert as chaiAssert } from "chai";
+import * as assert from "node:assert/strict";
+import {describe, test} from "node:test";
 
-import { BooleanType } from "../../lib/boolean.mjs";
-import { runTests, TypedValue } from "../helpers/test.mjs";
+import { BooleanType } from "../../lib/boolean.mts";
+import type { TypedValue } from "../helpers/test.mts";
+import { runTests } from "../helpers/test.mts";
 
 describe("BooleanType", function () {
   const type: BooleanType = new BooleanType();
@@ -50,8 +52,8 @@ describe("BooleanType", function () {
     ];
 
     for (const {left, right, expected} of testItems) {
-      it(`.lte(${left}, ${right}) should return ${expected}`, function () {
-        chaiAssert.strictEqual($Boolean.lte(left, right), expected);
+      test(`.lte(${left}, ${right}) should return ${expected}`, function () {
+        assert.deepStrictEqual($Boolean.lte(left, right), expected);
       });
     }
   });

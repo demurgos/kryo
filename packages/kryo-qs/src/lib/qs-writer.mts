@@ -2,10 +2,10 @@
  * @module kryo/writers/qs
  */
 
-import { Writer } from "kryo";
+import type {Writer} from "kryo";
 import qs from "qs";
 
-import { QsValueWriter } from "./qs-value-writer.mjs";
+import {QsValueWriter} from "./qs-value-writer.mts";
 
 export class QsWriter implements Writer<string> {
   private readonly valueWriter: QsValueWriter;
@@ -32,18 +32,11 @@ export class QsWriter implements Writer<string> {
     return qs.stringify({[this.primitiveWrapper]: this.valueWriter.writeDate(value)});
   }
 
-  writeRecord<K extends string>(
-    keys: Iterable<K>,
-    handler: (key: K, fieldWriter: Writer<any>) => any,
-  ): string {
-    return qs.stringify(this.valueWriter.writeRecord(keys, handler));
-  }
-
   writeFloat64(value: number): string {
     return qs.stringify({[this.primitiveWrapper]: this.valueWriter.writeFloat64(value)});
   }
 
-  writeList(size: number, handler: (index: number, itemWriter: Writer<any>) => any): string {
+  writeList(size: number, handler: <IW>(index: number, itemWriter: Writer<IW>) => IW): string {
     return qs.stringify({[this.primitiveWrapper]: this.valueWriter.writeList(size, handler)});
   }
 
@@ -51,12 +44,16 @@ export class QsWriter implements Writer<string> {
     size: number,
     keyHandler: <KW>(index: number, mapKeyWriter: Writer<KW>) => KW,
     valueHandler: <VW>(index: number, mapValueWriter: Writer<VW>) => VW,
-  ): any {
+  ): string {
     return qs.stringify(this.valueWriter.writeMap(size, keyHandler, valueHandler));
   }
 
   writeNull(): string {
     return qs.stringify({[this.primitiveWrapper]: this.valueWriter.writeNull()});
+  }
+
+  writeRecord<K extends string>(keys: Iterable<K>, handler: <FW>(key: K, fieldWriter: Writer<FW>) => FW): string {
+    return qs.stringify(this.valueWriter.writeRecord(keys, handler));
   }
 
   writeString(value: string): string {

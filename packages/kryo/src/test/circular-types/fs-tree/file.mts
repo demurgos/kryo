@@ -1,9 +1,10 @@
-import { CaseStyle } from "../../../lib/index.mjs";
-import { IntegerType } from "../../../lib/integer.mjs";
-import { LiteralType } from "../../../lib/literal.mjs";
-import { RecordType } from "../../../lib/record.mjs";
-import { $FsNodeBase, FsNodeBase } from "./fs-node-base.mjs";
-import { $FsNodeType, FsNodeType } from "./fs-node-type.mjs";
+import { CaseStyle } from "../../../lib/index.mts";
+import { IntegerType } from "../../../lib/integer.mts";
+import { LiteralType } from "../../../lib/literal.mts";
+import { RecordType } from "../../../lib/record.mts";
+import type { FsNodeBase } from "./fs-node-base.mts";
+import { $FsNodeBase } from "./fs-node-base.mts";
+import { $FsNodeType, FsNodeType } from "./fs-node-type.mts";
 
 export interface File extends FsNodeBase {
   tag: FsNodeType.File;

@@ -1,5 +1,8 @@
-import { IntegerType } from "../../lib/integer.mjs";
-import { runTests, TypedValue } from "../helpers/test.mjs";
+import {describe} from "node:test";
+
+import {IntegerType} from "../../lib/integer.mts";
+import type {TypedValue} from "../helpers/test.mts";
+import {runTests} from "../helpers/test.mts";
 
 describe("IntegerType", function () {
   describe("General", function () {

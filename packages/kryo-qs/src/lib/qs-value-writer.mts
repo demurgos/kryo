@@ -2,11 +2,13 @@
  * @module kryo/writers/qs-value
  */
 
-import { Writer } from "kryo";
-import { StructuredWriter } from "kryo/writers/structured";
-import { JsonWriter } from "kryo-json/json-writer";
+import type {Writer} from "kryo";
+import {StructuredWriter} from "kryo/writers/structured";
+import {JSON_WRITER} from "kryo-json/json-writer";
 
-export class QsValueWriter extends StructuredWriter {
+import type {QsPrimitive,QsValue} from "./qs-value.mjs";
+
+export class QsValueWriter extends StructuredWriter<QsPrimitive> implements Writer<QsValue> {
   writeBoolean(value: boolean): "true" | "false" {
     return value ? "true" : "false";
   }
@@ -43,14 +45,13 @@ export class QsValueWriter extends StructuredWriter {
     size: number,
     keyHandler: <KW>(index: number, mapKeyWriter: Writer<KW>) => KW,
     valueHandler: <VW>(index: number, mapValueWriter: Writer<VW>) => VW,
-  ): any {
-    const result: any = {};
+  ): Record<string, QsValue> {
+    const result: Record<string, QsValue> = Object.create(null);
     for (let index: number = 0; index < size; index++) {
       // TODO: Use a specialized writer that only accepts strings and numbers (KeyMustBeAStringError)
       // Let users build custom serializers if they want
-      const jsonWriter: JsonWriter = new JsonWriter();
-      const key: any = keyHandler(index, jsonWriter);
-      result[JSON.stringify(key)] = valueHandler(index, this);
+      const key: string = keyHandler(index, JSON_WRITER);
+      result[JSON.stringify(key)] = valueHandler<QsValue>(index, this);
     }
     return result;
   }

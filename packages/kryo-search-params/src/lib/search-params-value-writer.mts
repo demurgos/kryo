@@ -1,7 +1,7 @@
-import {Writer} from "kryo";
-import {JsonWriter} from "kryo-json/json-writer";
-import {JsonValue} from "kryo-json/json-value";
-import {JsonValueWriter} from "kryo-json/json-value-writer";
+import type {Writer} from "kryo";
+import type {JsonValue} from "kryo-json/json-value";
+import {JSON_VALUE_WRITER} from "kryo-json/json-value-writer";
+import {JSON_WRITER} from "kryo-json/json-writer";
 
 export class SearchParamsValueWriter implements Writer<URLSearchParams | string> {
   #isRoot: boolean;
@@ -42,9 +42,8 @@ export class SearchParamsValueWriter implements Writer<URLSearchParams | string>
     return value.toString(10);
   }
 
-  writeList(size: number, handler: (index: number, itemWriter: Writer<string>) => string): string {
-    const jsonWriter: JsonWriter = new JsonWriter();
-    return jsonWriter.writeList(size, handler);
+  writeList(size: number, handler: <IW>(index: number, itemWriter: Writer<IW>) => IW): string {
+    return JSON_WRITER.writeList(size, handler);
   }
 
   writeNull(): "" {
@@ -57,28 +56,22 @@ export class SearchParamsValueWriter implements Writer<URLSearchParams | string>
     valueHandler: <VW>(index: number, mapValueWriter: Writer<VW>) => VW,
   ): URLSearchParams | string {
     if (!this.#isRoot) {
-      const jsonWriter: JsonWriter = new JsonWriter();
-      return jsonWriter.writeMap(size, keyHandler, valueHandler);
+      return JSON_WRITER.writeMap(size, keyHandler, valueHandler);
     }
 
     const result: URLSearchParams = new URLSearchParams();
     for (let index: number = 0; index < size; index++) {
       // TODO: Use a specialized writer that only accepts strings and numbers (KeyMustBeAStringError)
       // Let users build custom serializers if they want
-      const jsonWriter: JsonValueWriter = new JsonValueWriter();
-      const key: JsonValue = keyHandler(index, jsonWriter);
+      const key: JsonValue = keyHandler<JsonValue>(index, JSON_VALUE_WRITER);
       result.set(JSON.stringify(key), valueHandler(index, NESTED_SEARCH_PARAMS_VALUE_WRITER as Writer<string>));
     }
     return result;
   }
 
-  writeRecord<K extends string>(
-    keys: Iterable<K>,
-    handler: (key: K, fieldWriter: Writer<string>) => string,
-  ): URLSearchParams | string {
+  writeRecord<K extends string>(keys: Iterable<K>, handler: <FW>(key: K, fieldWriter: Writer<FW>) => FW): URLSearchParams | string {
     if (!this.#isRoot) {
-      const jsonWriter: JsonWriter = new JsonWriter();
-      return jsonWriter.writeRecord(keys, handler);
+      return JSON_WRITER.writeRecord(keys, handler);
     }
 
     const result: URLSearchParams = new URLSearchParams();

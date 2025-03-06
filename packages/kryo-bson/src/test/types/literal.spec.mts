@@ -1,10 +1,32 @@
-import { LiteralIoType, LiteralType } from "kryo/literal";
-import { TsEnumType } from "kryo/ts-enum";
-import { Ucs2StringType } from "kryo/ucs2-string";
-import { registerErrMochaTests, registerMochaSuites, TestItem } from "kryo-testing";
+import {describe} from "node:test";
 
-import { BsonReader } from "../../lib/bson-reader.mjs";
-import { BsonWriter } from "../../lib/bson-writer.mjs";
+import type {LiteralIoType} from "kryo/literal";
+import {LiteralType} from "kryo/literal";
+import {TsEnumType} from "kryo/ts-enum";
+import {Ucs2StringType} from "kryo/ucs2-string";
+import type {TestItem} from "kryo-testing";
+import {registerErrMochaTests, registerMochaSuites} from "kryo-testing";
+
+import {BsonReader} from "../../lib/bson-reader.mts";
+import {BsonWriter} from "../../lib/bson-writer.mts";
+
+const Red: unique symbol = Symbol("Red");
+const Green: unique symbol = Symbol("Green");
+const Blue: unique symbol = Symbol("Blue");
+
+const Color = {
+  Red,
+  Green,
+  Blue,
+} as const;
+
+type Color = typeof Color[keyof typeof Color];
+
+declare namespace Color {
+  type Red = typeof Color.Red;
+  type Green = typeof Color.Green;
+  type Blue = typeof Color.Blue;
+}
 
 describe("kryo-bson | Literal", function () {
   const BSON_READER: BsonReader = new BsonReader();
@@ -60,12 +82,6 @@ describe("kryo-bson | Literal", function () {
   });
 
   describe("Literal<Color.Red>", function () {
-    enum Color {
-      Red,
-      Green,
-      Blue,
-    }
-
     const $ColorRed: LiteralIoType<Color.Red> = new LiteralType<Color.Red>({
       type: new TsEnumType({enum: Color}),
       value: Color.Red,
@@ -80,8 +96,8 @@ describe("kryo-bson | Literal", function () {
         ],
       },
       {
-        name: "0",
-        value: 0,
+        name: "Symbol(Red)",
+        value: Red,
         io: [
           {writer: BSON_WRITER, reader: BSON_READER, raw: Buffer.from("10000000025f00040000005265640000", "hex")},
         ],

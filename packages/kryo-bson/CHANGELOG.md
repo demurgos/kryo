@@ -1,3 +1,9 @@
+# Next
+
+- **[Breaking change]** Update to `kryo@0.16`.
+- **[Internal]** Refactor code to be compatible with `erasableSyntaxOnly` TS option.
+- **[Internal]** Switch to built-in Node testing framework.
+
 # 0.15.1 (2024-01-24)
 
 - **[Fix]** Fix support for `bson@6`.

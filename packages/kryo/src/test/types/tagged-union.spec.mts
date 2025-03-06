@@ -1,18 +1,31 @@
-import { CaseStyle } from "../../lib/index.mjs";
-import { IntegerType } from "../../lib/integer.mjs";
-import { LiteralType } from "../../lib/literal.mjs";
-import { RecordType } from "../../lib/record.mjs";
-import { TaggedUnionType } from "../../lib/tagged-union.mjs";
-import { TsEnumType } from "../../lib/ts-enum.mjs";
-import { runTests, TypedValue } from "../helpers/test.mjs";
+import {describe} from "node:test";
+
+import {CaseStyle} from "../../lib/index.mts";
+import {IntegerType} from "../../lib/integer.mts";
+import {LiteralType} from "../../lib/literal.mts";
+import {RecordType} from "../../lib/record.mts";
+import {TaggedUnionType} from "../../lib/tagged-union.mts";
+import {TsEnumType} from "../../lib/ts-enum.mts";
+import type {TypedValue} from "../helpers/test.mts";
+import {runTests} from "../helpers/test.mts";
+
+const Rectangle: unique symbol = Symbol("Rectangle");
+const Circle: unique symbol = Symbol("Circle");
+
+const ShapeType = {
+  Rectangle,
+  Circle,
+} as const;
+
+type ShapeType = typeof ShapeType[keyof typeof ShapeType];
+
+declare namespace ShapeType {
+  type Rectangle = typeof ShapeType.Rectangle;
+  type Circle = typeof ShapeType.Circle;
+}
 
 describe("TaggedUnion", function () {
   describe("TaggedUnion<Shape>", function () {
-    enum ShapeType {
-      Rectangle,
-      Circle,
-    }
-
     const shapeTypeType: TsEnumType<ShapeType> = new TsEnumType({
       enum: ShapeType,
       changeCase: CaseStyle.KebabCase,

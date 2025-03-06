@@ -1,18 +1,51 @@
-import { CaseStyle } from "kryo";
-import { TsEnumType } from "kryo/ts-enum";
-import { registerErrMochaTests, registerMochaSuites, TestItem } from "kryo-testing";
+import {describe} from "node:test";
 
-import { JSON_READER } from "../../lib/json-reader.mjs";
-import { JSON_WRITER } from "../../lib/json-writer.mjs";
+import {CaseStyle} from "kryo";
+import {TsEnumType} from "kryo/ts-enum";
+import type {TestItem} from "kryo-testing";
+import {registerErrMochaTests, registerMochaSuites} from "kryo-testing";
+
+import {JSON_READER} from "../../lib/json-reader.mts";
+import {JSON_WRITER} from "../../lib/json-writer.mts";
+
+const Red: unique symbol = Symbol("Red");
+const Green: unique symbol = Symbol("Green");
+const Blue: unique symbol = Symbol("Blue");
+
+const Color = {
+  Red,
+  Green,
+  Blue,
+} as const;
+
+type Color = typeof Color[keyof typeof Color];
+
+declare namespace Color {
+  type Red = typeof Color.Red;
+  type Green = typeof Color.Green;
+  type Blue = typeof Color.Blue;
+}
+
+const Expression: unique symbol = Symbol("Expression");
+const BinaryOperator: unique symbol = Symbol("BinaryOperator");
+const BlockStatement: unique symbol = Symbol("BlockStatement");
+
+const Node = {
+  Expression,
+  BinaryOperator,
+  BlockStatement,
+} as const;
+
+type Node = typeof Node[keyof typeof Node];
+
+declare namespace Node {
+  type Expression = typeof Node.Expression;
+  type BinaryOperator = typeof Node.BinaryOperator;
+  type BlockStatement = typeof Node.BlockStatement;
+}
 
 describe("kryo-json | TsEnum", function () {
   describe("Color", function () {
-    enum Color {
-      Red,
-      Green,
-      Blue,
-    }
-
     const $Color: TsEnumType<Color> = new TsEnumType({enum: Color});
 
     const items: TestItem[] = [
@@ -38,19 +71,22 @@ describe("kryo-json | TsEnum", function () {
         ],
       },
       {
-        value: 0,
+        name: "Symbol(Red)",
+        value: Red,
         io: [
           {writer: JSON_WRITER, reader: JSON_READER, raw: "\"Red\""},
         ],
       },
       {
-        value: 1,
+        name: "Symbol(Green)",
+        value: Green,
         io: [
           {writer: JSON_WRITER, reader: JSON_READER, raw: "\"Green\""},
         ],
       },
       {
-        value: 2,
+        name: "Symbol(Blue)",
+        value: Blue,
         io: [
           {writer: JSON_WRITER, reader: JSON_READER, raw: "\"Blue\""},
         ],
@@ -94,12 +130,6 @@ describe("kryo-json | TsEnum", function () {
   });
 
   describe("Node (Kebab-Case)", function () {
-    enum Node {
-      Expression,
-      BinaryOperator,
-      BlockStatement,
-    }
-
     const $Node: TsEnumType<Node> = new TsEnumType(() => ({enum: Node, changeCase: CaseStyle.KebabCase}));
 
     const items: TestItem[] = [
@@ -125,19 +155,22 @@ describe("kryo-json | TsEnum", function () {
         ],
       },
       {
-        value: 0,
+        name: "Symbol(Expression)",
+        value: Expression,
         io: [
           {writer: JSON_WRITER, reader: JSON_READER, raw: "\"expression\""},
         ],
       },
       {
-        value: 1,
+        name: "Symbol(BinaryOperator)",
+        value: BinaryOperator,
         io: [
           {writer: JSON_WRITER, reader: JSON_READER, raw: "\"binary-operator\""},
         ],
       },
       {
-        value: 2,
+        name: "Symbol(BlockStatement)",
+        value: BlockStatement,
         io: [
           {writer: JSON_WRITER, reader: JSON_READER, raw: "\"block-statement\""},
         ],

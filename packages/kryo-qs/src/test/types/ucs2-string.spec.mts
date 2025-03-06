@@ -1,8 +1,11 @@
-import { Ucs2StringType } from "kryo/ucs2-string";
-import { registerErrMochaTests, registerMochaSuites, TestItem } from "kryo-testing";
+import {describe} from "node:test";
 
-import { QsReader } from "../../lib/qs-reader.mjs";
-import { QsWriter } from "../../lib/qs-writer.mjs";
+import {Ucs2StringType} from "kryo/ucs2-string";
+import type {TestItem} from "kryo-testing";
+import {registerErrMochaTests, registerMochaSuites} from "kryo-testing";
+
+import {QsReader} from "../../lib/qs-reader.mts";
+import {QsWriter} from "../../lib/qs-writer.mts";
 
 describe("kryo-qs | Ucs2StringType", function () {
   const QS_READER: QsReader = new QsReader();
@@ -28,7 +31,11 @@ describe("kryo-qs | Ucs2StringType", function () {
       {
         value: "ԂЯØǷ Łƕ੬ ɃɅϨϞ",
         io: [
-          {writer: QS_WRITER, reader: QS_READER, raw: "_=%D4%82%D0%AF%C3%98%C7%B7%20%C5%81%C6%95%E0%A9%AC%20%C9%83%C9%85%CF%A8%CF%9E"},
+          {
+            writer: QS_WRITER,
+            reader: QS_READER,
+            raw: "_=%D4%82%D0%AF%C3%98%C7%B7%20%C5%81%C6%95%E0%A9%AC%20%C9%83%C9%85%CF%A8%CF%9E"
+          },
           {reader: QS_READER, raw: "_=ԂЯØǷ Łƕ੬ ɃɅϨϞ"},
         ],
       },

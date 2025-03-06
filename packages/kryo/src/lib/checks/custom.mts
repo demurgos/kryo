@@ -1,5 +1,5 @@
-import type {CheckId} from "../index.mjs";
-import {CheckKind} from "./check-kind.mjs";
+import type {CheckId} from "../index.mts";
+import {CheckKind} from "./check-kind.mts";
 
 export interface CustomCheck {
   readonly check: CheckKind.Custom,

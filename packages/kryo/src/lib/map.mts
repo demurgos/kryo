@@ -1,24 +1,24 @@
-import {enter, writeError} from "./_helpers/context.mjs";
-import {lazyProperties} from "./_helpers/lazy-properties.mjs";
-import {CheckKind} from "./checks/check-kind.mjs";
-import {CheckId, IoType, KryoContext, Lazy, Reader, Result, VersionedType, Writer} from "./index.mjs";
-import {readVisitor} from "./readers/read-visitor.mjs";
+import {enter, writeError} from "./_helpers/context.mts";
+import {lazyProperties} from "./_helpers/lazy-properties.mts";
+import {CheckKind} from "./checks/check-kind.mts";
+import type {CheckId, IoType, KryoContext, Lazy, Reader, Result, VersionedType, Writer} from "./index.mts";
+import {readVisitor} from "./readers/read-visitor.mts";
 
 export type Name = "map";
 export const name: Name = "map";
 export type Diff<K, V> = [Map<K, V>, Map<K, V>];
 
 export interface MapTypeOptions<K, V> {
-  keyType: VersionedType<K, any>;
-  valueType: VersionedType<V, any>;
+  keyType: VersionedType<K, unknown>;
+  valueType: VersionedType<V, unknown>;
   maxSize: number;
   assumeStringKey?: boolean;
 }
 
 export class MapType<K, V> implements IoType<Map<K, V>>, VersionedType<Map<K, V>, Diff<K, V>> {
   readonly name: Name = name;
-  readonly keyType!: VersionedType<K, any>;
-  readonly valueType!: VersionedType<V, any>;
+  readonly keyType!: VersionedType<K, unknown>;
+  readonly valueType!: VersionedType<V, unknown>;
   readonly maxSize!: number;
   readonly assumeStringKey!: boolean;
 
@@ -109,9 +109,9 @@ export class MapType<K, V> implements IoType<Map<K, V>>, VersionedType<Map<K, V>
   write<W>(writer: Writer<W>, value: Map<K, V>): W {
     if (this.assumeStringKey) {
       return writer.writeRecord(
-        value.keys() as Iterable<any> as Iterable<string>,
+        value.keys() as Iterable<unknown> as Iterable<string>,
         <FW,>(outKey: string, fieldWriter: Writer<FW>): FW => {
-          return this.valueType.write!(fieldWriter, value.get(outKey as any)!);
+          return this.valueType.write!(fieldWriter, value.get(outKey as K)!);
         },
       );
     }
@@ -214,8 +214,8 @@ export class MapType<K, V> implements IoType<Map<K, V>>, VersionedType<Map<K, V>
     }
     const options: MapTypeOptions<K, V> = typeof this._options === "function" ? this._options() : this._options;
 
-    const keyType: VersionedType<K, any> = options.keyType;
-    const valueType: VersionedType<V, any> = options.valueType;
+    const keyType: VersionedType<K, unknown> = options.keyType;
+    const valueType: VersionedType<V, unknown> = options.valueType;
     const maxSize: number = options.maxSize;
     const assumeStringKey: boolean = options.assumeStringKey || false;
 

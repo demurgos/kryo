@@ -1,9 +1,9 @@
-import {rename} from "./_helpers/case-style.mjs";
-import {writeError} from "./_helpers/context.mjs";
-import {lazyProperties} from "./_helpers/lazy-properties.mjs";
-import {CheckKind} from "./checks/check-kind.mjs";
-import {AnyKey, CaseStyle, CheckId, IoType, KryoContext, Lazy, Reader, Result, Writer} from "./index.mjs";
-import {readVisitor} from "./readers/read-visitor.mjs";
+import {rename} from "./_helpers/case-style.mts";
+import {writeError} from "./_helpers/context.mts";
+import {lazyProperties} from "./_helpers/lazy-properties.mts";
+import {CheckKind} from "./checks/check-kind.mts";
+import type {AnyKey, CaseStyle, CheckId, IoType, KryoContext, Lazy, Reader, Result, Writer} from "./index.mts";
+import {readVisitor} from "./readers/read-visitor.mts";
 
 /**
  * Represents an enum value defined in `EnumConstructor`
@@ -65,7 +65,7 @@ function getEnumMaps<K extends string, E extends AnyKey>(
   return [jsToOut, outToJs];
 }
 
-export interface TsEnumTypeOptions<E extends AnyKey, EO extends {} = {}> {
+export interface TsEnumTypeOptions<E extends AnyKey, EO extends Record<AnyKey, AnyKey> = Record<AnyKey, AnyKey>> {
   enum: EnumObject<EO, E>;
   changeCase?: CaseStyle;
   rename?: { [P in keyof EO]?: string };
@@ -78,7 +78,7 @@ export interface TsEnumTypeOptions<E extends AnyKey, EO extends {} = {}> {
  * non-numeric strings to strings or numbers and "reversed" properties from numeric strings to
  * keys of forward properties with constant numeric values.
  */
-export class TsEnumType<E extends AnyKey = AnyKey, EO extends {} = {}>
+export class TsEnumType<E extends AnyKey = AnyKey, EO extends Record<AnyKey, AnyKey> = Record<AnyKey, AnyKey>>
 implements IoType<E>, TsEnumTypeOptions<E, EO> {
   readonly name: Name = name;
   readonly enum!: Record<keyof EO, E>;
@@ -151,7 +151,7 @@ implements IoType<E>, TsEnumTypeOptions<E, EO> {
     }
     const options: TsEnumTypeOptions<E> = typeof this._options === "function" ? this._options() : this._options;
 
-    const tsEnum: EO = options.enum as EO;
+    const tsEnum: Record<AnyKey, AnyKey> = options.enum as Record<AnyKey, AnyKey>;
     const changeCase: CaseStyle | undefined = options.changeCase;
     const rename: { [P in keyof EO]?: string } | undefined = options.rename;
 

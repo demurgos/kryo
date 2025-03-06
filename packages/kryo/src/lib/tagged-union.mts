@@ -1,28 +1,29 @@
-import {writeError} from "./_helpers/context.mjs";
-import {lazyProperties} from "./_helpers/lazy-properties.mjs";
-import {CheckKind} from "./checks/check-kind.mjs";
-import {UnionMatchCheck} from "./checks/union-match.mjs";
-import {UnionTagValueCheck} from "./checks/union-tag-value.mjs";
-import {
+import {writeError} from "./_helpers/context.mts";
+import {lazyProperties} from "./_helpers/lazy-properties.mts";
+import {CheckKind} from "./checks/check-kind.mts";
+import type {UnionMatchCheck} from "./checks/union-match.mts";
+import type {UnionTagValueCheck} from "./checks/union-tag-value.mts";
+import type {
+  AnyKey,
   CheckId,
   IoType,
   KryoContext,
   Lazy,
-  NOOP_CONTEXT,
   Reader,
   Result,
   TypedValue,
   VersionedType,
   Writer
-} from "./index.mjs";
-import {LiteralType} from "./literal.mjs";
-import {readVisitor} from "./readers/read-visitor.mjs";
-import {RecordType} from "./record.mjs";
-import {TsEnumType} from "./ts-enum.mjs";
+} from "./index.mts";
+import {NOOP_CONTEXT} from "./index.mts";
+import {LiteralType} from "./literal.mts";
+import {readVisitor} from "./readers/read-visitor.mts";
+import {RecordType} from "./record.mts";
+import {TsEnumType} from "./ts-enum.mts";
 
 export type Name = "union";
 export const name: Name = "union";
-export type Diff = any;
+export type Diff = unknown;
 
 export interface TaggedUnionTypeOptions<T, $T extends RecordType<T> = RecordType<T>> {
   variants: readonly $T[];
@@ -40,8 +41,7 @@ export type TestWithVariantResult<T> =
  */
 // <T, K extends keyof T, M extends (RecordType<T> & {properties: {[tag in K]: LiteralType<unknown> & {type: TsEnumType}}}
 export class TaggedUnionType<T, M extends RecordType<T> = RecordType<T>>
-implements IoType<T>,
-    TaggedUnionTypeOptions<T, M> {
+implements IoType<T>, TaggedUnionTypeOptions<T, M> {
   readonly name: Name = name;
   readonly variants!: readonly M[];
   readonly tag!: keyof T;
@@ -189,9 +189,9 @@ implements IoType<T>,
     const tagValueToType: Map<unknown, M> = new Map();
 
     for (const variantType of variants) {
-      const lit: LiteralType<unknown> & { type: TsEnumType } = variantType.properties[tag].type as any;
+      const lit: LiteralType<AnyKey, TsEnumType> = variantType.properties[tag].type as unknown as LiteralType<AnyKey, TsEnumType>;
       if (tagValueToType.has(lit.value)) {
-        throw new Error(`\`TaggedUnion\` tag value ${lit.value} is is not unique`);
+        throw new Error(`\`TaggedUnion\` tag value ${String(lit.value)} is is not unique`);
       }
       tagValueToType.set(lit.value, variantType);
     }
@@ -236,7 +236,7 @@ implements IoType<T>,
       const tag = this.tag;
       let tagType: TsEnumType | undefined = undefined;
       for (const variant of this.variants) {
-        const lit: LiteralType<unknown> & { type: TsEnumType } = variant.properties[tag].type as any;
+        const lit: LiteralType<AnyKey, TsEnumType> = variant.properties[tag].type as unknown as LiteralType<AnyKey, TsEnumType>;
         const cur: TsEnumType = lit.type;
         if (tagType === undefined) {
           tagType = cur;

@@ -1,5 +1,8 @@
-import { $UuidHex } from "../../lib/uuid-hex.mjs";
-import { runTests, TypedValue } from "../helpers/test.mjs";
+import {describe} from "node:test";
+
+import {$UuidHex} from "../../lib/uuid-hex.mts";
+import type {TypedValue} from "../helpers/test.mts";
+import {runTests} from "../helpers/test.mts";
 
 describe("$UuidHex", function () {
   const items: TypedValue[] = [

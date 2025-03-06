@@ -1,21 +1,21 @@
-import {enter, writeError} from "./_helpers/context.mjs";
-import {lazyProperties} from "./_helpers/lazy-properties.mjs";
-import {CheckKind} from "./checks/check-kind.mjs";
-import {CheckId, IoType, KryoContext, Lazy, Ord, Reader, Result,VersionedType, Writer} from "./index.mjs";
-import {readVisitor} from "./readers/read-visitor.mjs";
+import {enter, writeError} from "./_helpers/context.mts";
+import {lazyProperties} from "./_helpers/lazy-properties.mts";
+import {CheckKind} from "./checks/check-kind.mts";
+import type {CheckId, IoType, KryoContext, Lazy, Ord, Reader, Result,VersionedType, Writer} from "./index.mts";
+import {readVisitor} from "./readers/read-visitor.mts";
 
 export type Name = "set";
 export const name: Name = "set";
 export type Diff<T = unknown> = [Set<T>, Set<T>];
 
 export interface SetTypeOptions<T> {
-  itemType: VersionedType<T, any> & Ord<T>;
+  itemType: VersionedType<T, unknown> & Ord<T>;
   maxSize: number;
 }
 
 export class SetType<T> implements IoType<Set<T>>, VersionedType<Set<T>, Diff> {
   readonly name: Name = name;
-  readonly itemType!: VersionedType<T, any> & Ord<T>;
+  readonly itemType!: VersionedType<T, unknown> & Ord<T>;
   readonly maxSize!: number;
 
   private _options: Lazy<SetTypeOptions<T>>;
@@ -68,6 +68,9 @@ export class SetType<T> implements IoType<Set<T>>, VersionedType<Set<T>, Diff> {
               result.add(resultList[i]);
             }
           }
+        }
+        if (result.size > this.maxSize) {
+          return writeError(cx, {check: CheckKind.Size, min: 0, max: this.maxSize, actual: result.size});
         }
         return {ok: true, value: result};
       },
@@ -206,7 +209,7 @@ export class SetType<T> implements IoType<Set<T>>, VersionedType<Set<T>, Diff> {
     }
     const options: SetTypeOptions<T> = typeof this._options === "function" ? this._options() : this._options;
 
-    const itemType: VersionedType<T, any> & Ord<T> = options.itemType;
+    const itemType: VersionedType<T, unknown> & Ord<T> = options.itemType;
     const maxSize: number = options.maxSize;
 
     Object.assign(this, {itemType, maxSize});

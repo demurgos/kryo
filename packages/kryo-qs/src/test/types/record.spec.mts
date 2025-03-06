@@ -1,18 +1,28 @@
-import { CaseStyle } from "kryo";
-import { DateType } from "kryo/date";
-import { IntegerType } from "kryo/integer";
-import { RecordIoType, RecordType } from "kryo/record";
-import { registerErrMochaTests, registerMochaSuites, TestItem } from "kryo-testing";
+import {describe} from "node:test";
 
-import { QsReader } from "../../lib/qs-reader.mjs";
-import { QsWriter } from "../../lib/qs-writer.mjs";
+import {CaseStyle} from "kryo";
+import {DateType} from "kryo/date";
+import {IntegerType} from "kryo/integer";
+import type {RecordIoType} from "kryo/record";
+import {RecordType} from "kryo/record";
+import type {TestItem} from "kryo-testing";
+import {registerErrMochaTests, registerMochaSuites} from "kryo-testing";
+
+import {QsReader} from "../../lib/qs-reader.mts";
+import {QsWriter} from "../../lib/qs-writer.mts";
 
 describe("kryo-qs | Record", function () {
   const QS_READER: QsReader = new QsReader();
   const QS_WRITER: QsWriter = new QsWriter();
 
   describe("TestRecord", function () {
-    const $TestRecord: RecordIoType<any> = new RecordType({
+    interface TestRecord {
+      dateProp: Date;
+      optIntProp?: number;
+      nestedDoc?: {id?: number};
+    }
+
+    const $TestRecord: RecordIoType<TestRecord> = new RecordType({
       noExtraKeys: false,
       properties: {
         dateProp: {

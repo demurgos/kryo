@@ -1,8 +1,11 @@
-import { Float64Type } from "kryo/float64";
-import { registerErrMochaTests, registerMochaSuites, TestItem } from "kryo-testing";
+import {describe} from "node:test";
 
-import {SEARCH_PARAMS_READER} from "../../lib/search-params-reader.mjs";
-import {SEARCH_PARAMS_WRITER} from "../../lib/search-params-writer.mjs";
+import {Float64Type} from "kryo/float64";
+import type {TestItem} from "kryo-testing";
+import {registerErrMochaTests, registerMochaSuites} from "kryo-testing";
+
+import {SEARCH_PARAMS_READER} from "../../lib/search-params-reader.mts";
+import {SEARCH_PARAMS_WRITER} from "../../lib/search-params-writer.mts";
 
 describe("kryo-search-params | Float64", function () {
   const $Float64: Float64Type = new Float64Type();

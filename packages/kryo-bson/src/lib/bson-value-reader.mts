@@ -3,12 +3,14 @@
  */
 
 import {Binary} from "bson";
-import {CheckId, KryoContext, Reader, ReadVisitor, Result, writeError} from "kryo";
-import {BaseTypeCheck} from "kryo/checks/base-type";
+import type {CheckId, KryoContext, Reader, ReadVisitor, Result} from "kryo";
+import {writeError} from "kryo";
+import type {BaseTypeCheck} from "kryo/checks/base-type";
 import {CheckKind} from "kryo/checks/check-kind";
-import {InstanceOfCheck} from "kryo/checks/instance-of";
-import {PropertyKeyCheck} from "kryo/checks/property-key";
+import type {InstanceOfCheck} from "kryo/checks/instance-of";
+import type {PropertyKeyCheck} from "kryo/checks/property-key";
 import {JsonReader} from "kryo-json/json-reader";
+import type {JsonValue} from "kryo-json/json-value";
 
 function isBinary(val: unknown): val is Binary {
   return val !== null && typeof val === "object" && Reflect.get(val, "_bsontype") === "Binary";
@@ -90,7 +92,7 @@ export class BsonValueReader implements Reader<unknown> {
     }
   }
 
-  readList<T>(cx: KryoContext, input: any, visitor: ReadVisitor<T>): Result<T, CheckId> {
+  readList<T>(cx: KryoContext, input: unknown, visitor: ReadVisitor<T>): Result<T, CheckId> {
     if (!Array.isArray(input)) {
       return writeError(cx, {check: CheckKind.BaseType, expected: ["Array"]} satisfies BaseTypeCheck);
     }
@@ -103,9 +105,9 @@ export class BsonValueReader implements Reader<unknown> {
     }
     const jsonReader: JsonReader = new JsonReader();
 
-    const inputMap: Map<any, any> = new Map();
+    const inputMap: Map<JsonValue, unknown> = new Map();
     for (const rawKey in input) {
-      let key: any;
+      let key: JsonValue;
       try {
         key = JSON.parse(rawKey);
         // key = (/* keyType */ undefined as any).read(jsonReader, key);
@@ -120,7 +122,7 @@ export class BsonValueReader implements Reader<unknown> {
     return visitor.fromMap(inputMap, jsonReader, this);
   }
 
-  readNull<T>(cx: KryoContext, input: any, visitor: ReadVisitor<T>): Result<T, CheckId> {
+  readNull<T>(cx: KryoContext, input: unknown, visitor: ReadVisitor<T>): Result<T, CheckId> {
     if (this.trustInput) {
       return visitor.fromNull();
     }
@@ -130,7 +132,7 @@ export class BsonValueReader implements Reader<unknown> {
     return visitor.fromNull();
   }
 
-  readString<T>(cx: KryoContext, input: any, visitor: ReadVisitor<T>): Result<T, CheckId> {
+  readString<T>(cx: KryoContext, input: unknown, visitor: ReadVisitor<T>): Result<T, CheckId> {
     if (typeof input !== "string") {
       return writeError(cx, {check: CheckKind.BaseType, expected: ["Ucs2String", "UsvString"]});
     }

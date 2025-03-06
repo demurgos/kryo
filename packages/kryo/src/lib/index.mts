@@ -4,10 +4,12 @@
  * @module kryo/core
  */
 
-import {Check, format} from "./checks/index.mjs";
+import type {Check} from "./checks/index.mts";
+import {format} from "./checks/index.mts";
 
-export {enter, writeCheck, writeError} from "./_helpers/context.mjs";
-export {Check, format as formatCheck};
+export {enter, writeCheck, writeError} from "./_helpers/context.mts";
+export type {Check};
+export {format as formatCheck};
 
 /**
  * Represents a lazy value of type `T`.
@@ -212,6 +214,11 @@ export interface Type<T> {
   read?<R>(cx: KryoContext, reader: Reader<R>, raw: R): Result<T, CheckId>;
 }
 
+/**
+ * Utility type to unwrap a Kryo Type back to a simple type.
+ */
+export type ExtractType<TyKryo> = TyKryo extends Type<infer Ty> ? Ty : never;
+
 export interface Ord<T> {
   lte(left: T, right: T): boolean;
 }
@@ -238,15 +245,13 @@ export interface IoType<T> extends Type<T>, Readable<T>, Writable<T> {
  * W: Write result type.
  */
 export interface Writer<W> {
-  writeAny(value: any): W;
+  writeAny(value: unknown): W;
 
   writeBoolean(value: boolean): W;
 
   writeBytes(value: Uint8Array): W;
 
   writeDate(value: Date): W;
-
-  writeRecord<K extends string>(keys: Iterable<K>, handler: <FW>(key: K, fieldWriter: Writer<FW>) => FW): W;
 
   writeFloat64(value: number): W;
 
@@ -259,6 +264,8 @@ export interface Writer<W> {
   ): W;
 
   writeNull(): W;
+
+  writeRecord<K extends string>(keys: Iterable<K>, handler: <FW>(key: K, fieldWriter: Writer<FW>) => FW): W;
 
   writeString(value: string): W;
 }
@@ -338,42 +345,54 @@ export interface VersionedType<T, Diff> extends Type<T> {
  *
  * This enum is used when automatically renaming fields and enum variants.
  */
-export enum CaseStyle {
+const CaseStyle = {
   /**
    * Capitalize every component except for the first one, then join them without any separator.
    *
    * e.g. `camelCase`
    */
-  CamelCase = "camelCase",
+  CamelCase: "camelCase",
 
   /**
    * Capitalize every component, then join them without any separator.
    *
    * e.g. `PascalCase`
    */
-  PascalCase = "PascalCase",
+  PascalCase: "PascalCase",
 
   /**
    * Make every component lowerCase, then join them using `_`.
    *
    * e.g. `snake_case`
    */
-  SnakeCase = "snake_case",
+  SnakeCase: "snake_case",
 
   /**
    * Make every component uppercase, then join them using `_`.
    *
    * e.g. `SCREAMING_SNAKE_CASE`
    */
-  ScreamingSnakeCase = "SCREAMING_SNAKE_CASE",
+  ScreamingSnakeCase: "SCREAMING_SNAKE_CASE",
 
   /**
    * Make every component lowerCase, then join them using `-`.
    *
    * e.g. `kebab-case`
    */
-  KebabCase = "kebab-case",
+  KebabCase: "kebab-case",
+} as const;
+
+type CaseStyle = typeof CaseStyle[keyof typeof CaseStyle];
+
+declare namespace CaseStyle {
+  type CamelCase = typeof CaseStyle.CamelCase;
+  type PascalCase = typeof CaseStyle.PascalCase;
+  type SnakeCase = typeof CaseStyle.SnakeCase;
+  type ScreamingSnakeCase = typeof CaseStyle.ScreamingSnakeCase;
+  type KebabCase = typeof CaseStyle.KebabCase;
 }
+
+export {CaseStyle};
 
 export function testOrThrow<T>(type: Type<T>, raw: unknown): asserts raw is T {
   const {ok} = type.test(null, raw);

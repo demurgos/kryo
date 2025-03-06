@@ -1,4 +1,4 @@
-import {CheckKind} from "./check-kind.mjs";
+import {CheckKind} from "./check-kind.mts";
 
 export interface UnicodeNormalizationCheck {
   readonly check: CheckKind.UnicodeNormalization,

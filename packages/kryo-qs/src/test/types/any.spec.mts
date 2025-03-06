@@ -1,41 +1,45 @@
-import { assert as chaiAssert } from "chai";
+import * as assert from "node:assert/strict";
+import {describe, test} from "node:test";
+
 import {readOrThrow} from "kryo";
 import {AnyType} from "kryo/any";
-import {RecordIoType, RecordType} from "kryo/record";
+import type {RecordIoType} from "kryo/record";
+import {RecordType} from "kryo/record";
 
-import {QsReader} from "../../lib/qs-reader.mjs";
-import {QsValueReader} from "../../lib/qs-value-reader.mjs";
+import {QsReader} from "../../lib/qs-reader.mts";
+import type {QsValue} from "../../lib/qs-value.mjs";
+import {QsValueReader} from "../../lib/qs-value-reader.mts";
 
 describe("kryo-qs | Any", function () {
   describe("with JsonReader", function () {
-    it("should read the expected top-level values", function () {
+    test("should read the expected top-level values", function () {
       const reader: QsReader = new QsReader();
       const $Any: AnyType = new AnyType();
-      chaiAssert.deepEqual(readOrThrow($Any, reader, "0"), "0");
-      chaiAssert.deepEqual(readOrThrow($Any, reader, "foo=bar"), "foo=bar");
+      assert.deepStrictEqual(readOrThrow($Any, reader, "0"), "0");
+      assert.deepStrictEqual(readOrThrow($Any, reader, "foo=bar"), "foo=bar");
     });
-    it("should read the expected nested values", function () {
+    test("should read the expected nested values", function () {
       const reader: QsReader = new QsReader();
       const $Any: AnyType = new AnyType();
 
       interface FooBarQuz {
-        foo: any;
+        foo: QsValue;
       }
 
       const $FooBarQuz: RecordIoType<FooBarQuz> = new RecordType({
         properties: {foo: {type: $Any}},
       });
 
-      chaiAssert.deepEqual(readOrThrow($FooBarQuz, reader, "foo[bar]=quz"), {foo: {bar: "quz"}});
+      assert.deepStrictEqual(readOrThrow($FooBarQuz, reader, "foo[bar]=quz"), {__proto__: null, foo: {bar: "quz"}});
     });
   });
 
   describe("with JsonValueReader", function () {
-    it("should read the expected values", function () {
+    test("should read the expected values", function () {
       const reader: QsValueReader = new QsValueReader();
       const $Any: AnyType = new AnyType();
-      chaiAssert.deepEqual(readOrThrow($Any, reader, 0), 0);
-      chaiAssert.deepEqual(readOrThrow($Any, reader, {foo: "bar"}), {foo: "bar"});
+      assert.deepStrictEqual(readOrThrow($Any, reader, "Hello"), "Hello");
+      assert.deepStrictEqual(readOrThrow($Any, reader, {foo: "bar"}), {foo: "bar"});
     });
   });
 });

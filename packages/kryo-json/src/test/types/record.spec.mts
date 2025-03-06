@@ -1,15 +1,25 @@
-import { CaseStyle } from "kryo";
-import { DateType } from "kryo/date";
-import { IntegerType } from "kryo/integer";
-import { RecordIoType, RecordType } from "kryo/record";
-import { registerErrMochaTests, registerMochaSuites, TestItem } from "kryo-testing";
+import {describe} from "node:test";
 
-import { JSON_READER } from "../../lib/json-reader.mjs";
-import { JSON_WRITER, PRETTY_JSON_WRITER } from "../../lib/json-writer.mjs";
+import {CaseStyle} from "kryo";
+import {DateType} from "kryo/date";
+import {IntegerType} from "kryo/integer";
+import type {RecordIoType} from "kryo/record";
+import {RecordType} from "kryo/record";
+import type {TestItem} from "kryo-testing";
+import {registerErrMochaTests, registerMochaSuites} from "kryo-testing";
+
+import {JSON_READER} from "../../lib/json-reader.mts";
+import {JSON_WRITER, PRETTY_JSON_WRITER} from "../../lib/json-writer.mts";
 
 describe("kryo-json | Record", function () {
   describe("TestRecord", function () {
-    const $TestRecord: RecordIoType<any> = new RecordType({
+    interface TestRecord {
+      dateProp: Date;
+      optIntProp?: number;
+      nestedDoc?: {id?: number};
+    }
+
+    const $TestRecord: RecordIoType<TestRecord> = new RecordType({
       noExtraKeys: false,
       properties: {
         dateProp: {

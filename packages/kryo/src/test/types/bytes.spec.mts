@@ -1,5 +1,8 @@
-import { BytesType } from "../../lib/bytes.mjs";
-import { runTests, TypedValue } from "../helpers/test.mjs";
+import {describe} from "node:test";
+
+import { BytesType } from "../../lib/bytes.mts";
+import type { TypedValue } from "../helpers/test.mts";
+import { runTests } from "../helpers/test.mts";
 
 describe("BytesType", function () {
   const shortBuffer: BytesType = new BytesType({
@@ -49,6 +52,7 @@ describe("BytesType", function () {
     },
     {
       name: "new Array()",
+      // eslint-disable-next-line @typescript-eslint/no-array-constructor
       value: new Array(),
       valid: false,
     },

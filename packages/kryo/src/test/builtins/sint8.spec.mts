@@ -1,5 +1,8 @@
-import { $Sint8 } from "../../lib/integer.mjs";
-import { runTests, TypedValue } from "../helpers/test.mjs";
+import {describe} from "node:test";
+
+import { $Sint8 } from "../../lib/integer.mts";
+import type { TypedValue } from "../helpers/test.mts";
+import { runTests } from "../helpers/test.mts";
 
 describe("$Sint8", function () {
   const items: TypedValue[] = [

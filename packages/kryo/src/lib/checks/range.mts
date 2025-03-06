@@ -1,4 +1,4 @@
-import {CheckKind} from "./check-kind.mjs";
+import {CheckKind} from "./check-kind.mts";
 
 export interface RangeCheck {
   readonly check: CheckKind.Range,

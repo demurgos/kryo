@@ -1,10 +1,13 @@
+import {describe} from "node:test";
+
 import { IntegerType } from "kryo/integer";
 import { MapType } from "kryo/map";
 import { Ucs2StringType } from "kryo/ucs2-string";
-import { registerErrMochaTests, registerMochaSuites, TestItem } from "kryo-testing";
+import type {TestItem} from "kryo-testing";
+import {registerErrMochaTests, registerMochaSuites} from "kryo-testing";
 
-import { QsReader } from "../../lib/qs-reader.mjs";
-import { QsWriter } from "../../lib/qs-writer.mjs";
+import { QsReader } from "../../lib/qs-reader.mts";
+import { QsWriter } from "../../lib/qs-writer.mts";
 
 describe("kryo-qs | Map", function () {
   const QS_READER: QsReader = new QsReader();
@@ -18,6 +21,12 @@ describe("kryo-qs | Map", function () {
     });
 
     const items: TestItem[] = [
+      {
+        value: new Map(),
+        io: [
+          {writer: QS_WRITER, reader: QS_READER, raw: ""},
+        ],
+      },
       {
         value: new Map([[1, 100], [2, 200]]),
         io: [
@@ -34,7 +43,6 @@ describe("kryo-qs | Map", function () {
         "null",
         "true",
         "false",
-        "",
         "0",
         "1",
         "0.5",
@@ -71,6 +79,12 @@ describe("kryo-qs | Map", function () {
 
     const items: TestItem[] = [
       {
+        value: new Map(),
+        io: [
+          {writer: QS_WRITER, reader: QS_READER, raw: ""},
+        ],
+      },
+      {
         value: new Map([["a", 100], ["aa", 200]]),
         io: [
           {writer: QS_WRITER, reader: QS_READER, raw: "a=100&aa=200"},
@@ -85,7 +99,6 @@ describe("kryo-qs | Map", function () {
         "null",
         "true",
         "false",
-        "",
         "0",
         "1",
         "0.5",

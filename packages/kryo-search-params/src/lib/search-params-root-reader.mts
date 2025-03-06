@@ -1,10 +1,12 @@
-import {CheckId, KryoContext, Reader, ReadVisitor, Result, writeError} from "kryo";
-import {BaseTypeCheck} from "kryo/checks/base-type";
-import {CheckKind} from "kryo/checks/check-kind";
-import {PropertyKeyCheck} from "kryo/checks/property-key";
-import {SEARCH_PARAMS_VALUE_READER} from "./search-params-value-reader.mjs";
-import {JSON_VALUE_READER} from "kryo-json/json-value-reader";
+import type {CheckId, KryoContext, Reader, ReadVisitor, Result} from "kryo";
+import {writeError} from "kryo";
 import {$Any} from "kryo/any";
+import type {BaseTypeCheck} from "kryo/checks/base-type";
+import {CheckKind} from "kryo/checks/check-kind";
+import type {PropertyKeyCheck} from "kryo/checks/property-key";
+import {JSON_VALUE_READER} from "kryo-json/json-value-reader";
+
+import {SEARCH_PARAMS_VALUE_READER} from "./search-params-value-reader.mts";
 
 export class SearchParamsRootReader implements Reader<URLSearchParams> {
   trustInput?: boolean | undefined;

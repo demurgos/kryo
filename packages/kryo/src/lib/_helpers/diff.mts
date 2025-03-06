@@ -113,13 +113,13 @@ class Slice<T> {
     if (this.reversed) {
       throw Error("Cannot split reversed");
     }
-    const left: Slice<T> = new Slice(this.sequence, this.start, this.start + index, false);
-    const right: Slice<T> = new Slice(this.sequence, this.start + index, this.end, false);
+    const left: Slice<T> = new Slice(this.sequence, this.start, this.start + index, this.reversed);
+    const right: Slice<T> = new Slice(this.sequence, this.start + index, this.end, this.reversed);
     return [left, right];
   }
 
   reverse(): Slice<T> {
-    return new Slice(this.sequence, this.start, this.end, true);
+    return new Slice(this.sequence, this.start, this.end, !this.reversed);
   }
 }
 
@@ -190,7 +190,7 @@ function nearestEnd<T>(src: Slice<T>, target: Slice<T>): IndexValue {
   return [minDistIndex, minDistValue];
 }
 
-function hirschberg(source: Slice<any>, target: Slice<any>): DiffAction[] {
+function hirschberg(source: Slice<unknown>, target: Slice<unknown>): DiffAction[] {
   const srcLen: number = source.length;
   const tarLen: number = target.length;
 
@@ -227,7 +227,7 @@ function hirschberg(source: Slice<any>, target: Slice<any>): DiffAction[] {
     }
   } else {
     const srcMid: number = Math.floor(srcLen / 2);
-    const [srcLeft, srcRight]: [Slice<any>, Slice<any>] = source.split(srcMid);
+    const [srcLeft, srcRight]: [Slice<unknown>, Slice<unknown>] = source.split(srcMid);
     const [leftMinDistIdx, leftMinVal]: [number, number] = nearestEnd(srcLeft, target);
     const [rightMinDistIdx, rightMinVal]: [number, number] = nearestEnd(srcRight.reverse(), target.reverse());
     let targetMid: number;
@@ -238,7 +238,7 @@ function hirschberg(source: Slice<any>, target: Slice<any>): DiffAction[] {
       // Convert the right index from the reversed tarRight to target
       targetMid = (target.length - 1) - rightMinDistIdx;
     }
-    const [tarLeft, tarRight]: [Slice<any>, Slice<any>] = target.split(targetMid);
+    const [tarLeft, tarRight]: [Slice<unknown>, Slice<unknown>] = target.split(targetMid);
     const left: DiffAction[] = hirschberg(srcLeft, tarLeft);
     const right: DiffAction[] = hirschberg(srcRight, tarRight);
     return [...left, ...right];
@@ -292,7 +292,7 @@ export function normalizeDiff(diff: DiffAction[]): DiffAction[] {
   return result;
 }
 
-export function diffSync(seq1: string | any[], seq2: string | any[]): DiffAction[] {
+export function diffSync(seq1: string | unknown[], seq2: string | unknown[]): DiffAction[] {
   return normalizeDiff(hirschberg(new Slice(seq1, 0, seq1.length, false), new Slice(seq2, 0, seq2.length, false)));
 }
 

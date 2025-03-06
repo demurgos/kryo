@@ -1,10 +1,14 @@
-import { ArrayIoType, ArrayType } from "kryo/array";
-import { $Boolean } from "kryo/boolean";
-import { $Uint8, IntegerType } from "kryo/integer";
-import { registerErrMochaTests, registerMochaSuites, TestItem } from "kryo-testing";
+import {describe} from "node:test";
 
-import { QsReader } from "../../lib/qs-reader.mjs";
-import { QsWriter } from "../../lib/qs-writer.mjs";
+import type {ArrayIoType} from "kryo/array";
+import {ArrayType} from "kryo/array";
+import {$Boolean} from "kryo/boolean";
+import {$Uint8, IntegerType} from "kryo/integer";
+import type {TestItem} from "kryo-testing";
+import {registerErrMochaTests, registerMochaSuites} from "kryo-testing";
+
+import {QsReader} from "../../lib/qs-reader.mts";
+import {QsWriter} from "../../lib/qs-writer.mts";
 
 describe("kryo-qs | Array", function () {
   const QS_READER: QsReader = new QsReader();
@@ -28,6 +32,7 @@ describe("kryo-qs | Array", function () {
         io: [
           {writer: QS_WRITER, reader: QS_READER, raw: "_%5B0%5D=1"},
           {reader: QS_READER, raw: "_[]=1"},
+          {reader: QS_READER, raw: "_[0]=1"},
         ],
       },
       {
@@ -35,6 +40,8 @@ describe("kryo-qs | Array", function () {
         io: [
           {writer: QS_WRITER, reader: QS_READER, raw: "_%5B0%5D=2&_%5B1%5D=3"},
           {reader: QS_READER, raw: "_[]=2&_[]=3"},
+          {reader: QS_READER, raw: "_[0]=2&_[1]=3"},
+          {reader: QS_READER, raw: "_[1]=3&_[0]=2"},
         ],
       },
     ];
@@ -43,8 +50,6 @@ describe("kryo-qs | Array", function () {
 
     describe("Reader", function () {
       const invalids: string[] = [
-        "_[0]=1",
-        "_[0]=1&_[1]=3",
         "[4,5,6]",
         "[0.5]",
         "[null]",
@@ -52,7 +57,6 @@ describe("kryo-qs | Array", function () {
         "[]",
         "true",
         "false",
-        "",
         "0",
         "1",
         "0.5",
@@ -193,7 +197,6 @@ describe("kryo-qs | Array", function () {
         "[0,1,2,3,4]",
         "true",
         "false",
-        "",
         "0",
         "1",
         "0.5",

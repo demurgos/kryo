@@ -1,15 +1,7 @@
-import {writeError} from "./_helpers/context.mjs";
-import {CheckKind} from "./checks/check-kind.mjs";
-import {
-  CheckId,
-  IoType,
-  KryoContext,
-  Ord,
-  Reader,
-  Result,
-  VersionedType,
-  Writer} from "./index.mjs";
-import { readVisitor } from "./readers/read-visitor.mjs";
+import {writeError} from "./_helpers/context.mts";
+import {CheckKind} from "./checks/check-kind.mts";
+import type {CheckId, IoType, KryoContext, Ord, Reader, Result, VersionedType, Writer} from "./index.mts";
+import {readVisitor} from "./readers/read-visitor.mts";
 
 export type Name = "date";
 export const name: Name = "date";
@@ -33,14 +25,14 @@ export class DateType implements IoType<Date>, VersionedType<Date, Diff>, Ord<Da
   test(cx: KryoContext | null, value: unknown): Result<Date, CheckId> {
     if (!(value instanceof Date)) {
       if (value !== null && typeof value === "object") {
-        return writeError(cx,{check: CheckKind.InstanceOf, class: "Date"});
+        return writeError(cx, {check: CheckKind.InstanceOf, class: "Date"});
       } else {
-        return writeError(cx,{check: CheckKind.BaseType, expected: ["Object"]});
+        return writeError(cx, {check: CheckKind.BaseType, expected: ["Object"]});
       }
     }
     const time: number = value.getTime();
     if (isNaN(time) || time > Number.MAX_SAFE_INTEGER || time < Number.MIN_SAFE_INTEGER) {
-      return writeError(cx,{check: CheckKind.UnixTimestamp});
+      return writeError(cx, {check: CheckKind.UnixTimestamp});
     }
     return {ok: true, value};
   }

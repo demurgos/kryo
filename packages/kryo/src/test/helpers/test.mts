@@ -1,10 +1,12 @@
-import { assert as chaiAssert } from "chai";
+import * as assert from "node:assert/strict";
+import {describe, test} from "node:test";
 
-import {NOOP_CONTEXT, Type} from "../../lib/index.mjs";
+import type {Type} from "../../lib/index.mts";
+import {NOOP_CONTEXT} from "../../lib/index.mts";
 
 export interface NamedValue {
   name?: string;
-  value: any;
+  value: unknown;
 }
 
 export interface CheckedValue extends NamedValue {
@@ -20,15 +22,15 @@ export interface ValidTypedValue extends CheckedValue {
   valid: boolean;
 
   output?: {
-    [formatName: string]: any;
+    [formatName: string]: unknown;
   };
 
   inputs?: {
-    [formatName: string]: any;
+    [formatName: string]: unknown;
   };
 
   invalidInputs?: {
-    [formatName: string]: any;
+    [formatName: string]: unknown;
   };
 }
 
@@ -38,19 +40,19 @@ function getName(namedValue: NamedValue) {
   return "name" in namedValue ? namedValue.name : JSON.stringify(namedValue.value);
 }
 
-export function testInvalidValue(type: Type<any>, item: InvalidTypedValue) {
-  it("Should return `ResultErr` for .test", function () {
-    chaiAssert.isFalse(type.test(NOOP_CONTEXT, item.value).ok);
+export function testInvalidValue(type: Type<unknown>, item: InvalidTypedValue) {
+  test("Should return `ResultErr` for .test", function () {
+    assert.strictEqual(type.test(NOOP_CONTEXT, item.value).ok, false);
   });
 }
 
-export function testValidValue(type: Type<any>, item: ValidTypedValue) {
-  it("Should return `ResultOk` for .test", function () {
-    chaiAssert.isTrue(type.test(NOOP_CONTEXT, item.value).ok);
+export function testValidValue(type: Type<unknown>, item: ValidTypedValue) {
+  test("Should return `ResultOk` for .test", function () {
+    assert.strictEqual(type.test(NOOP_CONTEXT, item.value).ok, true);
   });
 }
 
-export function testValueSync(type: Type<any>, item: TypedValue): void {
+export function testValueSync(type: Type<unknown>, item: TypedValue): void {
   if (item.valid) {
     testValidValue(type, item);
   } else {
@@ -58,7 +60,7 @@ export function testValueSync(type: Type<any>, item: TypedValue): void {
   }
 }
 
-export function runTests(type: Type<any>, items: TypedValue[]): void {
+export function runTests(type: Type<unknown>, items: TypedValue[]): void {
   for (const item of items) {
     describe(`Item: ${getName(item)}`, function () {
       testValueSync(type, item);

@@ -2,10 +2,12 @@
  * @module kryo/writers/json-value
  */
 
-import { Writer } from "kryo";
-import { StructuredWriter } from "kryo/writers/structured";
+import type {Writer} from "kryo";
+import {StructuredWriter} from "kryo/writers/structured";
 
-export class JsonValueWriter extends StructuredWriter {
+import type {JsonPrimitive, JsonValue} from "./json-value.mts";
+
+export class JsonValueWriter extends StructuredWriter<JsonPrimitive> implements Writer<JsonValue> {
   writeFloat64(value: number): number | string {
     if (isNaN(value)) {
       return "NaN";
@@ -48,14 +50,14 @@ export class JsonValueWriter extends StructuredWriter {
     size: number,
     keyHandler: <KW>(index: number, mapKeyWriter: Writer<KW>) => KW,
     valueHandler: <VW>(index: number, mapValueWriter: Writer<VW>) => VW,
-  ): any {
+  ): Record<string, JsonValue> {
     // TODO: Use a specialized writer that only accepts strings and numbers (KeyMustBeAStringError)
     // Let users build custom serializers if they want
     const jsonWriter: JsonValueWriter = new JsonValueWriter();
-    const result: any = {};
+    const result: Record<string, JsonValue> = Object.create(null);
     for (let index: number = 0; index < size; index++) {
-      const key: any = keyHandler(index, jsonWriter);
-      result[JSON.stringify(key)] = valueHandler(index, this);
+      const key: JsonValue = keyHandler<JsonValue>(index, jsonWriter);
+      result[JSON.stringify(key)] = valueHandler<JsonValue>(index, this);
     }
     return result;
   }

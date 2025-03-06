@@ -1,10 +1,13 @@
-import { $Boolean } from "../../lib/boolean.mjs";
-import { DateType } from "../../lib/date.mjs";
-import { CaseStyle } from "../../lib/index.mjs";
-import { $Uint32, IntegerType } from "../../lib/integer.mjs";
-import { RecordType } from "../../lib/record.mjs";
-import { $Ucs2String } from "../../lib/ucs2-string.mjs";
-import { runTests, TypedValue } from "../helpers/test.mjs";
+import {describe} from "node:test";
+
+import { $Boolean } from "../../lib/boolean.mts";
+import { DateType } from "../../lib/date.mts";
+import { CaseStyle } from "../../lib/index.mts";
+import { $Uint32, IntegerType } from "../../lib/integer.mts";
+import { RecordType } from "../../lib/record.mts";
+import { $Ucs2String } from "../../lib/ucs2-string.mts";
+import type { TypedValue } from "../helpers/test.mts";
+import { runTests } from "../helpers/test.mts";
 
 describe("kryo | Record", function () {
   describe("Main", function () {

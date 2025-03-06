@@ -1,8 +1,10 @@
-import { assert as chaiAssert } from "chai";
+import * as assert from "node:assert/strict";
+import {describe, test} from "node:test";
 
-import {NOOP_CONTEXT} from "../../lib/index.mjs";
-import { Ucs2StringType } from "../../lib/ucs2-string.mjs";
-import { runTests, TypedValue } from "../helpers/test.mjs";
+import {NOOP_CONTEXT} from "../../lib/index.mts";
+import { Ucs2StringType } from "../../lib/ucs2-string.mts";
+import type { TypedValue } from "../helpers/test.mts";
+import { runTests } from "../helpers/test.mts";
 
 describe("Ucs2StringType", function () {
   describe("basic support", function () {
@@ -35,33 +37,33 @@ describe("Ucs2StringType", function () {
   });
 
   describe("Simple UCS2 behavior", function () {
-    it("should accept the empty string, when requiring length exactly 0", function () {
-      chaiAssert.isTrue(new Ucs2StringType({minLength: 0, maxLength: 0}).test(NOOP_CONTEXT, "").ok);
+    test("should accept the empty string, when requiring length exactly 0", function () {
+      assert.strictEqual(new Ucs2StringType({minLength: 0, maxLength: 0}).test(NOOP_CONTEXT, "").ok, true);
     });
-    it("should accept the string \"a\" (ASCII codepoint), when requiring length exactly 1", function () {
-      chaiAssert.isTrue(new Ucs2StringType({minLength: 1, maxLength: 1}).test(NOOP_CONTEXT, "a").ok);
+    test("should accept the string \"a\" (ASCII codepoint), when requiring length exactly 1", function () {
+      assert.strictEqual(new Ucs2StringType({minLength: 1, maxLength: 1}).test(NOOP_CONTEXT, "a").ok, true);
     });
-    it("should accept the string \"∑\" (BMP codepoint), when requiring length exactly 1", function () {
-      chaiAssert.isTrue(new Ucs2StringType({minLength: 1, maxLength: 1}).test(NOOP_CONTEXT, "∑").ok);
+    test("should accept the string \"∑\" (BMP codepoint), when requiring length exactly 1", function () {
+      assert.strictEqual(new Ucs2StringType({minLength: 1, maxLength: 1}).test(NOOP_CONTEXT, "∑").ok, true);
     });
-    it("should accept the string \"𝄞\" (non-BMP codepoint), when requiring length exactly 2", function () {
-      chaiAssert.isTrue(new Ucs2StringType({minLength: 2, maxLength: 2}).test(NOOP_CONTEXT, "𝄞").ok);
+    test("should accept the string \"𝄞\" (non-BMP codepoint), when requiring length exactly 2", function () {
+      assert.strictEqual(new Ucs2StringType({minLength: 2, maxLength: 2}).test(NOOP_CONTEXT, "𝄞").ok, true);
     });
-    it("should reject the string \"𝄞\" (non-BMP codepoint), when requiring length exactly 1", function () {
-      chaiAssert.isFalse(new Ucs2StringType({minLength: 1, maxLength: 1}).test(NOOP_CONTEXT, "𝄞").ok);
+    test("should reject the string \"𝄞\" (non-BMP codepoint), when requiring length exactly 1", function () {
+      assert.strictEqual(new Ucs2StringType({minLength: 1, maxLength: 1}).test(NOOP_CONTEXT, "𝄞").ok, false);
     });
-    it("should accept unmatched surrogate halves", function () {
+    describe("should accept unmatched surrogate halves", function () {
       // 𝄞 corresponds to the surrogate pair (0xd834, 0xdd1e)
       const type: Ucs2StringType = new Ucs2StringType({maxLength: 500});
       const items: string[] = ["\ud834", "a\ud834", "\ud834b", "a\ud834b", "\udd1e", "a\udd1e", "\udd1eb", "a\udd1eb"];
       for (const item of items) {
-        it(JSON.stringify(item), function () {
-          chaiAssert.isTrue(type.test(NOOP_CONTEXT, item).ok);
+        test(JSON.stringify(item), function () {
+          assert.strictEqual(type.test(NOOP_CONTEXT, item).ok, true);
         });
       }
     });
-    it("should accept reversed (invalid) surrogate pairs", function () {
-      chaiAssert.isTrue(new Ucs2StringType({maxLength: 500}).test(NOOP_CONTEXT, "\udd1e\ud834").ok);
+    test("should accept reversed (invalid) surrogate pairs", function () {
+      assert.strictEqual(new Ucs2StringType({maxLength: 500}).test(NOOP_CONTEXT, "\udd1e\ud834").ok, true);
     });
   });
 });

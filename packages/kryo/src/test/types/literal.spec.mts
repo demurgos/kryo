@@ -1,7 +1,29 @@
-import { LiteralIoType, LiteralType } from "../../lib/literal.mjs";
-import { TsEnumType } from "../../lib/ts-enum.mjs";
-import { Ucs2StringType } from "../../lib/ucs2-string.mjs";
-import { runTests, TypedValue } from "../helpers/test.mjs";
+import {describe} from "node:test";
+
+import type {LiteralIoType} from "../../lib/literal.mts";
+import {LiteralType} from "../../lib/literal.mts";
+import {TsEnumType} from "../../lib/ts-enum.mts";
+import {Ucs2StringType} from "../../lib/ucs2-string.mts";
+import type {TypedValue} from "../helpers/test.mts";
+import {runTests} from "../helpers/test.mts";
+
+const Red: unique symbol = Symbol("Red");
+const Green: unique symbol = Symbol("Green");
+const Blue: unique symbol = Symbol("Blue");
+
+const Color = {
+  Red,
+  Green,
+  Blue,
+} as const;
+
+type Color = typeof Color[keyof typeof Color];
+
+declare namespace Color {
+  type Red = typeof Color.Red;
+  type Green = typeof Color.Green;
+  type Blue = typeof Color.Blue;
+}
 
 describe("Literal", function () {
   describe("Literal<\"foo\">", function () {
@@ -45,12 +67,6 @@ describe("Literal", function () {
   });
 
   describe("Literal<Color.Red>", function () {
-    enum Color {
-      Red,
-      Green,
-      Blue,
-    }
-
     const $ColorRed: LiteralIoType<Color.Red> = new LiteralType<Color.Red>({
       type: new TsEnumType({enum: Color}),
       value: Color.Red,
@@ -63,8 +79,8 @@ describe("Literal", function () {
         valid: true,
       },
       {
-        name: "0",
-        value: 0,
+        name: "Symbol(Red)",
+        value: Red,
         valid: true,
       },
       {name: "Color.Green", value: Color.Green, valid: false},

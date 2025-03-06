@@ -4,7 +4,7 @@
  * @module kryo/case-style
  */
 
-import { CaseStyle } from "../index.mjs";
+import { CaseStyle } from "../index.mts";
 
 export function detectCaseStyle(identifier: string): CaseStyle {
   if (/^[A-Z]+[0-9]*(?:_[A-Z]+[0-9]*)*$/.test(identifier)) {

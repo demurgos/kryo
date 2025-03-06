@@ -1,8 +1,11 @@
-import { CaseStyle } from "../../lib/index.mjs";
-import { IntegerType } from "../../lib/integer.mjs";
-import { RecordType } from "../../lib/record.mjs";
-import { TryUnionType } from "../../lib/try-union.mjs";
-import { runTests, TypedValue } from "../helpers/test.mjs";
+import {describe} from "node:test";
+
+import {CaseStyle} from "../../lib/index.mts";
+import {IntegerType} from "../../lib/integer.mts";
+import {RecordType} from "../../lib/record.mts";
+import {TryUnionType} from "../../lib/try-union.mts";
+import type {TypedValue} from "../helpers/test.mts";
+import {runTests} from "../helpers/test.mts";
 
 describe("TryUnion", function () {
   describe("TryUnion<Shape>", function () {

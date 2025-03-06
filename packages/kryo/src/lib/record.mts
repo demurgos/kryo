@@ -1,11 +1,12 @@
-import { rename } from "./_helpers/case-style.mjs";
-import {enter, writeError} from "./_helpers/context.mjs";
-import { lazyProperties } from "./_helpers/lazy-properties.mjs";
-import {AggregateCheck} from "./checks/aggregate.mjs";
-import {CheckKind} from "./checks/check-kind.mjs";
-import {PropertyKeyCheck} from "./checks/property-key.mjs";
-import {PropertyValueCheck} from "./checks/property-value.mjs";
-import {
+import {rename} from "./_helpers/case-style.mts";
+import {enter, writeError} from "./_helpers/context.mts";
+import {lazyProperties} from "./_helpers/lazy-properties.mts";
+import type {AggregateCheck} from "./checks/aggregate.mts";
+import {CheckKind} from "./checks/check-kind.mts";
+import type {MissingKeyCheck} from "./checks/missing-key.mts";
+import type {PropertyKeyCheck} from "./checks/property-key.mts";
+import type {PropertyValueCheck} from "./checks/property-value.mts";
+import type {
   AnyKey,
   CaseStyle,
   CheckId,
@@ -17,16 +18,16 @@ import {
   Type,
   VersionedType,
   Writer
-} from "./index.mjs";
-import { readVisitor } from "./readers/read-visitor.mjs";
+} from "./index.mts";
+import {readVisitor} from "./readers/read-visitor.mts";
 
 export type Name = "record";
 export const name: Name = "record";
 
 export interface Diff<T> {
-  set: {[P in keyof T]?: any}; // val
-  update: {[P in keyof T]?: any}; // diff
-  unset: {[P in keyof T]?: any}; // val
+  set: { [P in keyof T]?: unknown }; // val
+  update: { [P in keyof T]?: unknown }; // diff
+  unset: { [P in keyof T]?: unknown }; // val
 }
 
 export interface RecordTypeOptions<T> {
@@ -38,7 +39,7 @@ export interface RecordTypeOptions<T> {
   /**
    * A dictionary between a property name and its description.
    */
-  properties: {readonly [P in keyof T]: PropertyDescriptor<T[P], Type<T[P]>>};
+  properties: { readonly [P in keyof T]: PropertyDescriptor<T[P], Type<T[P]>> };
 
   /**
    * The keys of the serialized records are renamed following the
@@ -46,11 +47,11 @@ export interface RecordTypeOptions<T> {
    */
   changeCase?: CaseStyle;
 
-  rename?: {readonly [P in keyof T]?: string};
+  rename?: { readonly [P in keyof T]?: string };
 }
 
 export interface RecordIoTypeOptions<T> extends RecordTypeOptions<T> {
-  properties: {readonly [P in keyof T]: PropertyDescriptor<T[P], IoType<T[P]>>};
+  properties: { readonly [P in keyof T]: PropertyDescriptor<T[P], IoType<T[P]>> };
 }
 
 export interface PropertyDescriptor<T, K extends Type<T> = Type<T>> {
@@ -81,13 +82,13 @@ export interface ExtendRecordTypeOptions<E> {
   /**
    * A dictionary between a property name and its description.
    */
-  properties: {readonly [P in keyof E]: PropertyDescriptor<E[P], Type<E[P]>>};
+  properties: { readonly [P in keyof E]: PropertyDescriptor<E[P], Type<E[P]>> };
 
-  rename?: {readonly [P in keyof E]?: string};
+  rename?: { readonly [P in keyof E]?: string };
 }
 
 export interface ExtendRecordIoTypeOptions<E> extends ExtendRecordTypeOptions<E> {
-  properties: {readonly [P in keyof E]: PropertyDescriptor<E[P], IoType<E[P]>>};
+  properties: { readonly [P in keyof E]: PropertyDescriptor<E[P], IoType<E[P]>> };
 }
 
 export interface RecordTypeConstructor {
@@ -127,6 +128,7 @@ export interface RecordIoType<T> extends IoType<T>, VersionedType<T, Diff<T>>, R
   omit<K extends keyof T>(keys: readonly K[]): RecordIoType<Omit<T, K>>;
 
   extend<E>(options: Lazy<ExtendRecordIoTypeOptions<E>>): RecordIoType<T & E>;
+
   extend<E>(options: Lazy<ExtendRecordTypeOptions<E>>): RecordType<T & E>;
 }
 
@@ -136,8 +138,8 @@ export const RecordType: RecordTypeConstructor = (class<T> implements IoType<T>,
   RecordIoTypeOptions<T> {
   readonly name: Name = name;
   readonly noExtraKeys?: boolean;
-  readonly properties!: {readonly [P in keyof T]: PropertyDescriptor<T[P], any>};
-  readonly rename?: {readonly [P in keyof T]?: string};
+  readonly properties!: { readonly [P in keyof T]: PropertyDescriptor<T[P], IoType<T[P]>> };
+  readonly rename?: { readonly [P in keyof T]?: string };
   readonly changeCase?: CaseStyle;
   private _options: Lazy<RecordTypeOptions<T>>;
   private _outKeys: Map<string, keyof T> | undefined;
@@ -168,7 +170,7 @@ export const RecordType: RecordTypeConstructor = (class<T> implements IoType<T>,
     if (typeof key !== "string") {
       throw new Error(`NonStringKey: ${String(key)}`);
     }
-    const descriptor: PropertyDescriptor<any> = this.properties[key];
+    const descriptor: PropertyDescriptor<unknown> = this.properties[key];
     if (descriptor.rename !== undefined) {
       return descriptor.rename;
     } else if (descriptor.changeCase !== undefined) {
@@ -188,7 +190,7 @@ export const RecordType: RecordTypeConstructor = (class<T> implements IoType<T>,
         const extra: Set<string> = new Set();
         const missing: Set<string> = new Set();
         for (const key in this.properties) {
-          const descriptor: PropertyDescriptor<any> = this.properties[key];
+          const descriptor: PropertyDescriptor<unknown> = this.properties[key];
           if (!descriptor.optional) {
             missing.add(key);
           }
@@ -197,7 +199,7 @@ export const RecordType: RecordTypeConstructor = (class<T> implements IoType<T>,
         const result: Partial<T> = Object.create(null);
 
         for (const [rawKey, rawValue] of input) {
-          const {ok: okOutKey, value: outKey} =  keyReader.readString(
+          const {ok: okOutKey, value: outKey} = keyReader.readString(
             cx,
             rawKey,
             readVisitor({fromString: (value: string): Result<string, CheckId> => ({ok: true, value})}),
@@ -212,7 +214,7 @@ export const RecordType: RecordTypeConstructor = (class<T> implements IoType<T>,
             continue;
           }
           missing.delete(key as string);
-          const descriptor: PropertyDescriptor<any> = this.properties[key];
+          const descriptor: PropertyDescriptor<T[typeof key]> = this.properties[key];
           // TODO: Update readers so `undefined` is impossible/not handled here
           if (rawValue === undefined) {
             if (descriptor.optional) {
@@ -230,7 +232,13 @@ export const RecordType: RecordTypeConstructor = (class<T> implements IoType<T>,
           }
         }
 
-        if (this.noExtraKeys && extra.size > 0 || missing.size > 0) {
+        if (missing.size > 0) {
+          const key: string = missing[Symbol.iterator]().next().value!;
+          // todo: report all missing keys
+          return writeError(cx, {check: CheckKind.MissingKey, key} satisfies MissingKeyCheck);
+        }
+
+        if (this.noExtraKeys && extra.size > 0) {
           return writeError(cx, {check: CheckKind.PropertyKey} satisfies PropertyKeyCheck);
           // throw createInvalidRecordError({extra, missing, invalid});
         }
@@ -252,9 +260,9 @@ export const RecordType: RecordTypeConstructor = (class<T> implements IoType<T>,
       }
     }
 
-    return writer.writeRecord(outKeys.keys(), <FW,>(outKey: string, fieldWriter: Writer<FW>): FW => {
+    return writer.writeRecord(outKeys.keys(), <FW, >(outKey: string, fieldWriter: Writer<FW>): FW => {
       const jsKey: keyof T = this.outKeys.get(outKey)!;
-      const descriptor: PropertyDescriptor<any> = this.properties[jsKey];
+      const descriptor: PropertyDescriptor<unknown> = this.properties[jsKey];
       if (descriptor.type.write === undefined) {
         throw new Error(`write is not supported for Record with non-readable key ${String(jsKey)} with type ${descriptor.type.name}`);
       }
@@ -273,11 +281,11 @@ export const RecordType: RecordTypeConstructor = (class<T> implements IoType<T>,
       if (extra !== undefined) {
         extra.delete(key);
       }
-      const descriptor: PropertyDescriptor<any> = this.properties[key];
+      const descriptor: PropertyDescriptor<unknown> = this.properties[key];
       const propertyValue: unknown = Reflect.get(value, key);
       if (propertyValue === undefined) {
         if (!descriptor.optional) {
-          return writeError(cx, {check: CheckKind.PropertyKey} satisfies PropertyKeyCheck);
+          return writeError(cx, {check: CheckKind.MissingKey, key} satisfies MissingKeyCheck);
           // return false;
         }
       } else {
@@ -296,7 +304,7 @@ export const RecordType: RecordTypeConstructor = (class<T> implements IoType<T>,
 
   equals(val1: T, val2: T): boolean {
     for (const key in this.properties) {
-      const descriptor: PropertyDescriptor<any> = this.properties[key];
+      const descriptor: PropertyDescriptor<unknown> = this.properties[key];
       if (!descriptor.optional) {
         if (!descriptor.type.equals(val1[key], val2[key])) {
           return false;
@@ -326,12 +334,12 @@ export const RecordType: RecordTypeConstructor = (class<T> implements IoType<T>,
     const result: Diff<T> = {set: {}, unset: {}, update: {}};
     for (const key in this.properties) {
       // TODO: Remove cast
-      const descriptor: PropertyDescriptor<any, VersionedType<any, any>> = this.properties[key] as any;
-      const oldMember: any = (oldVal as any)[key];
-      const newMember: any = (newVal as any)[key];
+      const descriptor: PropertyDescriptor<unknown, VersionedType<unknown, unknown>> = this.properties[key] as PropertyDescriptor<unknown, VersionedType<unknown, unknown>>;
+      const oldMember: unknown = Reflect.get(oldVal as object, key);
+      const newMember: unknown = Reflect.get(newVal as object, key);
       if (oldMember !== undefined) {
         if (newMember !== undefined) {
-          const diff: any = descriptor.type.diff(oldMember, newMember);
+          const diff: unknown = descriptor.type.diff(oldMember, newMember);
           if (diff !== undefined) {
             result.update[key] = diff;
             equal = false;
@@ -356,14 +364,15 @@ export const RecordType: RecordTypeConstructor = (class<T> implements IoType<T>,
       return result;
     }
     for (const key in diff.set) {
-      result[key] = this.properties[key].type.clone(diff.set[key]);
+      result[key] = this.properties[key].type.clone(diff.set[key] as T[typeof key]);
     }
     for (const key in diff.unset) {
-      Reflect.deleteProperty(result as any as object, key);
+      // TODO: Remove cast
+      Reflect.deleteProperty(result as object, key);
     }
     for (const key in diff.update) {
       // TODO: Remove cast
-      result[key] = (this.properties[key].type as any).patch(result[key], diff.update[key]);
+      result[key] = (this.properties[key].type as VersionedType<unknown, unknown>).patch(result[key], diff.update[key]) as T[typeof key];
     }
     return result;
   }
@@ -374,14 +383,13 @@ export const RecordType: RecordTypeConstructor = (class<T> implements IoType<T>,
     }
     const result: Diff<T> = {set: {}, unset: {}, update: {}};
     for (const key in diff.unset) {
-      result.set[key] = this.properties[key].type.clone(diff.unset[key]);
+      result.set[key] = this.properties[key].type.clone(diff.unset[key] as T[typeof key]);
     }
     for (const key in diff.set) {
-      result.unset[key] = this.properties[key].type.clone(diff.set[key]);
+      result.unset[key] = this.properties[key].type.clone(diff.set[key] as T[typeof key]);
     }
     for (const key in diff.update) {
-      // TODO: Remove cast
-      result.update[key] = (this.properties[key].type as any).reverseDiff(diff.update[key]);
+      result.update[key] = (this.properties[key].type as VersionedType<unknown, unknown>).reverseDiff(diff.update[key]);
     }
     return result;
   }
@@ -394,21 +402,21 @@ export const RecordType: RecordTypeConstructor = (class<T> implements IoType<T>,
     }
     const diff: Diff<T> = {set: {}, update: {}, unset: {}};
     const handled: Set<AnyKey> = new Set();
-    for (const [key, nextSet] of Object.entries<T>(next.set)) {
+    for (const [key, nextSet] of Object.entries(next.set)) {
       const descriptor = Reflect.get(this.properties, key);
       if (descriptor === undefined) {
         throw new Error(`unknown key ${key} in record diff`);
       }
       if (Reflect.has(prev.unset, key)) {
         const prevUnset = Reflect.get(prev.unset, key);
-        const diff = descriptor.type.diff(prevUnset, nextSet);
-        Reflect.set(diff.update, key, diff);
+        const propDiff = (descriptor.type as VersionedType<unknown, unknown>).diff(prevUnset, nextSet);
+        Reflect.set(diff.update, key, propDiff);
       } else {
         Reflect.set(diff.set, key, nextSet);
       }
       handled.add(key);
     }
-    for (const [key, nextUnset] of Object.entries<T>(next.unset)) {
+    for (const [key, nextUnset] of Object.entries(next.unset)) {
       const descriptor = Reflect.get(this.properties, key);
       if (descriptor === undefined) {
         throw new Error(`unknown key ${key} in record diff`);
@@ -418,19 +426,19 @@ export const RecordType: RecordTypeConstructor = (class<T> implements IoType<T>,
       }
       handled.add(key);
     }
-    for (const [key, nextUpdate] of Object.entries<T>(next.update)) {
+    for (const [key, nextUpdate] of Object.entries(next.update)) {
       const descriptor = Reflect.get(this.properties, key);
       if (descriptor === undefined) {
         throw new Error(`unknown key ${key} in record diff`);
       }
       if (Reflect.has(prev.set, key)) {
         const prevSet = Reflect.get(prev.set, key);
-        const nextSet = descriptor.type.apply(prevSet, nextUpdate);
+        const nextSet = (descriptor.type as VersionedType<unknown, unknown>).patch(prevSet, nextUpdate);
         Reflect.set(diff.set, key, nextSet);
       } else if (Reflect.has(prev.update, key)) {
         const prevUpdate = Reflect.get(prev.update, key);
-        const diff = descriptor.type.squash(prevUpdate, nextUpdate);
-        Reflect.set(diff.update, key, diff);
+        const propDiff = (descriptor.type as VersionedType<unknown, unknown>).squash(prevUpdate, nextUpdate);
+        Reflect.set(diff.update, key, propDiff);
       } else {
         Reflect.set(diff.update, key, diff);
       }
@@ -466,8 +474,8 @@ export const RecordType: RecordTypeConstructor = (class<T> implements IoType<T>,
       this._options;
 
     const noExtraKeys: boolean | undefined = options.noExtraKeys;
-    const properties: {[P in keyof T]: PropertyDescriptor<any>} = options.properties;
-    const rename: {[P in keyof T]?: string} | undefined = options.rename;
+    const properties: { [P in keyof T]: PropertyDescriptor<T[P]> } = options.properties;
+    const rename: { [P in keyof T]?: string } | undefined = options.rename;
     const changeCase: CaseStyle | undefined = options.changeCase;
 
     Object.assign(this, {noExtraKeys, properties, rename, changeCase});
@@ -483,14 +491,14 @@ export const RecordType: RecordTypeConstructor = (class<T> implements IoType<T>,
 
       const properties = {};
       for (const key in parentOptions.properties) {
-        if (keySet.has(key as any)) {
+        if (keySet.has(key as unknown as K)) {
           Reflect.set(properties, key, parentOptions.properties[key]);
         }
       }
 
       const options: RecordTypeOptions<Pick<T, K>> = {
         ...parentOptions,
-        properties: properties as {[P in keyof Pick<T, K>]: PropertyDescriptor<any>},
+        properties: properties as { [P in keyof Pick<T, K>]: PropertyDescriptor<T[P]> },
       };
       return options;
     });
@@ -506,14 +514,14 @@ export const RecordType: RecordTypeConstructor = (class<T> implements IoType<T>,
 
       const properties = {};
       for (const key in parentOptions.properties) {
-        if (!keySet.has(key as any)) {
+        if (!keySet.has(key as unknown as K)) {
           Reflect.set(properties, key, parentOptions.properties[key]);
         }
       }
 
       const options: RecordTypeOptions<Omit<T, K>> = {
         ...parentOptions,
-        properties: properties as {[P in keyof Omit<T, K>]: PropertyDescriptor<any>},
+        properties: properties as { [P in keyof Omit<T, K>]: PropertyDescriptor<T[P]> },
       };
       return options;
     });
@@ -536,7 +544,7 @@ export const RecordType: RecordTypeConstructor = (class<T> implements IoType<T>,
         Reflect.set(properties, key, extensionOptions.properties[key]);
       }
 
-      type ResultRename = {[P in keyof (T & E)]?: string};
+      type ResultRename = { [P in keyof (T & E)]?: string };
       let rename: ResultRename | undefined = undefined;
       if (parentOptions.rename === undefined) {
         if (extensionOptions.rename === undefined) {
@@ -560,7 +568,7 @@ export const RecordType: RecordTypeConstructor = (class<T> implements IoType<T>,
 
       const resultOptions: RecordTypeOptions<T & E> = {
         ...parentOptions,
-        properties: properties as {[P in keyof (T & E)]: PropertyDescriptor<any>},
+        properties: properties as { [P in keyof (T & E)]: PropertyDescriptor<(T & E)[P]> },
         rename,
       };
       return resultOptions;
@@ -568,7 +576,7 @@ export const RecordType: RecordTypeConstructor = (class<T> implements IoType<T>,
   }
 }) as RecordTypeConstructor;
 
-export function renameKeys<T extends {}>(obj: T, renameAll?: CaseStyle): Map<keyof T, string> {
+export function renameKeys<T extends object>(obj: T, renameAll?: CaseStyle): Map<keyof T, string> {
   const keys: string[] = Object.keys(obj);
   const result: Map<keyof T, string> = new Map();
   const outKeys: Set<string> = new Set();

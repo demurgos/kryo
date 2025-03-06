@@ -1,24 +1,40 @@
-// import { checkedUcs2Decode } from "./_helpers/checked-ucs2-decode.mjs";
-import {writeError} from "./_helpers/context.mjs";
-import {lazyProperties} from "./_helpers/lazy-properties.mjs";
-import {stringIsWellFormed} from "./_helpers/string-is-well-formed.mjs";
-import {CheckKind} from "./checks/check-kind.mjs";
-import {CheckId, IoType, KryoContext, Lazy, Reader, Result, VersionedType, Writer} from "./index.mjs";
-import {readVisitor} from "./readers/read-visitor.mjs";
+// import { checkedUcs2Decode } from "./_helpers/checked-ucs2-decode.mts";
+import {writeError} from "./_helpers/context.mts";
+import {lazyProperties} from "./_helpers/lazy-properties.mts";
+import {stringIsWellFormed} from "./_helpers/string-is-well-formed.mts";
+import {CheckKind} from "./checks/check-kind.mts";
+import type {CheckId, IoType, KryoContext, Lazy, Reader, Result, VersionedType, Writer} from "./index.mts";
+import {readVisitor} from "./readers/read-visitor.mts";
 
-export enum Normalization {
-  Nfc = "NFC",
-  Nfd = "NFD",
-  Nfkc = "NFKC",
-  Nfkd = "NFKD",
+const Nfc = "NFC" as const;
+const Nfd = "NFD" as const;
+const Nfkc = "NFKC" as const;
+const Nfkd = "NFKD" as const;
+
+const Normalization = {
+  Nfc,
+  Nfd,
+  Nfkc,
+  Nfkd,
+} as const;
+
+type Normalization = typeof Normalization[keyof typeof Normalization];
+
+declare namespace Normalization {
+  type Nfc = typeof Normalization.Nfc;
+  type Nfd = typeof Normalization.Nfd;
+  type Nfkc = typeof Normalization.Nfkc;
+  type Nfkd = typeof Normalization.Nfkd;
 }
+
+export { Normalization };
 
 export type Name = "codepoint-string";
 export const name: Name = "codepoint-string";
-export namespace json {
+export declare namespace json {
   export interface Type {
     name: Name;
-    normalization: null | "NFC" | "NFD" | "NFKC" | "NFKD";
+    normalization: null | Normalization;
     allowUcs2RegExp: boolean;
     pattern?: [string, string];
     lowerCase: boolean;

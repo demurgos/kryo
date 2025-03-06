@@ -2,7 +2,7 @@
  * @module kryo/readers/read-visitor
  */
 
-import { ReadVisitor } from "../index.mjs";
+import type { ReadVisitor } from "../index.mts";
 
 function fromBoolean(_: boolean): never {
   throw new Error("Unable to read from boolean");
@@ -20,11 +20,11 @@ function fromFloat64(_: number): never {
   throw new Error("Unable to read from float64");
 }
 
-function fromList(_: Iterable<any>): never {
+function fromList(_: Iterable<unknown>): never {
   throw new Error("Unable to read from list");
 }
 
-function fromMap(_: Map<any, any>): never {
+function fromMap(_: Map<unknown, unknown>): never {
   throw new Error("Unable to read from map");
 }
 

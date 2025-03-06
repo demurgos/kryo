@@ -2,10 +2,10 @@
  * @module kryo/writers/bson
  */
 
-import { serialize as bsonSerialize } from "bson";
-import { Writer } from "kryo";
+import {serialize as bsonSerialize} from "bson";
+import type {Writer} from "kryo";
 
-import { BsonValueWriter } from "./bson-value-writer.mjs";
+import {BsonValueWriter} from "./bson-value-writer.mts";
 
 export class BsonWriter implements Writer<Uint8Array> {
   private readonly valueWriter: BsonValueWriter;
@@ -32,10 +32,7 @@ export class BsonWriter implements Writer<Uint8Array> {
     return bsonSerialize({[this.primitiveWrapper]: this.valueWriter.writeDate(value)});
   }
 
-  writeRecord<K extends string>(
-    keys: Iterable<K>,
-    handler: (key: K, fieldWriter: Writer<any>) => any,
-  ): Uint8Array {
+  writeRecord<K extends string>(keys: Iterable<K>, handler: <FW>(key: K, fieldWriter: Writer<FW>) => FW): Uint8Array {
     return bsonSerialize(this.valueWriter.writeRecord(keys, handler));
   }
 
@@ -43,7 +40,8 @@ export class BsonWriter implements Writer<Uint8Array> {
     return bsonSerialize({[this.primitiveWrapper]: this.valueWriter.writeFloat64(value)});
   }
 
-  writeList(size: number, handler: (index: number, itemWriter: Writer<any>) => any): Uint8Array {
+
+  writeList(size: number, handler: <IW>(index: number, itemWriter: Writer<IW>) => IW): Uint8Array {
     return bsonSerialize({[this.primitiveWrapper]: this.valueWriter.writeList(size, handler)});
   }
 

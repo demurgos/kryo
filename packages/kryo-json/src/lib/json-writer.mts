@@ -2,10 +2,10 @@
  * @module kryo/writers/json
  */
 
-import { Writer } from "kryo";
+import type {Writer} from "kryo";
 
-import { JsonValue } from "./json-value.mjs";
-import { JsonValueWriter } from "./json-value-writer.mjs";
+import type {JsonValue} from "./json-value.mts";
+import {JsonValueWriter} from "./json-value-writer.mts";
 
 export class JsonWriter implements Writer<string> {
   private readonly valueWriter: JsonValueWriter;
@@ -37,18 +37,7 @@ export class JsonWriter implements Writer<string> {
     return this.stringify(this.valueWriter.writeDate(value));
   }
 
-  public writeRecord<K extends string>(
-    keys: Iterable<K>,
-    handler: (key: K, fieldWriter: Writer<any>) => any,
-  ): string {
-    return this.stringify(this.valueWriter.writeRecord(keys, handler));
-  }
-
-  public writeFloat64(value: number): string {
-    return this.stringify(this.valueWriter.writeFloat64(value));
-  }
-
-  public writeList(size: number, handler: (index: number, itemWriter: Writer<any>) => any): string {
+  public writeList(size: number, handler: <IW>(index: number, itemWriter: Writer<IW>) => IW): string {
     return this.stringify(this.valueWriter.writeList(size, handler));
   }
 
@@ -56,8 +45,16 @@ export class JsonWriter implements Writer<string> {
     size: number,
     keyHandler: <KW>(index: number, mapKeyWriter: Writer<KW>) => KW,
     valueHandler: <VW>(index: number, mapValueWriter: Writer<VW>) => VW,
-  ): any {
+  ): string {
     return this.stringify(this.valueWriter.writeMap(size, keyHandler, valueHandler));
+  }
+
+  public writeRecord<K extends string>(keys: Iterable<K>, handler: <FW>(key: K, fieldWriter: Writer<FW>) => FW): string {
+    return this.stringify(this.valueWriter.writeRecord(keys, handler));
+  }
+
+  public writeFloat64(value: number): string {
+    return this.stringify(this.valueWriter.writeFloat64(value));
   }
 
   public writeNull(): string {

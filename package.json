@@ -3,22 +3,23 @@
   "private": true,
   "scripts": {
     "clean": "rimraf \"packages/*/@(lib|main|test)\"",
-    "lint": "eslint \"packages/*/src/**/*.mts\"",
+    "lint": "eslint --config eslint.config.mjs --ext mts \"packages/*/src/**/*.mts\"",
     "format": "eslint --fix \"packages/*/src/**/*.mts\"",
     "test:build": "tsc --build test.tsconfig.json",
-    "test": "yarn run test:build && mocha \"packages/*/test/**/*.spec.mjs\""
+    "test": "yarn run test:build && node --test \"packages/*/src/test/**/*.spec.mts\""
   },
   "engines": {
-    "node": ">=18.13.0"
+    "node": ">=23.6.0"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^6.19.0",
-    "@typescript-eslint/parser": "^6.19.0",
-    "eslint": "^8.56.0",
-    "eslint-plugin-simple-import-sort": "^10.0.0",
-    "mocha": "^10.2.0",
+    "@eslint/eslintrc": "^3.3.0",
+    "@eslint/js": "^9.22.0",
+    "@types/node": "^22.13.10",
+    "eslint": "^9.22.0",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
     "rimraf": "^5.0.5",
-    "typescript": "^5.3.3"
+    "typescript": "^5.8.2",
+    "typescript-eslint": "^8.26.0"
   },
   "workspaces": {
     "packages": [

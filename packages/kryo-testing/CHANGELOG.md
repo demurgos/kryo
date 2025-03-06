@@ -1,3 +1,9 @@
+# Next
+
+- **[Breaking change]** Update to `kryo@0.16`.
+- **[Breaking change]** Switch to built-in Node testing framework.
+- **[Internal]** Refactor code to be compatible with `erasableSyntaxOnly` TS option.
+
 # 0.15.0 (2024-01-22)
 
 - Drop `unorm`, `incident`, `object-inspect` errors

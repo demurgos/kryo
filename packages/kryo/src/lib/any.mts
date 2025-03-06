@@ -1,10 +1,11 @@
-import {CheckId, IoType, KryoContext, Reader, Result,Writer} from "./index.mjs";
+import type {CheckId, IoType, KryoContext, Reader, Result,Writer} from "./index.mts";
 
-export type Diff = any;
+export type Diff = unknown;
 
 /**
  * Type representing an opaque value.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class AnyType<T = any> implements IoType<T> {
   read<R>(_cx: KryoContext, _reader: Reader<R>, raw: R): Result<T, CheckId> {
     return {ok: true, value: raw as unknown as T};

@@ -2,9 +2,9 @@
  * @module kryo/readers/json
  */
 
-import {CheckId, KryoContext, Reader, ReadVisitor, Result} from "kryo";
+import type {CheckId, KryoContext, Reader, ReadVisitor, Result} from "kryo";
 
-import {JsonValueReader} from "./json-value-reader.mjs";
+import {JsonValueReader} from "./json-value-reader.mts";
 
 export class JsonReader implements Reader<string> {
   trustInput?: boolean | undefined;
@@ -32,7 +32,7 @@ export class JsonReader implements Reader<string> {
     return this.valueReader.readDate(cx, JSON.parse(raw), visitor);
   }
 
-  readRecord<T>(cx: KryoContext, raw: any, visitor: ReadVisitor<T>): Result<T, CheckId> {
+  readRecord<T>(cx: KryoContext, raw: string, visitor: ReadVisitor<T>): Result<T, CheckId> {
     return this.valueReader.readRecord(cx, JSON.parse(raw), visitor);
   }
 
@@ -40,11 +40,11 @@ export class JsonReader implements Reader<string> {
     return this.valueReader.readFloat64(cx, JSON.parse(raw), visitor);
   }
 
-  readList<T>(cx: KryoContext, raw: any, visitor: ReadVisitor<T>): Result<T, CheckId> {
+  readList<T>(cx: KryoContext, raw: string, visitor: ReadVisitor<T>): Result<T, CheckId> {
     return this.valueReader.readList(cx, JSON.parse(raw), visitor);
   }
 
-  readMap<T>(cx: KryoContext, raw: any, visitor: ReadVisitor<T>): Result<T, CheckId> {
+  readMap<T>(cx: KryoContext, raw: string, visitor: ReadVisitor<T>): Result<T, CheckId> {
     return this.valueReader.readMap(cx, JSON.parse(raw), visitor);
   }
 

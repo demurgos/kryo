@@ -1,7 +1,9 @@
-import {CheckId, KryoContext, Reader, ReadVisitor, Result, writeError} from "kryo";
-import {SearchParamsValueReader} from "./search-params-value-reader.mjs";
+import type {CheckId, KryoContext, Reader, ReadVisitor, Result} from "kryo";
+import {writeError} from "kryo";
 import {CheckKind} from "kryo/checks/check-kind";
-import {SearchParamsRootReader} from "./search-params-root-reader.mjs";
+
+import {SearchParamsRootReader} from "./search-params-root-reader.mts";
+import {SearchParamsValueReader} from "./search-params-value-reader.mts";
 
 export function parseSearch(searchStr: string): URLSearchParams {
   return new URLSearchParams(searchStr);
@@ -23,7 +25,7 @@ export class SearchParamsReader implements Reader<string> {
   readAny<T>(cx: KryoContext, raw: string, visitor: ReadVisitor<T>): Result<T, CheckId> {
     const primitive: string | null = parseSearch(raw).get(this.#primitiveWrapper);
     if (primitive === null) {
-      return writeError(cx, {check: CheckKind.BaseType, expected: ["Ucs2String", "UsvString"]})
+      return writeError(cx, {check: CheckKind.BaseType, expected: ["Ucs2String", "UsvString"]});
     } else {
       return this.#valueReader.readAny(cx, primitive, visitor);
     }
@@ -32,7 +34,7 @@ export class SearchParamsReader implements Reader<string> {
   readBoolean<T>(cx: KryoContext, raw: string, visitor: ReadVisitor<T>): Result<T, CheckId> {
     const primitive: string | null = parseSearch(raw).get(this.#primitiveWrapper);
     if (primitive === null) {
-      return writeError(cx, {check: CheckKind.BaseType, expected: ["Ucs2String", "UsvString"]})
+      return writeError(cx, {check: CheckKind.BaseType, expected: ["Ucs2String", "UsvString"]});
     } else {
       return this.#valueReader.readBoolean(cx, primitive, visitor);
     }
@@ -41,7 +43,7 @@ export class SearchParamsReader implements Reader<string> {
   readBytes<T>(cx: KryoContext, raw: string, visitor: ReadVisitor<T>): Result<T, CheckId> {
     const primitive: string | null = parseSearch(raw).get(this.#primitiveWrapper);
     if (primitive === null) {
-      return writeError(cx, {check: CheckKind.BaseType, expected: ["Ucs2String", "UsvString"]})
+      return writeError(cx, {check: CheckKind.BaseType, expected: ["Ucs2String", "UsvString"]});
     } else {
       return this.#valueReader.readBytes(cx, primitive, visitor);
     }
@@ -50,7 +52,7 @@ export class SearchParamsReader implements Reader<string> {
   readDate<T>(cx: KryoContext, raw: string, visitor: ReadVisitor<T>): Result<T, CheckId> {
     const primitive: string | null = parseSearch(raw).get(this.#primitiveWrapper);
     if (primitive === null) {
-      return writeError(cx, {check: CheckKind.BaseType, expected: ["Ucs2String", "UsvString"]})
+      return writeError(cx, {check: CheckKind.BaseType, expected: ["Ucs2String", "UsvString"]});
     } else {
       return this.#valueReader.readDate(cx, primitive, visitor);
     }
@@ -64,7 +66,7 @@ export class SearchParamsReader implements Reader<string> {
   readFloat64<T>(cx: KryoContext, raw: string, visitor: ReadVisitor<T>): Result<T, CheckId> {
     const primitive: string | null = parseSearch(raw).get(this.#primitiveWrapper);
     if (primitive === null) {
-      return writeError(cx, {check: CheckKind.BaseType, expected: ["Ucs2String", "UsvString"]})
+      return writeError(cx, {check: CheckKind.BaseType, expected: ["Ucs2String", "UsvString"]});
     } else {
       return this.#valueReader.readFloat64(cx, primitive, visitor);
     }
@@ -73,7 +75,7 @@ export class SearchParamsReader implements Reader<string> {
   readList<T>(cx: KryoContext, raw: string, visitor: ReadVisitor<T>): Result<T, CheckId> {
     const primitive: string | null = parseSearch(raw).get(this.#primitiveWrapper);
     if (primitive === null) {
-      return writeError(cx, {check: CheckKind.BaseType, expected: ["Ucs2String", "UsvString"]})
+      return writeError(cx, {check: CheckKind.BaseType, expected: ["Ucs2String", "UsvString"]});
     } else {
       return this.#valueReader.readList(cx, primitive, visitor);
     }
@@ -86,7 +88,7 @@ export class SearchParamsReader implements Reader<string> {
   readNull<T>(cx: KryoContext, raw: string, visitor: ReadVisitor<T>): Result<T, CheckId> {
     const primitive: string | null = parseSearch(raw).get(this.#primitiveWrapper);
     if (primitive === null) {
-      return writeError(cx, {check: CheckKind.BaseType, expected: ["Ucs2String", "UsvString"]})
+      return writeError(cx, {check: CheckKind.BaseType, expected: ["Ucs2String", "UsvString"]});
     } else {
       return this.#valueReader.readNull(cx, primitive, visitor);
     }
@@ -95,7 +97,7 @@ export class SearchParamsReader implements Reader<string> {
   readString<T>(cx: KryoContext, raw: string, visitor: ReadVisitor<T>): Result<T, CheckId> {
     const primitive: string | null = parseSearch(raw).get(this.#primitiveWrapper);
     if (primitive === null) {
-      return writeError(cx, {check: CheckKind.BaseType, expected: ["Ucs2String", "UsvString"]})
+      return writeError(cx, {check: CheckKind.BaseType, expected: ["Ucs2String", "UsvString"]});
     } else {
       return this.#valueReader.readString(cx, primitive, visitor);
     }

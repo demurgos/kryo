@@ -1,5 +1,5 @@
-import {CheckId} from "../index.mjs";
-import {CheckKind} from "./check-kind.mjs";
+import type {CheckId} from "../index.mts";
+import {CheckKind} from "./check-kind.mts";
 
 export interface AggregateCheck {
   readonly check: CheckKind.Aggregate,

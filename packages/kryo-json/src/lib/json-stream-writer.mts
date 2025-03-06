@@ -2,7 +2,7 @@
  * @module kryo/writers/json-stream
  */
 
-import { Writer } from "kryo";
+import type {Writer} from "kryo";
 
 export interface WritableStream {
   /**
@@ -21,7 +21,7 @@ export class JsonStreamWriter implements Writer<boolean> {
     this.stream = stream;
   }
 
-  writeAny(value: any): boolean {
+  writeAny(value: boolean): boolean {
     return this.stream.write(JSON.stringify(value));
   }
 

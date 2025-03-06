@@ -1,6 +1,9 @@
-import { assert as chaiAssert } from "chai";
-import {IoType, NOOP_CONTEXT,Reader, readOrThrow, Writer} from "kryo";
-import util from "util";
+import * as assert from "node:assert/strict";
+import {describe, test} from "node:test";
+import * as util from "node:util";
+
+import type {IoType, Reader, Writer} from "kryo";
+import {NOOP_CONTEXT, readOrThrow} from "kryo";
 
 export interface TestItem<T = unknown> {
   name?: string;
@@ -34,12 +37,18 @@ export function registerErrMochaTests<T = unknown>(
   raws: Iterable<unknown>,
 ): void {
   for (const raw of raws) {
-    it(`rejects: ${util.inspect(raw)}`, function () {
+    test(`rejects: ${util.inspect(raw)}`, function () {
+      let readOrThrowError: unknown = null;
+      let actualValue: T | null = null;
       try {
-        const actualValue: T = readOrThrow(ioType, reader, raw);
-        chaiAssert.fail(`expected reader to throw, value: ${util.inspect(actualValue)}`);
-      } catch (err) {
-        chaiAssert.isDefined(err);
+        actualValue = readOrThrow(ioType, reader, raw);
+      } catch (err: unknown) {
+        readOrThrowError = err;
+      }
+      if (readOrThrowError === null) {
+        assert.fail(`expected reader to throw: value=${util.inspect(actualValue)}`);
+      } else {
+        assert.ok(readOrThrowError instanceof Error);
       }
     });
   }
@@ -67,10 +76,10 @@ export function registerMochaTests<T = unknown>(ioType: IoType<T>, testItem: Tes
   }
   for (const ioTest of testItem.io) {
     if (ioTest.writer !== undefined) {
-      registerMochaWriteTest(`write: ${util.inspect(ioTest.raw)}`, ioType, testItem.value, ioTest as any);
+      registerMochaWriteTest(`write: ${util.inspect(ioTest.raw)}`, ioType, testItem.value, ioTest as WriteTestItem);
     }
     if (ioTest.reader !== undefined) {
-      registerMochaReadTest(`read: ${util.inspect(ioTest.raw)}`, ioType, testItem.value, ioTest as any);
+      registerMochaReadTest(`read: ${util.inspect(ioTest.raw)}`, ioType, testItem.value, ioTest as ReadTestItem);
     }
   }
 }
@@ -81,9 +90,9 @@ export function registerMochaWriteTest<T = unknown>(
   inputValue: T,
   testItem: WriteTestItem,
 ): void {
-  it(testName, function () {
+  test(testName, function () {
     const actualRaw: typeof testItem.raw = ioType.write(testItem.writer, inputValue);
-    chaiAssert.deepEqual(actualRaw, testItem.raw);
+    assert.deepStrictEqual(actualRaw, testItem.raw);
   });
 }
 
@@ -93,10 +102,10 @@ export function registerMochaReadTest<T = unknown>(
   expectedValue: T,
   testItem: ReadTestItem,
 ): void {
-  it(testName, function () {
+  test(testName, function () {
     const actualValue: T = readOrThrow(ioType, testItem.reader, testItem.raw);
-    chaiAssert.isTrue(ioType.test(NOOP_CONTEXT, actualValue).ok);
-    chaiAssert.isTrue(ioType.equals(actualValue, expectedValue));
+    assert.ok(ioType.test(NOOP_CONTEXT, actualValue).ok);
+    assert.ok(ioType.equals(actualValue, expectedValue));
   });
 }
 

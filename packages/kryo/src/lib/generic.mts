@@ -1,14 +1,14 @@
-import { lazyProperties } from "./_helpers/lazy-properties.mjs";
-import { IoType, Lazy, Type } from "./index.mjs";
+import { lazyProperties } from "./_helpers/lazy-properties.mts";
+import type { IoType, Lazy, Type } from "./index.mts";
 
 export type Name = "generic";
 export const name: Name = "generic";
 
-export interface GenericTypeOptions<Fn extends (...args: any[]) => any> {
+export interface GenericTypeOptions<Fn extends (...args: unknown[]) => unknown> {
   apply: (...typeArgs: Type<unknown>[]) => Type<ReturnType<Fn>>;
 }
 
-export interface GenericIoTypeOptions<Fn extends (...args: any[]) => any> {
+export interface GenericIoTypeOptions<Fn extends (...args: unknown[]) => unknown> {
   apply: (...typeArgs: IoType<unknown>[]) => IoType<ReturnType<Fn>>;
 }
 
@@ -18,24 +18,24 @@ export interface GenericIoTypeOptions<Fn extends (...args: any[]) => any> {
  * - https://github.com/microsoft/TypeScript/issues/22617
  * - https://github.com/microsoft/TypeScript/issues/40111
  */
-export interface GenericType<Fn extends (...args: any[]) => any> {
+export interface GenericType<Fn extends (...args: unknown[]) => unknown> {
   apply(...typeArgs: Type<unknown>[]): Type<ReturnType<Fn>>;
 }
 
-export interface GenericIoType<Fn extends (...args: any[]) => any> {
+export interface GenericIoType<Fn extends (...args: unknown[]) => unknown> {
   apply(...typeArgs: IoType<unknown>[]): IoType<ReturnType<Fn>>;
 }
 
 export interface GenericTypeConstructor {
-  new<Fn extends (...args: any[]) => any>(options: Lazy<GenericIoTypeOptions<Fn>>): GenericIoType<Fn>;
+  new<Fn extends (...args: unknown[]) => unknown>(options: Lazy<GenericIoTypeOptions<Fn>>): GenericIoType<Fn>;
 
-  new<Fn extends (...args: any[]) => any>(options: Lazy<GenericTypeOptions<Fn>>): GenericType<Fn>;
+  new<Fn extends (...args: unknown[]) => unknown>(options: Lazy<GenericTypeOptions<Fn>>): GenericType<Fn>;
 }
 
 /**
  * Generic type constructor (not a type itself).
  */
-export const GenericType: GenericTypeConstructor = (class<Fn extends (...args: any[]) => any> {
+export const GenericType: GenericTypeConstructor = (class<Fn extends (...args: unknown[]) => unknown> {
   readonly name: Name = name;
   readonly apply!: (...typeArgs: Type<unknown>[]) => Type<ReturnType<Fn>>;
 

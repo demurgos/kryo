@@ -1,12 +1,15 @@
-import {writeError} from "./_helpers/context.mjs";
-import {lazyProperties} from "./_helpers/lazy-properties.mjs";
-import {CheckKind} from "./checks/check-kind.mjs";
-import {CheckId, IoType, KryoContext, Lazy, NOOP_CONTEXT, Reader, Result, Type, Writer} from "./index.mjs";
-import {readVisitor} from "./readers/read-visitor.mjs";
+import {writeError} from "./_helpers/context.mts";
+import {lazyProperties} from "./_helpers/lazy-properties.mts";
+import type {AggregateCheck} from "./checks/aggregate.mts";
+import {CheckKind} from "./checks/check-kind.mts";
+import type {SizeCheck} from "./checks/size.mts";
+import type {CheckId, IoType, KryoContext, Lazy, Reader, Result, Type, Writer} from "./index.mts";
+import {NOOP_CONTEXT} from "./index.mts";
+import {readVisitor} from "./readers/read-visitor.mts";
 
 export type Name = "array";
 export const name: Name = "array";
-export type Diff = any;
+export type Diff = unknown;
 
 /**
  * T: Item type
@@ -67,7 +70,7 @@ export const ArrayType: ArrayTypeConstructor = class<T, M extends Type<T> = Type
         let i: number = 0;
         for (const rawItem of input) {
           if (i >= maxLength) {
-            return writeError(cx, {check: CheckKind.Size as const, min: minLength ?? 0, max: maxLength});
+            return writeError(cx, {check: CheckKind.Size, min: minLength ?? 0, max: maxLength} satisfies SizeCheck);
           }
           if (itemType.read === undefined) {
             throw new Error(`read is not supported for Array with non-readable type ${itemType.name}`);
@@ -88,10 +91,15 @@ export const ArrayType: ArrayTypeConstructor = class<T, M extends Type<T> = Type
           i++;
         }
         if (failedChecks !== undefined) {
-          return writeError(cx, {check: CheckKind.Aggregate as const, children: [...failedChecks]});
+          return writeError(cx, {check: CheckKind.Aggregate, children: [...failedChecks]} satisfies AggregateCheck);
         }
         if (minLength !== undefined && i < minLength) {
-          return writeError(cx, {check: CheckKind.Size as const, min: minLength ?? 0, max: maxLength, actual: i});
+          return writeError(cx, {
+            check: CheckKind.Size,
+            min: minLength ?? 0,
+            max: maxLength,
+            actual: i
+          } satisfies SizeCheck);
         }
         return {ok: true, value: result};
       },
@@ -99,7 +107,7 @@ export const ArrayType: ArrayTypeConstructor = class<T, M extends Type<T> = Type
   }
 
   write<W>(writer: Writer<W>, value: T[]): W {
-    return writer.writeList(value.length, <IW,>(index: number, itemWriter: Writer<IW>): IW => {
+    return writer.writeList(value.length, <IW, >(index: number, itemWriter: Writer<IW>): IW => {
       if (this.itemType.write === undefined) {
         throw new Error(`write is not supported for Array with non-writable type ${this.itemType.name}`);
       }
@@ -109,10 +117,15 @@ export const ArrayType: ArrayTypeConstructor = class<T, M extends Type<T> = Type
 
   test(cx: KryoContext | null, value: unknown): Result<T[], CheckId> {
     if (!Array.isArray(value)) {
-      return writeError(cx,{check: CheckKind.BaseType, expected: ["Array"]});
+      return writeError(cx, {check: CheckKind.BaseType, expected: ["Array"]});
     }
     if (value.length > this.maxLength || (this.minLength !== undefined && value.length < this.minLength)) {
-      return writeError(cx, {check: CheckKind.Size, min: this.minLength ?? 0, max: this.maxLength, actual: value.length});
+      return writeError(cx, {
+        check: CheckKind.Size,
+        min: this.minLength ?? 0,
+        max: this.maxLength,
+        actual: value.length
+      });
     }
     const itemCount: number = value.length;
     let errors: CheckId[] | undefined = undefined;

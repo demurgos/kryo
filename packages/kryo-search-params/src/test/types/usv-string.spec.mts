@@ -1,8 +1,11 @@
-import { UsvStringType } from "kryo/usv-string";
-import { registerErrMochaTests, registerMochaSuites, TestItem } from "kryo-testing";
+import {describe} from "node:test";
 
-import {SEARCH_PARAMS_READER} from "../../lib/search-params-reader.mjs";
-import {SEARCH_PARAMS_WRITER} from "../../lib/search-params-writer.mjs";
+import {UsvStringType} from "kryo/usv-string";
+import type {TestItem} from "kryo-testing";
+import {registerErrMochaTests, registerMochaSuites} from "kryo-testing";
+
+import {SEARCH_PARAMS_READER} from "../../lib/search-params-reader.mts";
+import {SEARCH_PARAMS_WRITER} from "../../lib/search-params-writer.mts";
 
 describe("kryo-search-params | UsvString", function () {
   const type: UsvStringType = new UsvStringType({maxCodepoints: 500});
@@ -24,7 +27,11 @@ describe("kryo-search-params | UsvString", function () {
     {
       value: "ԂЯØǷ Łƕ੬ ɃɅϨϞ",
       io: [
-        {writer: SEARCH_PARAMS_WRITER, reader: SEARCH_PARAMS_READER, raw: "_=%D4%82%D0%AF%C3%98%C7%B7+%C5%81%C6%95%E0%A9%AC+%C9%83%C9%85%CF%A8%CF%9E"},
+        {
+          writer: SEARCH_PARAMS_WRITER,
+          reader: SEARCH_PARAMS_READER,
+          raw: "_=%D4%82%D0%AF%C3%98%C7%B7+%C5%81%C6%95%E0%A9%AC+%C9%83%C9%85%CF%A8%CF%9E"
+        },
         {reader: SEARCH_PARAMS_READER, raw: "_=ԂЯØǷ Łƕ੬ ɃɅϨϞ"},
       ],
     },

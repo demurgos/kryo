@@ -1,11 +1,15 @@
-import {CheckId, KryoContext, Reader, Result, writeError,Writer} from "kryo";
+import {describe} from "node:test";
+
+import type {CheckId, KryoContext, Reader, Result, Writer} from "kryo";
+import {writeError} from "kryo";
 import {CheckKind} from "kryo/checks/check-kind";
 import {CustomType} from "kryo/custom";
 import {readVisitor} from "kryo/readers/read-visitor";
-import {registerErrMochaTests, registerMochaSuites, TestItem} from "kryo-testing";
+import type {TestItem} from "kryo-testing";
+import {registerErrMochaTests, registerMochaSuites} from "kryo-testing";
 
-import {QsReader} from "../../lib/qs-reader.mjs";
-import {QsWriter} from "../../lib/qs-writer.mjs";
+import {QsReader} from "../../lib/qs-reader.mts";
+import {QsWriter} from "../../lib/qs-writer.mts";
 
 describe("kryo-qs | Custom", function () {
   const QS_READER: QsReader = new QsReader();

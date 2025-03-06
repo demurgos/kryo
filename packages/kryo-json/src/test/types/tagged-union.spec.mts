@@ -1,21 +1,34 @@
-import { CaseStyle } from "kryo";
-import { IntegerType } from "kryo/integer";
-import { LiteralType } from "kryo/literal";
-import { RecordType } from "kryo/record";
-import { TaggedUnionType } from "kryo/tagged-union";
-import { TsEnumType } from "kryo/ts-enum";
-import { registerErrMochaTests, registerMochaSuites, TestItem } from "kryo-testing";
+import {describe} from "node:test";
 
-import { JSON_READER } from "../../lib/json-reader.mjs";
-import { JSON_WRITER } from "../../lib/json-writer.mjs";
+import {CaseStyle} from "kryo";
+import {IntegerType} from "kryo/integer";
+import {LiteralType} from "kryo/literal";
+import {RecordType} from "kryo/record";
+import {TaggedUnionType} from "kryo/tagged-union";
+import {TsEnumType} from "kryo/ts-enum";
+import type {TestItem} from "kryo-testing";
+import {registerErrMochaTests, registerMochaSuites} from "kryo-testing";
+
+import {JSON_READER} from "../../lib/json-reader.mts";
+import {JSON_WRITER} from "../../lib/json-writer.mts";
+
+const Rectangle: unique symbol = Symbol("Rectangle");
+const Circle: unique symbol = Symbol("Circle");
+
+const ShapeType = {
+  Rectangle,
+  Circle,
+} as const;
+
+type ShapeType = typeof ShapeType[keyof typeof ShapeType];
+
+declare namespace ShapeType {
+  type Rectangle = typeof ShapeType.Rectangle;
+  type Circle = typeof ShapeType.Circle;
+}
 
 describe("kryo-json | TaggedUnion", function () {
   describe("Shape", function () {
-    enum ShapeType {
-      Rectangle,
-      Circle,
-    }
-
     const shapeTypeType: TsEnumType<ShapeType> = new TsEnumType({
       enum: ShapeType,
       changeCase: CaseStyle.KebabCase,

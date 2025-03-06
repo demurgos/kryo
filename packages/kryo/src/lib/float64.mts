@@ -1,20 +1,12 @@
-import {writeError} from "./_helpers/context.mjs";
-import { lazyProperties } from "./_helpers/lazy-properties.mjs";
-import {CheckKind} from "./checks/check-kind.mjs";
-import {
-  CheckId,   IoType,
-  KryoContext,
-  Lazy,
-  Ord,
-  Reader,
-  Result,
-  VersionedType,
-  Writer} from "./index.mjs";
-import { readVisitor } from "./readers/read-visitor.mjs";
+import {writeError} from "./_helpers/context.mts";
+import {lazyProperties} from "./_helpers/lazy-properties.mts";
+import {CheckKind} from "./checks/check-kind.mts";
+import type {CheckId, IoType, KryoContext, Lazy, Ord, Reader, Result, VersionedType, Writer} from "./index.mts";
+import {readVisitor} from "./readers/read-visitor.mts";
 
 export type Name = "Float64";
 export const name: Name = "Float64";
-export namespace json {
+export declare namespace json {
   export interface Type {
     readonly name: Name;
     readonly allowNaN: boolean;
@@ -98,14 +90,19 @@ export class Float64Type implements IoType<number>, VersionedType<number, [numbe
 
   test(cx: KryoContext | null, value: unknown): Result<number, CheckId> {
     if (typeof value !== "number") {
-      return writeError(cx,{check: CheckKind.BaseType, expected: ["Float64"]});
+      return writeError(cx, {check: CheckKind.BaseType, expected: ["Float64"]});
     }
     if (
       (!this.allowNaN && isNaN(value))
       || (!this.allowInfinity && Math.abs(value) === Infinity)
       || (!this.allowNegativeZero && Object.is(value, -0))
     ) {
-      return writeError(cx, {check: CheckKind.Float64, allowNaN: this.allowNaN, allowInfinity: this.allowInfinity, allowNegativeZero: this.allowNegativeZero});
+      return writeError(cx, {
+        check: CheckKind.Float64,
+        allowNaN: this.allowNaN,
+        allowInfinity: this.allowInfinity,
+        allowNegativeZero: this.allowNegativeZero
+      });
     }
     return {ok: true, value};
   }

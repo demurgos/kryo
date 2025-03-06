@@ -1,8 +1,13 @@
-import {CheckKind} from "../../lib/checks/check-kind.mjs";
-import {CustomType} from "../../lib/custom.mjs";
-import {CheckId, KryoContext, Reader, Result, writeError, Writer} from "../../lib/index.mjs";
-import {readVisitor} from "../../lib/readers/read-visitor.mjs";
-import {runTests, TypedValue} from "../helpers/test.mjs";
+import {describe} from "node:test";
+
+import type {BaseTypeCheck} from "../../lib/checks/base-type.mts";
+import {CheckKind} from "../../lib/checks/check-kind.mts";
+import {CustomType} from "../../lib/custom.mts";
+import type {CheckId, KryoContext, Reader, Result, Writer} from "../../lib/index.mts";
+import {writeError} from "../../lib/index.mts";
+import {readVisitor} from "../../lib/readers/read-visitor.mts";
+import type {TypedValue} from "../helpers/test.mts";
+import {runTests} from "../helpers/test.mts";
 
 describe("Custom", function () {
   class ComplexParseError extends Error {
@@ -62,7 +67,7 @@ describe("Custom", function () {
             return {ok: true, value};
           } catch (e) {
             if (e instanceof ComplexParseError) {
-              return writeError(cx, {check: CheckKind.BaseType, expected: ["Object"]});
+              return writeError(cx, {check: CheckKind.BaseType, expected: ["Object"]} satisfies BaseTypeCheck);
             } else {
               throw e;
             }

@@ -1,7 +1,10 @@
-import { IntegerType } from "../../lib/integer.mjs";
-import { MapType } from "../../lib/map.mjs";
-import { Ucs2StringType } from "../../lib/ucs2-string.mjs";
-import { runTests, TypedValue } from "../helpers/test.mjs";
+import {describe} from "node:test";
+
+import {IntegerType} from "../../lib/integer.mts";
+import {MapType} from "../../lib/map.mts";
+import {Ucs2StringType} from "../../lib/ucs2-string.mts";
+import type {TypedValue} from "../helpers/test.mts";
+import {runTests} from "../helpers/test.mts";
 
 describe("Map", function () {
   const mapType: MapType<number, number> = new MapType({

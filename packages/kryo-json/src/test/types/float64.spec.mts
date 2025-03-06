@@ -1,8 +1,11 @@
-import { Float64Type } from "kryo/float64";
-import { registerErrMochaTests, registerMochaSuites, TestItem } from "kryo-testing";
+import {describe} from "node:test";
 
-import { JSON_READER } from "../../lib/json-reader.mjs";
-import { JSON_WRITER } from "../../lib/json-writer.mjs";
+import {Float64Type} from "kryo/float64";
+import type {TestItem} from "kryo-testing";
+import {registerErrMochaTests, registerMochaSuites} from "kryo-testing";
+
+import {JSON_READER} from "../../lib/json-reader.mts";
+import {JSON_WRITER} from "../../lib/json-writer.mts";
 
 describe("kryo-json | Float64", function () {
   const $Float64: Float64Type = new Float64Type();

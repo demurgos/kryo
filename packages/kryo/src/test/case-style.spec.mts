@@ -1,7 +1,8 @@
-import { assert as chaiAssert } from "chai";
+import * as assert from "node:assert/strict";
+import {describe, test} from "node:test";
 
-import { detectCaseStyle, join, rename, split } from "../lib/_helpers/case-style.mjs";
-import { CaseStyle } from "../lib/index.mjs";
+import { detectCaseStyle, join, rename, split } from "../lib/_helpers/case-style.mts";
+import { CaseStyle } from "../lib/index.mts";
 
 describe("rename", function () {
   describe("detectCaseStyle", function () {
@@ -45,8 +46,8 @@ describe("rename", function () {
     ];
 
     for (const item of items) {
-      it(`detectCaseStyle for ${item.identifier} should return ${item.expected}`, function () {
-        chaiAssert.deepEqual(detectCaseStyle(item.identifier), item.expected);
+      test(`detectCaseStyle for ${item.identifier} should return ${item.expected}`, function () {
+        assert.deepStrictEqual(detectCaseStyle(item.identifier), item.expected);
       });
     }
   });
@@ -94,16 +95,16 @@ describe("rename", function () {
 
     describe("split", function () {
       for (const {caseStyle, identifier, parts} of items) {
-        it(`split for ${caseStyle}, ${identifier} should return ${JSON.stringify(parts)}`, function () {
-          chaiAssert.deepEqual(split(caseStyle, identifier), parts);
+        test(`split for ${caseStyle}, ${identifier} should return ${JSON.stringify(parts)}`, function () {
+          assert.deepStrictEqual(split(caseStyle, identifier), parts);
         });
       }
     });
 
     describe("join", function () {
       for (const {caseStyle, identifier, parts} of items) {
-        it(`join for ${caseStyle}, ${JSON.stringify(parts)} should return ${identifier}`, function () {
-          chaiAssert.deepEqual(join(caseStyle, parts), identifier);
+        test(`join for ${caseStyle}, ${JSON.stringify(parts)} should return ${identifier}`, function () {
+          assert.deepStrictEqual(join(caseStyle, parts), identifier);
         });
       }
     });
@@ -126,8 +127,8 @@ describe("rename", function () {
     ];
 
     for (const {identifier, to, expected} of items) {
-      it(`rename ${identifier} to ${to} should return ${expected}`, function () {
-        chaiAssert.deepEqual(rename(identifier, to), expected);
+      test(`rename ${identifier} to ${to} should return ${expected}`, function () {
+        assert.deepStrictEqual(rename(identifier, to), expected);
       });
     }
   });

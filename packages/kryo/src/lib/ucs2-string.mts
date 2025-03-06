@@ -1,20 +1,12 @@
-import {writeError} from "./_helpers/context.mjs";
-import {lazyProperties} from "./_helpers/lazy-properties.mjs";
-import {CheckKind} from "./checks/check-kind.mjs";
-import {
-  CheckId,
-  IoType,
-  KryoContext,
-  Lazy,
-  Reader,
-  Result,
-  VersionedType,
-  Writer} from "./index.mjs";
-import {readVisitor} from "./readers/read-visitor.mjs";
+import {writeError} from "./_helpers/context.mts";
+import {lazyProperties} from "./_helpers/lazy-properties.mts";
+import {CheckKind} from "./checks/check-kind.mts";
+import type {CheckId, IoType, KryoContext, Lazy, Reader, Result, VersionedType, Writer} from "./index.mts";
+import {readVisitor} from "./readers/read-visitor.mts";
 
 export type Name = "ucs2-string";
 export const name: Name = "ucs2-string";
-export namespace json {
+export declare namespace json {
   export type Input = string;
   export type Output = string;
 
@@ -183,19 +175,24 @@ export class Ucs2StringType implements IoType<string>, VersionedType<string, Dif
 
   test(cx: KryoContext | null, value: unknown): Result<string, CheckId> {
     if (typeof value !== "string") {
-      return writeError(cx,{check: CheckKind.BaseType, expected: ["Ucs2String"]});
+      return writeError(cx, {check: CheckKind.BaseType, expected: ["Ucs2String"]});
     }
     if (value.length > this.maxLength || value.length < (this.minLength ?? 0)) {
-      return writeError(cx,{check: CheckKind.Size, min: this.minLength ?? 0, max: this.maxLength, actual: value.length});
+      return writeError(cx, {
+        check: CheckKind.Size,
+        min: this.minLength ?? 0,
+        max: this.maxLength,
+        actual: value.length
+      });
     }
     if (this.trimmed && value.trim() !== value) {
-      return writeError(cx,{check: CheckKind.Trimmed});
+      return writeError(cx, {check: CheckKind.Trimmed});
     }
     if (this.lowerCase && value.toLowerCase() !== value) {
-      return writeError(cx,{check: CheckKind.LowerCase});
+      return writeError(cx, {check: CheckKind.LowerCase});
     }
     if ((this.pattern instanceof RegExp) && !this.pattern.test(value)) {
-      return writeError(cx,{check: CheckKind.StringPattern});
+      return writeError(cx, {check: CheckKind.StringPattern});
     }
     return {ok: true, value};
   }

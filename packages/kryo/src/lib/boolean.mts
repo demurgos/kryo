@@ -1,7 +1,7 @@
-import {writeError} from "./_helpers/context.mjs";
-import {CheckKind} from "./checks/check-kind.mjs";
-import {CheckId, IoType, KryoContext, Ord, Reader, Result,VersionedType, Writer} from "./index.mjs";
-import { readVisitor } from "./readers/read-visitor.mjs";
+import {writeError} from "./_helpers/context.mts";
+import {CheckKind} from "./checks/check-kind.mts";
+import type {CheckId, IoType, KryoContext, Ord, Reader, Result,VersionedType, Writer} from "./index.mts";
+import { readVisitor } from "./readers/read-visitor.mts";
 
 export type Name = "Boolean";
 export const name: Name = "Boolean";

@@ -1,7 +1,7 @@
-import { CaseStyle } from "../../../lib/index.mjs";
-import { RecordType } from "../../../lib/record.mjs";
-import { Ucs2StringType } from "../../../lib/ucs2-string.mjs";
-import { $FsNodeType, FsNodeType } from "./fs-node-type.mjs";
+import { CaseStyle } from "../../../lib/index.mts";
+import { RecordType } from "../../../lib/record.mts";
+import { Ucs2StringType } from "../../../lib/ucs2-string.mts";
+import { $FsNodeType, FsNodeType } from "./fs-node-type.mts";
 
 export interface FsNodeBase {
   tag: FsNodeType;

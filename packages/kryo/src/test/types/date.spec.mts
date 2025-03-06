@@ -1,5 +1,8 @@
-import { DateType } from "../../lib/date.mjs";
-import { runTests, TypedValue } from "../helpers/test.mjs";
+import {describe} from "node:test";
+
+import { DateType } from "../../lib/date.mts";
+import type { TypedValue } from "../helpers/test.mts";
+import { runTests } from "../helpers/test.mts";
 
 describe("DateType", function () {
   const type: DateType = new DateType();

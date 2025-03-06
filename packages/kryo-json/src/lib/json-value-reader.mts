@@ -2,12 +2,17 @@
  * @module kryo/readers/json-value
  */
 
-import {CheckId, KryoContext, Reader, ReadVisitor, Result,writeError} from "kryo";
-import {BaseTypeCheck} from "kryo/checks/base-type";
+import type {CheckId, KryoContext, Reader, ReadVisitor, Result} from "kryo";
+import {writeError} from "kryo";
+import type {BaseTypeCheck} from "kryo/checks/base-type";
 import {CheckKind} from "kryo/checks/check-kind";
-import {PropertyKeyCheck} from "kryo/checks/property-key";
+import type {PropertyKeyCheck} from "kryo/checks/property-key";
+import type {PropertyKeyFormatCheck} from "kryo/checks/property-key-format";
+import type {StringPatternCheck} from "kryo/checks/string-pattern";
 
-import {JsonValue} from "./json-value.mjs";
+import type {JsonValue} from "./json-value.mts";
+
+const ISO_DATE_TIME_FORMAT_RE = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:[+-]\d{2}:\d{2}|Z)/;
 
 export class JsonValueReader implements Reader<JsonValue> {
   trustInput?: boolean | undefined;
@@ -27,7 +32,10 @@ export class JsonValueReader implements Reader<JsonValue> {
           ? visitor.fromNull()
           : visitor.fromMap(new Map(Object.keys(raw).map(k => [k, Reflect.get(raw, k)] as [string, unknown])), this, this);
       default:
-        return writeError(cx, {check: CheckKind.BaseType, expected: ["Array", "Boolean", "Null", "Object", "UsvString", "Ucs2String"]} satisfies BaseTypeCheck);
+        return writeError(cx, {
+          check: CheckKind.BaseType,
+          expected: ["Array", "Boolean", "Null", "Object", "UsvString", "Ucs2String"]
+        } satisfies BaseTypeCheck);
     }
   }
 
@@ -40,9 +48,15 @@ export class JsonValueReader implements Reader<JsonValue> {
 
   readBytes<T>(cx: KryoContext, raw: JsonValue, visitor: ReadVisitor<T>): Result<T, CheckId> {
     if (typeof raw !== "string") {
-      return writeError(cx, {check: CheckKind.BaseType, expected: ["UsvString", "Ucs2String", "Bytes"]} satisfies BaseTypeCheck);
+      return writeError(cx, {
+        check: CheckKind.BaseType,
+        expected: ["UsvString", "Ucs2String", "Bytes"]
+      } satisfies BaseTypeCheck);
     } else if (!/^(?:[0-9a-f]{2})*$/.test(raw)) {
-      return writeError(cx, {check: CheckKind.BaseType, expected: ["UsvString", "Ucs2String", "Bytes"]} satisfies BaseTypeCheck);
+      return writeError(cx, {
+        check: CheckKind.BaseType,
+        expected: ["UsvString", "Ucs2String", "Bytes"]
+      } satisfies BaseTypeCheck);
     }
     const len: number = raw.length / 2;
     const result: Uint8Array = new Uint8Array(len);
@@ -54,23 +68,34 @@ export class JsonValueReader implements Reader<JsonValue> {
 
   readDate<T>(cx: KryoContext, raw: JsonValue, visitor: ReadVisitor<T>): Result<T, CheckId> {
     if (this.trustInput) {
-      return visitor.fromDate(new Date(raw as any));
+      return visitor.fromDate(new Date(raw as string | number));
     }
 
     if (typeof raw === "string") {
+      if (!ISO_DATE_TIME_FORMAT_RE.test(raw)) {
+        return writeError(cx, {
+          check: CheckKind.StringPattern,
+        } satisfies StringPatternCheck);
+      }
       return visitor.fromDate(new Date(raw));
     } else if (typeof raw === "number") {
       return visitor.fromDate(new Date(raw));
     }
-    return writeError(cx, {check: CheckKind.BaseType, expected: ["UsvString", "Ucs2String", "Float64", "Sint53"]} satisfies BaseTypeCheck);
+    return writeError(cx, {
+      check: CheckKind.BaseType,
+      expected: ["UsvString", "Ucs2String", "Float64", "Sint53"]
+    } satisfies BaseTypeCheck);
   }
 
   readRecord<T>(cx: KryoContext, raw: JsonValue, visitor: ReadVisitor<T>): Result<T, CheckId> {
-    if (typeof raw !== "object" || raw === null) {
+    if (typeof raw !== "object" || Array.isArray(raw) || raw === null) {
       return writeError(cx, {check: CheckKind.BaseType, expected: ["Record"]} satisfies BaseTypeCheck);
     }
-    const input: Map<string, any> = new Map();
-    for (const key in raw) {
+    const input: Map<string, JsonValue> = new Map();
+    for (const key of Reflect.ownKeys(raw)) {
+      if (typeof key !== "string") {
+        return writeError(cx, {check: CheckKind.PropertyKey} satisfies PropertyKeyCheck);
+      }
       input.set(key, Reflect.get(raw, key));
     }
     return visitor.fromMap(input, this, this);
@@ -102,14 +127,17 @@ export class JsonValueReader implements Reader<JsonValue> {
   }
 
   readMap<T>(cx: KryoContext, raw: JsonValue, visitor: ReadVisitor<T>): Result<T, CheckId> {
-    if (typeof raw !== "object" || raw === null) {
+    if (typeof raw !== "object" || Array.isArray(raw) || raw === null) {
       return writeError(cx, {check: CheckKind.BaseType, expected: ["Record"]} satisfies BaseTypeCheck);
     }
     const keyReader: JsonValueReader = new JsonValueReader();
 
-    const input: Map<string, unknown> = new Map();
-    for (const rawKey in raw) {
-      let key: any;
+    const input: Map<JsonValue, unknown> = new Map();
+    for (const rawKey of Reflect.ownKeys(raw)) {
+      if (typeof rawKey !== "string") {
+        return writeError(cx, {check: CheckKind.PropertyKey} satisfies PropertyKeyCheck);
+      }
+      let key: JsonValue;
       try {
         key = JSON.parse(rawKey);
         // key = (/* keyType */ undefined as any).read(jsonReader, key);
@@ -118,7 +146,7 @@ export class JsonValueReader implements Reader<JsonValue> {
           throw err;
         }
         // key is not valid JSON
-        return writeError(cx, {check: CheckKind.PropertyKey} satisfies PropertyKeyCheck);
+        return writeError(cx, {check: CheckKind.PropertyKeyFormat} satisfies PropertyKeyFormatCheck);
       }
       input.set(key, Reflect.get(raw, rawKey));
     }

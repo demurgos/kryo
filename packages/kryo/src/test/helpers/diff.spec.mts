@@ -1,9 +1,11 @@
-import { assert as chaiAssert } from "chai";
+import * as assert from "node:assert/strict";
+import {describe, test} from "node:test";
 
-import { DiffAction, diffSync } from "../../lib/_helpers/diff.mjs";
+import type {DiffAction} from "../../lib/_helpers/diff.mts";
+import {diffSync} from "../../lib/_helpers/diff.mts";
 
 describe("Diff", function () {
-  it("\"rosettacode\" -> \"raisethysword\"", function () {
+  test("\"rosettacode\" -> \"raisethysword\"", function () {
     const actual: DiffAction[] = diffSync("rosettacode", "raisethysword");
     const expected: DiffAction[] = [
       {type: "match", value: 1},   // r    r
@@ -17,6 +19,6 @@ describe("Diff", function () {
       {type: "match", value: 1},   // d    d
       {type: "source", value: 1},  // e
     ];
-    chaiAssert.deepEqual(actual, expected);
+    assert.deepStrictEqual(actual, expected);
   });
 });

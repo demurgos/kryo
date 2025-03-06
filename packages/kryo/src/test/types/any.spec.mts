@@ -1,5 +1,8 @@
-import { AnyType } from "../../lib/any.mjs";
-import { runTests, TypedValue } from "../helpers/test.mjs";
+import {describe} from "node:test";
+
+import {AnyType} from "../../lib/any.mts";
+import type {TypedValue} from "../helpers/test.mts";
+import {runTests} from "../helpers/test.mts";
 
 describe("Any", function () {
   const $Any: AnyType = new AnyType();

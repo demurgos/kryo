@@ -1,6 +1,9 @@
-import { IntegerType } from "../../lib/integer.mjs";
-import { SetType } from "../../lib/set.mjs";
-import { runTests, TypedValue } from "../helpers/test.mjs";
+import {describe} from "node:test";
+
+import { IntegerType } from "../../lib/integer.mts";
+import { SetType } from "../../lib/set.mts";
+import type { TypedValue } from "../helpers/test.mts";
+import { runTests } from "../helpers/test.mts";
 
 describe("SetType", function () {
   describe("General", function () {

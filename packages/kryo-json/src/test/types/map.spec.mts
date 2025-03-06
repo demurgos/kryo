@@ -1,10 +1,13 @@
-import { IntegerType } from "kryo/integer";
-import { MapType } from "kryo/map";
-import { Ucs2StringType } from "kryo/ucs2-string";
-import { registerErrMochaTests, registerMochaSuites, TestItem } from "kryo-testing";
+import {describe} from "node:test";
 
-import { JSON_READER } from "../../lib/json-reader.mjs";
-import { JSON_WRITER } from "../../lib/json-writer.mjs";
+import {IntegerType} from "kryo/integer";
+import {MapType} from "kryo/map";
+import {Ucs2StringType} from "kryo/ucs2-string";
+import type {TestItem} from "kryo-testing";
+import {registerErrMochaTests, registerMochaSuites} from "kryo-testing";
+
+import {JSON_READER} from "../../lib/json-reader.mts";
+import {JSON_WRITER} from "../../lib/json-writer.mts";
 
 describe("kryo-json | Map", function () {
   describe("IntMap", function () {
@@ -19,6 +22,12 @@ describe("kryo-json | Map", function () {
         value: new Map([[1, 100], [2, 200]]),
         io: [
           {writer: JSON_WRITER, reader: JSON_READER, raw: "{\"1\":100,\"2\":200}"},
+        ],
+      },
+      {
+        value: new Map(),
+        io: [
+          {writer: JSON_WRITER, reader: JSON_READER, raw: "{}"},
         ],
       },
     ];
@@ -50,7 +59,7 @@ describe("kryo-json | Map", function () {
         "\"-Infinity\"",
         "\"foo\"",
         "[]",
-        "{}",
+        "[[1,100],[2,200]]",
         "\"1970-01-01T00:00:00.000Z\"",
       ];
       registerErrMochaTests(JSON_READER, $IntMap, invalids);
@@ -70,6 +79,12 @@ describe("kryo-json | Map", function () {
         value: new Map([["a", 100], ["aa", 200]]),
         io: [
           {writer: JSON_WRITER, reader: JSON_READER, raw: "{\"a\":100,\"aa\":200}"},
+        ],
+      },
+      {
+        value: new Map(),
+        io: [
+          {writer: JSON_WRITER, reader: JSON_READER, raw: "{}"},
         ],
       },
     ];
@@ -101,7 +116,7 @@ describe("kryo-json | Map", function () {
         "\"-Infinity\"",
         "\"foo\"",
         "[]",
-        "{}",
+        "[[\"a\",100],[\"aa\",200]]",
         "\"1970-01-01T00:00:00.000Z\"",
       ];
       registerErrMochaTests(JSON_READER, $StringMap, invalids);

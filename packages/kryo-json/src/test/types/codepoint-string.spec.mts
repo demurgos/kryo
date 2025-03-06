@@ -1,8 +1,11 @@
-import { UsvStringType } from "kryo/usv-string";
-import { registerErrMochaTests, registerMochaSuites, TestItem } from "kryo-testing";
+import {describe} from "node:test";
 
-import { JSON_READER } from "../../lib/json-reader.mjs";
-import { JSON_WRITER } from "../../lib/json-writer.mjs";
+import {UsvStringType} from "kryo/usv-string";
+import type {TestItem} from "kryo-testing";
+import {registerErrMochaTests, registerMochaSuites} from "kryo-testing";
+
+import {JSON_READER} from "../../lib/json-reader.mts";
+import {JSON_WRITER} from "../../lib/json-writer.mts";
 
 describe("kryo-json | CodepointString", function () {
   const type: UsvStringType = new UsvStringType({maxCodepoints: 500});

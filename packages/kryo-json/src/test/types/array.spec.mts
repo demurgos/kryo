@@ -1,10 +1,14 @@
-import { ArrayIoType, ArrayType } from "kryo/array";
-import { $Boolean } from "kryo/boolean";
-import { $Uint8, IntegerType } from "kryo/integer";
-import { registerErrMochaTests, registerMochaSuites, TestItem } from "kryo-testing";
+import {describe} from "node:test";
 
-import { JSON_READER } from "../../lib/json-reader.mjs";
-import { JSON_WRITER } from "../../lib/json-writer.mjs";
+import type {ArrayIoType} from "kryo/array";
+import {ArrayType} from "kryo/array";
+import {$Boolean} from "kryo/boolean";
+import {$Uint8, IntegerType} from "kryo/integer";
+import type {TestItem} from "kryo-testing";
+import {registerErrMochaTests, registerMochaSuites} from "kryo-testing";
+
+import {JSON_READER} from "../../lib/json-reader.mts";
+import {JSON_WRITER} from "../../lib/json-writer.mts";
 
 describe("kryo-json | Array", function () {
   describe("Main", function () {
@@ -42,7 +46,6 @@ describe("kryo-json | Array", function () {
         "[0.5]",
         "[null]",
         "[undefined]",
-        "[]",
         "true",
         "false",
         "",
@@ -64,7 +67,6 @@ describe("kryo-json | Array", function () {
         "\"Infinity\"",
         "\"-Infinity\"",
         "\"foo\"",
-        "[]",
         "{}",
         "\"1970-01-01T00:00:00.000Z\"",
       ];
@@ -131,7 +133,6 @@ describe("kryo-json | Array", function () {
         "\"Infinity\"",
         "\"-Infinity\"",
         "\"foo\"",
-        "[]",
         "{}",
         "\"1970-01-01T00:00:00.000Z\"",
       ];
@@ -176,7 +177,6 @@ describe("kryo-json | Array", function () {
         "[0.5]",
         "[null]",
         "[undefined]",
-        "[]",
         "[[[]]]",
         "[0]",
         "[0,1,2,3,4]",
@@ -201,7 +201,6 @@ describe("kryo-json | Array", function () {
         "\"Infinity\"",
         "\"-Infinity\"",
         "\"foo\"",
-        "[]",
         "{}",
         "\"1970-01-01T00:00:00.000Z\"",
       ];

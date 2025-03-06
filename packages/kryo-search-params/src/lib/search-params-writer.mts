@@ -1,6 +1,6 @@
-import {Writer} from "kryo";
+import type {Writer} from "kryo";
 
-import {SearchParamsValueWriter} from "./search-params-value-writer.mjs";
+import {SearchParamsValueWriter} from "./search-params-value-writer.mts";
 
 export class SearchParamsWriter implements Writer<string> {
   readonly #valueWriter: SearchParamsValueWriter;
@@ -27,18 +27,11 @@ export class SearchParamsWriter implements Writer<string> {
     return new URLSearchParams({[this.#primitiveWrapper]: this.#valueWriter.writeDate(value)}).toString();
   }
 
-  writeRecord<K extends string>(
-    keys: Iterable<K>,
-    handler: (key: K, fieldWriter: Writer<any>) => any,
-  ): string {
-    return this.#valueWriter.writeRecord(keys, handler).toString();
-  }
-
   writeFloat64(value: number): string {
     return new URLSearchParams({[this.#primitiveWrapper]: this.#valueWriter.writeFloat64(value)}).toString();
   }
 
-  writeList(size: number, handler: (index: number, itemWriter: Writer<any>) => any): string {
+  writeList(size: number, handler: <IW>(index: number, itemWriter: Writer<IW>) => IW): string {
     return new URLSearchParams({[this.#primitiveWrapper]: this.#valueWriter.writeList(size, handler)}).toString();
   }
 
@@ -46,12 +39,16 @@ export class SearchParamsWriter implements Writer<string> {
     size: number,
     keyHandler: <KW>(index: number, mapKeyWriter: Writer<KW>) => KW,
     valueHandler: <VW>(index: number, mapValueWriter: Writer<VW>) => VW,
-  ): any {
+  ): string {
     return this.#valueWriter.writeMap(size, keyHandler, valueHandler).toString();
   }
 
   writeNull(): string {
     return new URLSearchParams({[this.#primitiveWrapper]: this.#valueWriter.writeNull()}).toString();
+  }
+
+  writeRecord<K extends string>(keys: Iterable<K>, handler: <FW>(key: K, fieldWriter: Writer<FW>) => FW): string {
+    return this.#valueWriter.writeRecord(keys, handler).toString();
   }
 
   writeString(value: string): string {

@@ -1,8 +1,11 @@
-import { BooleanType } from "kryo/boolean";
-import { registerErrMochaTests, registerMochaSuites, TestItem } from "kryo-testing";
+import {describe} from "node:test";
 
-import { QsReader } from "../../lib/qs-reader.mjs";
-import { QsWriter } from "../../lib/qs-writer.mjs";
+import {BooleanType} from "kryo/boolean";
+import type {TestItem} from "kryo-testing";
+import {registerErrMochaTests, registerMochaSuites} from "kryo-testing";
+
+import {QsReader} from "../../lib/qs-reader.mts";
+import {QsWriter} from "../../lib/qs-writer.mts";
 
 describe("kryo-qs | Boolean", function () {
   const QS_READER: QsReader = new QsReader();

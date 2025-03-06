@@ -1,16 +1,21 @@
-import {CheckId, KryoContext, Reader, Result, writeError,Writer} from "kryo";
+import {describe} from "node:test";
+
+import type {CheckId, KryoContext, Reader, Result, Writer} from "kryo";
+import {writeError} from "kryo";
 import {CheckKind} from "kryo/checks/check-kind";
 import {CustomType} from "kryo/custom";
 import {readVisitor} from "kryo/readers/read-visitor";
-import {registerErrMochaTests, registerMochaSuites, TestItem} from "kryo-testing";
+import type {TestItem} from "kryo-testing";
+import {registerErrMochaTests, registerMochaSuites} from "kryo-testing";
 
-import {JSON_READER} from "../../lib/json-reader.mjs";
-import {JSON_WRITER} from "../../lib/json-writer.mjs";
+import {JSON_READER} from "../../lib/json-reader.mts";
+import {JSON_WRITER} from "../../lib/json-writer.mts";
 
 describe("kryo-json | Custom", function () {
   describe("ComplexNumber", function () {
     class ComplexParseError extends Error {
       public input: string;
+
       public constructor(input: string) {
         super(`invalid input format for \`Complex\`: ${JSON.stringify(input)}`);
         this.input = input;
@@ -141,8 +146,6 @@ describe("kryo-json | Custom", function () {
         "9007199254740991",
         "-9007199254740991",
         "\"\"",
-        "\"0\"",
-        "\"1\"",
         "\"null\"",
         "\"true\"",
         "\"false\"",

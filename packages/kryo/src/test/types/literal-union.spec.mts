@@ -1,6 +1,9 @@
-import {LiteralUnionType} from "../../lib/literal-union.mjs";
-import {Ucs2StringType} from "../../lib/ucs2-string.mjs";
-import {runTests, TypedValue} from "../helpers/test.mjs";
+import {describe} from "node:test";
+
+import {LiteralUnionType} from "../../lib/literal-union.mts";
+import {Ucs2StringType} from "../../lib/ucs2-string.mts";
+import type {TypedValue} from "../helpers/test.mts";
+import {runTests} from "../helpers/test.mts";
 
 describe("LiteralUnionType", function () {
   const $Ucs2String: Ucs2StringType = new Ucs2StringType({maxLength: 10});

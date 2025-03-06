@@ -1,8 +1,11 @@
-import { IntegerType } from "kryo/integer";
-import { registerErrMochaTests, registerMochaSuites, TestItem } from "kryo-testing";
+import {describe} from "node:test";
 
-import { JSON_READER } from "../../lib/json-reader.mjs";
-import { JSON_WRITER } from "../../lib/json-writer.mjs";
+import {IntegerType} from "kryo/integer";
+import type {TestItem} from "kryo-testing";
+import {registerErrMochaTests, registerMochaSuites} from "kryo-testing";
+
+import {JSON_READER} from "../../lib/json-reader.mts";
+import {JSON_WRITER} from "../../lib/json-writer.mts";
 
 describe("kryo-json | Integer", function () {
   describe("Main", function () {
@@ -52,38 +55,40 @@ describe("kryo-json | Integer", function () {
         ],
       },
       {
-        name: "Number.MAX_SAFE_INTEGER",
-        value: Number.MAX_SAFE_INTEGER,
+        name: "Number.MIN_SAFE_INTEGER - 1", // -(2**53)
+        value: Number.MIN_SAFE_INTEGER - 1,
         io: [
-          {writer: JSON_WRITER, reader: JSON_READER, raw: "9007199254740991"},
+          {writer: JSON_WRITER, reader: JSON_READER, raw: "-9007199254740992"},
+          // todo: this case should be rejected instead of silently changing the value!
+          {reader: JSON_READER, raw: "-9007199254740993"}, // `JSON.parse` reads `-(2**53) - 1` as `-(2**53)`
         ],
       },
       {
-        name: "Number.MAX_SAFE_INTEGER - 1",
-        value: Number.MAX_SAFE_INTEGER - 1,
-        io: [
-          {writer: JSON_WRITER, reader: JSON_READER, raw: "9007199254740990"},
-        ],
-      },
-      {
-        name: "Number.MIN_SAFE_INTEGER",
+        name: "Number.MIN_SAFE_INTEGER", // -(2**53) + 1
         value: Number.MIN_SAFE_INTEGER,
         io: [
           {writer: JSON_WRITER, reader: JSON_READER, raw: "-9007199254740991"},
         ],
       },
       {
-        name: "Number.MIN_SAFE_INTEGER - 1",
-        value: Number.MIN_SAFE_INTEGER - 1,
-        io: [
-          {writer: JSON_WRITER, reader: JSON_READER, raw: "-9007199254740992"},
-        ],
-      },
-      {
-        name: "Number.MIN_SAFE_INTEGER + 1",
+        name: "Number.MIN_SAFE_INTEGER + 1", // -(2**53) + 2
         value: Number.MIN_SAFE_INTEGER + 1,
         io: [
           {writer: JSON_WRITER, reader: JSON_READER, raw: "-9007199254740990"},
+        ],
+      },
+      {
+        name: "Number.MAX_SAFE_INTEGER - 1", // +2**53 - 2
+        value: Number.MAX_SAFE_INTEGER - 1,
+        io: [
+          {writer: JSON_WRITER, reader: JSON_READER, raw: "9007199254740990"},
+        ],
+      },
+      {
+        name: "Number.MAX_SAFE_INTEGER", // +2**53 - 1
+        value: Number.MAX_SAFE_INTEGER,
+        io: [
+          {writer: JSON_WRITER, reader: JSON_READER, raw: "9007199254740991"},
         ],
       },
     ];
@@ -99,8 +104,10 @@ describe("kryo-json | Integer", function () {
         "0.5",
         "0.0001",
         "2.220446049250313e-16",
-        "9007199254740992", // Number.MAX_SAFE_INTEGER + 1
-        "-9007199254740993", // Number.MIN_SAFE_INTEGER - 2
+        "-9007199254740994", // Number.MIN_SAFE_INTEGER - 3, -(2**53) - 2
+        // `-(2**53) - 1` is not tested here since `JSON.parse` reads it as `-(2**53)`
+        // "-9007199254740993",
+        "9007199254740992", // Number.MAX_SAFE_INTEGER + 1, +2**53
         "\"\"",
         "\"0\"",
         "\"null\"",

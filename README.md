@@ -65,7 +65,7 @@ If you like fancy words, it defines a [setoid](https://en.wikipedia.org/wiki/Set
 
 There are more advanced types with additional methods and operators (for example to support
 serialization) but any object implementing [the `Type` interface](https://demurgos.github.io/kryo/interfaces/_types_.type.html)
-is compatible with Kryo. 
+is compatible with Kryo.
 
 For example, the builtin type `$Uint8` represents an unsigned integer in the inclusive range
 `[0, 255]`.
@@ -335,10 +335,10 @@ const $Date: DateType = new DateType();
 
 // Both $identifier and $date are versioned type: they implement the methods of all the levels.
 
-// Use the methods provided by simple type 
+// Use the methods provided by simple type
 $Identifier.test("abc"); // true
 $Identifier.test("$#!+"); // false
-$Date.testError(NaN); 
+$Date.testError(NaN);
 const now: Date = new Date();
 const nowCopy = $Date.clone(now);
 console.log(now === nowCopy); // false: `clone` performs a deep copy on objects
@@ -492,6 +492,12 @@ const $oddLevel = new DocumentType(() => ({
 // When testing `v4`, `$oddLevel` will also be used so it will be initialized at this point.
 $evenLevel.test(v4); // Success: returns `true`
 ```
+
+## Issues to watch
+
+- [Allow specifying interface implements clauses for the static side of classes](https://github.com/microsoft/TypeScript/issues/33892):
+  This would allow to better support custom types where the `Type` methods are defined as static methods on the
+  corresponding class.
 
 ## License
 

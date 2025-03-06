@@ -1,9 +1,12 @@
-import { LiteralUnionType } from "kryo/literal-union";
-import { Ucs2StringType } from "kryo/ucs2-string";
-import { registerErrMochaTests, registerMochaSuites, TestItem } from "kryo-testing";
+import {describe} from "node:test";
 
-import {SEARCH_PARAMS_READER} from "../../lib/search-params-reader.mjs";
-import {SEARCH_PARAMS_WRITER} from "../../lib/search-params-writer.mjs";
+import {LiteralUnionType} from "kryo/literal-union";
+import {Ucs2StringType} from "kryo/ucs2-string";
+import type {TestItem} from "kryo-testing";
+import {registerErrMochaTests, registerMochaSuites} from "kryo-testing";
+
+import {SEARCH_PARAMS_READER} from "../../lib/search-params-reader.mts";
+import {SEARCH_PARAMS_WRITER} from "../../lib/search-params-writer.mts";
 
 describe("kryo-search-params | LiteralUnion", function () {
   describe("\"foo\" | \"bar\" | \"baz\"", function () {

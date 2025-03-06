@@ -1,10 +1,15 @@
-import { $Date } from "../../lib/date.mjs";
-import { GenericIoType, GenericType } from "../../lib/generic.mjs";
-import { IoType } from "../../lib/index.mjs";
-import { $Uint32 } from "../../lib/integer.mjs";
-import { RecordIoType, RecordType } from "../../lib/record.mjs";
-import { $Ucs2String } from "../../lib/ucs2-string.mjs";
-import { runTests, TypedValue } from "../helpers/test.mjs";
+import {describe} from "node:test";
+
+import { $Date } from "../../lib/date.mts";
+import type { GenericIoType } from "../../lib/generic.mts";
+import { GenericType } from "../../lib/generic.mts";
+import type { IoType } from "../../lib/index.mts";
+import { $Uint32 } from "../../lib/integer.mts";
+import type { RecordIoType } from "../../lib/record.mts";
+import { RecordType } from "../../lib/record.mts";
+import { $Ucs2String } from "../../lib/ucs2-string.mts";
+import type { TypedValue } from "../helpers/test.mts";
+import { runTests } from "../helpers/test.mts";
 
 describe("kryo | Generic", function () {
   describe("TimedValue<T>", function () {
@@ -13,13 +18,15 @@ describe("kryo | Generic", function () {
       value: T;
     }
 
-    const $TimedValue: GenericIoType<<T>(t: T) => TimedValue<T>> = new GenericType({
-      apply: <T,>(t: IoType<T>): RecordIoType<TimedValue<T>> => new RecordType({
-        properties: {
-          time: {type: $Date},
-          value: {type: t},
-        },
-      }),
+    const $TimedValue: GenericIoType<(<T>(t: T) => TimedValue<T>)> = new GenericType({
+      apply<T>(t: IoType<T>): RecordIoType<TimedValue<T>> {
+        return new RecordType({
+          properties: {
+            time: {type: $Date},
+            value: {type: t},
+          },
+        });
+      }
     });
 
     describe("TimedValue<string>", function () {

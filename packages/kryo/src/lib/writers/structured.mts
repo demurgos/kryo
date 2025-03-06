@@ -2,43 +2,34 @@
  * @module kryo/writers/structured
  */
 
-import { Writer } from "../index.mjs";
+import type {AnyKey, Writer} from "../index.mts";
+
+export interface StructuredRecord<T> {
+  [key: AnyKey]: StructuredValue<T>;
+}
+
+export type StructuredValue<T> = T | StructuredValue<T>[] | StructuredRecord<T>;
 
 /**
  * Base class for `json`, `qs` and `bson` writers.
  */
-export abstract class StructuredWriter implements Writer<any> {
-  abstract writeBoolean(value: boolean): any;
-
-  abstract writeDate(value: Date): any;
-
-  abstract writeFloat64(value: number): any;
-
-  abstract writeString(value: string): any;
-
-  abstract writeBytes(value: Uint8Array): any;
-
-  abstract writeNull(): any;
-
-  writeAny(value: any): any {
+export abstract class StructuredWriter<W> implements Writer<StructuredValue<W>> {
+  writeAny(value: unknown): W {
     return JSON.parse(JSON.stringify(value));
   }
 
-  writeList(size: number, handler: (index: number, itemWriter: Writer<any>) => any): any[] {
-    const result: any[] = [];
-    for (let index: number = 0; index < size; index++) {
-      result.push(handler(index, this));
-    }
-    return result;
-  }
+  abstract writeBoolean(value: boolean): W;
 
-  writeRecord<K extends string>(
-    keys: Iterable<K>,
-    handler: (key: K, fieldWriter: Writer<any>) => any,
-  ): Record<K, any> {
-    const result: any = {};
-    for (const key of keys) {
-      result[key] = handler(key, this);
+  abstract writeBytes(value: Uint8Array): W;
+
+  abstract writeDate(value: Date): W;
+
+  abstract writeFloat64(value: number): W;
+
+  writeList(size: number, handler: <IW>(index: number, itemWriter: Writer<IW>) => IW): StructuredValue<W>[] {
+    const result: StructuredValue<W>[] = [];
+    for (let index: number = 0; index < size; index++) {
+      result.push(handler<StructuredValue<W>>(index, this));
     }
     return result;
   }
@@ -47,5 +38,17 @@ export abstract class StructuredWriter implements Writer<any> {
     size: number,
     keyHandler: <KW>(index: number, mapKeyWriter: Writer<KW>) => KW,
     valueHandler: <VW>(index: number, mapValueWriter: Writer<VW>) => VW,
-  ): any;
+  ): Record<StructuredValue<W> & AnyKey, StructuredValue<W>>;
+
+  abstract writeNull(): W;
+
+  writeRecord<K extends string>(keys: Iterable<K>, handler: <FW>(key: K, fieldWriter: Writer<FW>) => FW): Record<K, StructuredValue<W>> {
+    const result: Record<K, StructuredValue<W>> = Object.create(null);
+    for (const key of keys) {
+      result[key] = handler<StructuredValue<W>>(key, this);
+    }
+    return result;
+  }
+
+  abstract writeString(value: string): W;
 }

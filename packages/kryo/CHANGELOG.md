@@ -1,3 +1,15 @@
+# Next
+
+- **[Breaking change]** Use `Symbol` values instead of integers for opaque enum variant values.
+- **[Breaking change]** `StructuredWriter` now uses precise return type instead of `any`.
+- **[Feature]** Return `MissingKeyCheck` when a record is missing a required key.
+- **[Fix]** Check max set size on read.
+- **[Fix]** Remove uses of `any`, replace it with better type inference (especially for `LiteralType` and `UnionType`).
+- **[Fix]** `RecordType.squash` now properly supports squashing diffs when a property is unset then set again, or when a property is updated twice.
+- **[Internal]** Fix multiple invalid test cases.
+- **[Internal]** Refactor code to be compatible with `erasableSyntaxOnly` TS option.
+- **[Internal]** Switch to built-in Node testing framework.
+
 # 0.15.3 (2024-11-24)
 
 - **[Fix]** Return `ResultErr` on invalid `Map` value.
@@ -251,4 +263,5 @@
 - **[Internal]** Create CHANGELOG.md
 
 [npm-express]:https://www.npmjs.com/package/expess
+
 [npm-qs]:https://www.npmjs.com/package/qs

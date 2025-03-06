@@ -1,7 +1,10 @@
-import { runTests, TypedValue } from "../../helpers/test.mjs";
-import { $File } from "./file.mjs";
-import { $FsNode } from "./fs-node.mjs";
-import { FsNodeType } from "./fs-node-type.mjs";
+import {describe} from "node:test";
+
+import type {TypedValue} from "../../helpers/test.mts";
+import {runTests} from "../../helpers/test.mts";
+import {$File} from "./file.mts";
+import {$FsNode} from "./fs-node.mts";
+import {FsNodeType} from "./fs-node-type.mts";
 
 /**
  * Modelizes a simple file system with two kinds of nodes: files and directories.

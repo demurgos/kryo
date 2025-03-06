@@ -1,5 +1,5 @@
-import {Check} from "../checks/index.mjs";
-import {AnyKey, CheckId, KryoContext, ResultErr} from "../index.mjs";
+import type {Check} from "../checks/index.mts";
+import type {AnyKey, CheckId, KryoContext, ResultErr} from "../index.mts";
 
 export function enter<R>(cx: KryoContext | null, key: AnyKey, cb: () => R): R {
   return cx !== null ? cx.enter(key, cb) : cb();

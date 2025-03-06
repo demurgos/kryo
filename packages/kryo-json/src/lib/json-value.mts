@@ -6,17 +6,11 @@
  */
 
 /**
- * Represents an atomic JSON value or a JSON object.
+ * Represents a primitive JSON value.
  */
-export type JsonBaseValue = boolean | string | null | number | {[P in keyof any]: JsonValue};
-
-/**
- * Represents an array of JSON values.
- */
-export interface JsonArrayValue extends Array<JsonValue> {
-}
+export type JsonPrimitive = boolean | string | null | number;
 
 /**
  * Represents a JSON value: a value returned by `JSON.parse(str)`.
  */
-export type JsonValue = JsonArrayValue | JsonBaseValue;
+export type JsonValue = JsonPrimitive | { [P: string]: JsonValue } | JsonValue[];

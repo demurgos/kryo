@@ -1,6 +1,9 @@
-import { ArrayType } from "../../lib/array.mjs";
-import { $Uint8, IntegerType } from "../../lib/integer.mjs";
-import { runTests, TypedValue } from "../helpers/test.mjs";
+import {describe} from "node:test";
+
+import { ArrayType } from "../../lib/array.mts";
+import { $Uint8, IntegerType } from "../../lib/integer.mts";
+import type { TypedValue } from "../helpers/test.mts";
+import { runTests } from "../helpers/test.mts";
 
 describe("ArrayType", function () {
   describe("General", function () {
@@ -42,6 +45,7 @@ describe("ArrayType", function () {
       },
       {
         name: "new Array()",
+        // eslint-disable-next-line @typescript-eslint/no-array-constructor
         value: new Array(),
         valid: true,
       },

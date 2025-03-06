@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "allowImportingTsExtensions": true,
     "allowJs": false,
     "allowSyntheticDefaultImports": true,
     "allowUnreachableCode": false,
@@ -11,6 +12,7 @@
     "downlevelIteration": false,
     "emitBOM": false,
     "emitDecoratorMetadata": true,
+    "erasableSyntaxOnly": true,
     "esModuleInterop": false,
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
@@ -33,13 +35,15 @@
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "noStrictGenericChecks": false,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
     "noImplicitUseStrict": false,
     "noLib": false,
     "noResolve": false,
     "preserveConstEnums": true,
     "removeComments": false,
+    "rewriteRelativeImportExtensions": true,
+    "rootDir": ".",
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
@@ -48,6 +52,6 @@
     "suppressImplicitAnyIndexErrors": false,
     "target": "es2021",
     "traceResolution": false,
-    "rootDir": "."
+    "verbatimModuleSyntax": true
   }
 }

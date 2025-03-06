@@ -1,5 +1,6 @@
-import {CheckId, KryoContext, Reader, ReadVisitor, Result, writeError} from "kryo";
-import {BaseTypeCheck} from "kryo/checks/base-type";
+import type {CheckId, KryoContext, Reader, ReadVisitor, Result} from "kryo";
+import {writeError} from "kryo";
+import type {BaseTypeCheck} from "kryo/checks/base-type";
 import {CheckKind} from "kryo/checks/check-kind";
 import {JSON_READER, JsonReader} from "kryo-json/json-reader";
 
@@ -23,9 +24,15 @@ export class SearchParamsValueReader implements Reader<string> {
 
   readBytes<T>(cx: KryoContext, input: string, visitor: ReadVisitor<T>): Result<T, CheckId> {
     if (typeof input !== "string") {
-      return writeError(cx, {check: CheckKind.BaseType, expected: ["Ucs2String", "UsvString", "Bytes"]} satisfies BaseTypeCheck);
+      return writeError(cx, {
+        check: CheckKind.BaseType,
+        expected: ["Ucs2String", "UsvString", "Bytes"]
+      } satisfies BaseTypeCheck);
     } else if (!/^(?:[0-9a-f]{2})*$/.test(input)) {
-      return writeError(cx, {check: CheckKind.BaseType, expected: ["Ucs2String", "UsvString", "Bytes"]} satisfies BaseTypeCheck);
+      return writeError(cx, {
+        check: CheckKind.BaseType,
+        expected: ["Ucs2String", "UsvString", "Bytes"]
+      } satisfies BaseTypeCheck);
     }
     const len: number = input.length / 2;
     const result: Uint8Array = new Uint8Array(len);
@@ -44,7 +51,10 @@ export class SearchParamsValueReader implements Reader<string> {
       return visitor.fromDate(new Date(input));
     }
 
-    return writeError(cx, {check: CheckKind.BaseType, expected: ["Ucs2String", "Float64", "Sint53", "UsvString"]} satisfies BaseTypeCheck);
+    return writeError(cx, {
+      check: CheckKind.BaseType,
+      expected: ["Ucs2String", "Float64", "Sint53", "UsvString"]
+    } satisfies BaseTypeCheck);
   }
 
   readRecord<T>(cx: KryoContext, input: string, visitor: ReadVisitor<T>): Result<T, CheckId> {

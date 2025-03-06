@@ -15,7 +15,7 @@
     "build": "tsc --build src/lib/tsconfig.json",
     "prepack": "yarn run build",
     "test:build": "tsc --build src/test/tsconfig.json",
-    "test": "yarn run test:build && mocha \"test/**/*.spec.mjs\""
+    "test": "yarn run test:build && node --test \"src/test/**/*.spec.mts\""
   },
   "engines": {
     "node": ">=18.13.0"
@@ -25,13 +25,9 @@
     "kryo-json": "workspace:^"
   },
   "devDependencies": {
-    "@types/chai": "^4.3.11",
-    "@types/mocha": "^10.0.6",
-    "@types/node": "^20.11.5",
-    "chai": "^5.0.0",
+    "@types/node": "^22.13.9",
     "kryo-testing": "workspace:^",
-    "mocha": "^10.2.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.8.2"
   },
   "type": "module",
   "exports": {

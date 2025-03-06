@@ -15,19 +15,18 @@
     "build": "tsc --build src/lib/tsconfig.json",
     "prepack": "yarn run build",
     "test:build": "tsc --build src/test/tsconfig.json",
-    "test": "yarn run test:build && mocha \"test/**/*.spec.mjs\""
+    "test": "yarn run test:build && node --test \"src/test/**/*.spec.mts\""
   },
   "engines": {
     "node": ">=18.13.0"
   },
+  "dependencies": {
+    "tslib": "^2.8.1"
+  },
   "devDependencies": {
-    "@types/chai": "^4.3.1",
-    "@types/mocha": "^9.1.1",
-    "@types/node": "^17.0.31",
-    "chai": "^4.3.6",
-    "eslint": "^8.56.0",
-    "mocha": "^10.0.0",
-    "typescript": "^5.3.3"
+    "@types/node": "^22.13.9",
+    "eslint": "^9.20.0",
+    "typescript": "^5.8.2"
   },
   "type": "module",
   "exports": {

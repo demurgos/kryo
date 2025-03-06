@@ -1,8 +1,11 @@
-import { BytesType } from "kryo/bytes";
-import { registerErrMochaTests, registerMochaSuites, TestItem } from "kryo-testing";
+import {describe} from "node:test";
 
-import { QsReader } from "../../lib/qs-reader.mjs";
-import { QsWriter } from "../../lib/qs-writer.mjs";
+import { BytesType } from "kryo/bytes";
+import type {TestItem} from "kryo-testing";
+import {registerErrMochaTests, registerMochaSuites} from "kryo-testing";
+
+import { QsReader } from "../../lib/qs-reader.mts";
+import { QsWriter } from "../../lib/qs-writer.mts";
 
 describe("kryo-qs | Bytes", function () {
   const QS_READER: QsReader = new QsReader();

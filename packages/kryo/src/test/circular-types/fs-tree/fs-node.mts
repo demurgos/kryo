@@ -1,6 +1,8 @@
-import { TaggedUnionType } from "../../../lib/tagged-union.mjs";
-import { $Directory, Directory } from "./directory.mjs";
-import { $File, File } from "./file.mjs";
+import { TaggedUnionType } from "../../../lib/tagged-union.mts";
+import type { Directory } from "./directory.mts";
+import { $Directory } from "./directory.mts";
+import type { File } from "./file.mts";
+import { $File } from "./file.mts";
 
 export type FsNode =
   Directory

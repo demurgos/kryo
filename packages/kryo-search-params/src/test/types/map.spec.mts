@@ -1,10 +1,13 @@
+import {describe} from "node:test";
+
 import { IntegerType } from "kryo/integer";
 import { MapType } from "kryo/map";
 import { Ucs2StringType } from "kryo/ucs2-string";
-import { registerErrMochaTests, registerMochaSuites, TestItem } from "kryo-testing";
+import type {TestItem} from "kryo-testing";
+import {registerErrMochaTests, registerMochaSuites} from "kryo-testing";
 
-import {SEARCH_PARAMS_READER} from "../../lib/search-params-reader.mjs";
-import {SEARCH_PARAMS_WRITER} from "../../lib/search-params-writer.mjs";
+import {SEARCH_PARAMS_READER} from "../../lib/search-params-reader.mts";
+import {SEARCH_PARAMS_WRITER} from "../../lib/search-params-writer.mts";
 
 describe("kryo-search-params | Map", function () {
   describe("IntMap", function () {
@@ -15,6 +18,12 @@ describe("kryo-search-params | Map", function () {
     });
 
     const items: TestItem[] = [
+      {
+        value: new Map(),
+        io: [
+          {writer: SEARCH_PARAMS_WRITER, reader: SEARCH_PARAMS_READER, raw: ""},
+        ],
+      },
       {
         value: new Map([[1, 100], [2, 200]]),
         io: [
@@ -30,7 +39,6 @@ describe("kryo-search-params | Map", function () {
         "null",
         "true",
         "false",
-        "",
         "0",
         "1",
         "0.5",
@@ -67,6 +75,12 @@ describe("kryo-search-params | Map", function () {
 
     const items: TestItem[] = [
       {
+        value: new Map(),
+        io: [
+          {writer: SEARCH_PARAMS_WRITER, reader: SEARCH_PARAMS_READER, raw: ""},
+        ],
+      },
+      {
         value: new Map([["a", 100], ["aa", 200]]),
         io: [
           {writer: SEARCH_PARAMS_WRITER, reader: SEARCH_PARAMS_READER, raw: "a=100&aa=200"},
@@ -81,7 +95,6 @@ describe("kryo-search-params | Map", function () {
         "null",
         "true",
         "false",
-        "",
         "0",
         "1",
         "0.5",

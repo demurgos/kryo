@@ -1,18 +1,22 @@
-import {assert as chaiAssert} from "chai";
+import * as assert from "node:assert/strict";
+import {describe, test} from "node:test";
+
 import {readOrThrow} from "kryo";
 import {$Any, AnyType} from "kryo/any";
-import {RecordIoType, RecordType} from "kryo/record";
-import {SEARCH_PARAMS_READER} from "../../lib/search-params-reader.mjs";
-import {SEARCH_PARAMS_VALUE_READER} from "../../lib/search-params-value-reader.mjs";
+import type {RecordIoType} from "kryo/record";
+import {RecordType} from "kryo/record";
+
+import {SEARCH_PARAMS_READER} from "../../lib/search-params-reader.mts";
+import {SEARCH_PARAMS_VALUE_READER} from "../../lib/search-params-value-reader.mts";
 
 describe("kryo-search-params | Any", function () {
   describe("with JsonReader", function () {
-    it("should read the expected top-level values", function () {
+    test("should read the expected top-level values", function () {
       const $Any: AnyType = new AnyType();
-      chaiAssert.deepEqual(readOrThrow($Any, SEARCH_PARAMS_READER, "0"), "0");
-      chaiAssert.deepEqual(readOrThrow($Any, SEARCH_PARAMS_READER, "foo=bar"), "foo=bar");
+      assert.deepStrictEqual(readOrThrow($Any, SEARCH_PARAMS_READER, "0"), "0");
+      assert.deepStrictEqual(readOrThrow($Any, SEARCH_PARAMS_READER, "foo=bar"), "foo=bar");
     });
-    it("should read the expected nested values", function () {
+    test("should read the expected nested values", function () {
       const $Any: AnyType = new AnyType();
 
       interface FooBarQuz {
@@ -23,14 +27,17 @@ describe("kryo-search-params | Any", function () {
         properties: {foo: {type: $Any}},
       });
 
-      chaiAssert.deepEqual(readOrThrow($FooBarQuz, SEARCH_PARAMS_READER, "foo=\{\"bar\":\"quz\"}"), {foo: "{\"bar\":\"quz\"}"});
+      assert.deepStrictEqual(readOrThrow($FooBarQuz, SEARCH_PARAMS_READER, "foo={\"bar\":\"quz\"}"), {
+        __proto__: null,
+        foo: "{\"bar\":\"quz\"}"
+      });
     });
   });
 
   describe("with JsonValueReader", function () {
-    it("should read the expected values", function () {
-      chaiAssert.deepEqual(readOrThrow($Any, SEARCH_PARAMS_VALUE_READER, "0"), "0");
-      chaiAssert.deepEqual(readOrThrow($Any, SEARCH_PARAMS_VALUE_READER, "{\"foo\": \"bar\"}"), "{\"foo\": \"bar\"}");
+    test("should read the expected values", function () {
+      assert.deepStrictEqual(readOrThrow($Any, SEARCH_PARAMS_VALUE_READER, "0"), "0");
+      assert.deepStrictEqual(readOrThrow($Any, SEARCH_PARAMS_VALUE_READER, "{\"foo\": \"bar\"}"), "{\"foo\": \"bar\"}");
     });
   });
 });

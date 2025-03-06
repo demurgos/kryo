@@ -1,8 +1,11 @@
-import { Ucs2StringType } from "kryo/ucs2-string";
-import { registerErrMochaTests, registerMochaSuites, TestItem } from "kryo-testing";
+import {describe} from "node:test";
 
-import { JSON_READER } from "../../lib/json-reader.mjs";
-import { JSON_WRITER } from "../../lib/json-writer.mjs";
+import {Ucs2StringType} from "kryo/ucs2-string";
+import type {TestItem} from "kryo-testing";
+import {registerErrMochaTests, registerMochaSuites} from "kryo-testing";
+
+import {JSON_READER} from "../../lib/json-reader.mts";
+import {JSON_WRITER} from "../../lib/json-writer.mts";
 
 describe("kryo-json | Ucs2StringType", function () {
   describe("Ucs2StringType({maxLength: 15})", function () {
@@ -27,6 +30,66 @@ describe("kryo-json | Ucs2StringType", function () {
           {writer: JSON_WRITER, reader: JSON_READER, raw: "\"ԂЯØǷ Łƕ੬ ɃɅϨϞ\""},
         ],
       },
+      {
+        value: "0",
+        io: [
+          {writer: JSON_WRITER, reader: JSON_READER, raw: "\"0\""},
+        ],
+      },
+      {
+        value: "1",
+        io: [
+          {writer: JSON_WRITER, reader: JSON_READER, raw: "\"1\""},
+        ],
+      },
+      {
+        value: "null",
+        io: [
+          {writer: JSON_WRITER, reader: JSON_READER, raw: "\"null\""},
+        ],
+      },
+      {
+        value: "true",
+        io: [
+          {writer: JSON_WRITER, reader: JSON_READER, raw: "\"true\""},
+        ],
+      },
+      {
+        value: "false",
+        io: [
+          {writer: JSON_WRITER, reader: JSON_READER, raw: "\"false\""},
+        ],
+      },
+      {
+        value: "undefined",
+        io: [
+          {writer: JSON_WRITER, reader: JSON_READER, raw: "\"undefined\""},
+        ],
+      },
+      {
+        value: "NaN",
+        io: [
+          {writer: JSON_WRITER, reader: JSON_READER, raw: "\"NaN\""},
+        ],
+      },
+      {
+        value: "Infinity",
+        io: [
+          {writer: JSON_WRITER, reader: JSON_READER, raw: "\"Infinity\""},
+        ],
+      },
+      {
+        value: "-Infinity",
+        io: [
+          {writer: JSON_WRITER, reader: JSON_READER, raw: "\"-Infinity\""},
+        ],
+      },
+      {
+        value: "0123456789abcde",
+        io: [
+          {writer: JSON_WRITER, reader: JSON_READER, raw: "\"0123456789abcde\""},
+        ],
+      },
     ];
 
     registerMochaSuites($String50, items);
@@ -44,17 +107,7 @@ describe("kryo-json | Ucs2StringType", function () {
         "2.220446049250313e-16",
         "9007199254740991",
         "-9007199254740991",
-        "\"\"",
-        "\"0\"",
-        "\"1\"",
-        "\"null\"",
-        "\"true\"",
-        "\"false\"",
-        "\"undefined\"",
-        "\"NaN\"",
-        "\"Infinity\"",
-        "\"-Infinity\"",
-        "\"foo\"",
+        "\"0123456789abcdef\"",
         "[]",
         "{}",
         "\"1970-01-01T00:00:00.000Z\"",

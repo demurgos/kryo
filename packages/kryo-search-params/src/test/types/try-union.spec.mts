@@ -1,11 +1,14 @@
+import {describe} from "node:test";
+
 import { CaseStyle } from "kryo";
 import { IntegerType } from "kryo/integer";
 import { RecordType } from "kryo/record";
 import { TryUnionType } from "kryo/try-union";
-import { registerErrMochaTests, registerMochaSuites, TestItem } from "kryo-testing";
+import type {TestItem} from "kryo-testing";
+import {registerErrMochaTests, registerMochaSuites} from "kryo-testing";
 
-import {SEARCH_PARAMS_READER} from "../../lib/search-params-reader.mjs";
-import {SEARCH_PARAMS_WRITER} from "../../lib/search-params-writer.mjs";
+import {SEARCH_PARAMS_READER} from "../../lib/search-params-reader.mts";
+import {SEARCH_PARAMS_WRITER} from "../../lib/search-params-writer.mts";
 
 describe("kryo-search-params | TryUnion", function () {
   describe("Shape", function () {

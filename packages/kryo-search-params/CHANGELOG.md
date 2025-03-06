@@ -1,3 +1,10 @@
+# Next
+
+- **[Breaking change]** Update to `kryo@0.16`.
+- **[Internal]** Fix multiple invalid test cases.
+- **[Internal]** Refactor code to be compatible with `erasableSyntaxOnly` TS option.
+- **[Internal]** Switch to built-in Node testing framework.
+
 # 0.15.1 (2024-01-24)
 
 - **[Feature]** First release.

@@ -1,21 +1,34 @@
-import { CaseStyle } from "kryo";
-import { IntegerType } from "kryo/integer";
-import { LiteralType } from "kryo/literal";
-import { RecordType } from "kryo/record";
-import { TaggedUnionType } from "kryo/tagged-union";
-import { TsEnumType } from "kryo/ts-enum";
-import { registerErrMochaTests, registerMochaSuites, TestItem } from "kryo-testing";
+import {describe} from "node:test";
 
-import {SEARCH_PARAMS_READER} from "../../lib/search-params-reader.mjs";
-import {SEARCH_PARAMS_WRITER} from "../../lib/search-params-writer.mjs";
+import {CaseStyle} from "kryo";
+import {IntegerType} from "kryo/integer";
+import {LiteralType} from "kryo/literal";
+import {RecordType} from "kryo/record";
+import {TaggedUnionType} from "kryo/tagged-union";
+import {TsEnumType} from "kryo/ts-enum";
+import type {TestItem} from "kryo-testing";
+import {registerErrMochaTests, registerMochaSuites} from "kryo-testing";
+
+import {SEARCH_PARAMS_READER} from "../../lib/search-params-reader.mts";
+import {SEARCH_PARAMS_WRITER} from "../../lib/search-params-writer.mts";
+
+const Rectangle: unique symbol = Symbol("Rectangle");
+const Circle: unique symbol = Symbol("Circle");
+
+const ShapeType = {
+  Rectangle,
+  Circle,
+} as const;
+
+type ShapeType = typeof ShapeType[keyof typeof ShapeType];
+
+declare namespace ShapeType {
+  type Rectangle = typeof ShapeType.Rectangle;
+  type Circle = typeof ShapeType.Circle;
+}
 
 describe("kryo-search-params | TaggedUnion", function () {
   describe("Shape", function () {
-    enum ShapeType {
-      Rectangle,
-      Circle,
-    }
-
     const shapeTypeType: TsEnumType<ShapeType> = new TsEnumType({
       enum: ShapeType,
       changeCase: CaseStyle.KebabCase,

@@ -1,33 +1,33 @@
-import {writeCheck, writeError} from "./_helpers/context.mjs";
-import {lazyProperties} from "./_helpers/lazy-properties.mjs";
-import {AggregateCheck} from "./checks/aggregate.mjs";
-import {CheckKind} from "./checks/check-kind.mjs";
-import {UnionMatchCheck} from "./checks/union-match.mjs";
-import {
+import {writeCheck, writeError} from "./_helpers/context.mts";
+import {lazyProperties} from "./_helpers/lazy-properties.mts";
+import type {AggregateCheck} from "./checks/aggregate.mts";
+import {CheckKind} from "./checks/check-kind.mts";
+import type {UnionMatchCheck} from "./checks/union-match.mts";
+import type {
   CheckId,
   IoType,
   KryoContext,
   Lazy,
-  NOOP_CONTEXT,
   Reader,
   Result,
   Type,
   TypedValue,
   VersionedType,
   Writer
-} from "./index.mjs";
+} from "./index.mts";
+import {NOOP_CONTEXT,} from "./index.mts";
 
 export type Name = "union";
 export const name: Name = "union";
-export type Diff = any;
+export type Diff = unknown;
 
 export interface TryUnionTypeOptions<T, M extends Type<T> = Type<T>> {
   variants: M[];
 }
 
 export type TestWithVariantResult<T> =
-  [true, VersionedType<T, any>]
-  | [false, VersionedType<T, any> | undefined];
+  [true, VersionedType<T, unknown>]
+  | [false, VersionedType<T, unknown> | undefined];
 
 export class TryUnionType<T, M extends Type<T> = Type<T>> implements IoType<T>, TryUnionTypeOptions<T, M> {
   readonly name: Name = name;

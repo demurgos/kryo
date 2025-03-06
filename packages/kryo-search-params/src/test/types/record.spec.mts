@@ -1,15 +1,25 @@
-import { CaseStyle } from "kryo";
-import { DateType } from "kryo/date";
-import { IntegerType } from "kryo/integer";
-import { RecordIoType, RecordType } from "kryo/record";
-import {registerErrMochaTests, registerMochaSuites, TestItem} from "kryo-testing";
+import {describe} from "node:test";
 
-import {SEARCH_PARAMS_READER} from "../../lib/search-params-reader.mjs";
-import {SEARCH_PARAMS_WRITER} from "../../lib/search-params-writer.mjs";
+import {CaseStyle} from "kryo";
+import {DateType} from "kryo/date";
+import {IntegerType} from "kryo/integer";
+import type {RecordIoType} from "kryo/record";
+import {RecordType} from "kryo/record";
+import type {TestItem} from "kryo-testing";
+import {registerErrMochaTests, registerMochaSuites} from "kryo-testing";
+
+import {SEARCH_PARAMS_READER} from "../../lib/search-params-reader.mts";
+import {SEARCH_PARAMS_WRITER} from "../../lib/search-params-writer.mts";
 
 describe("kryo-search-params | Record", function () {
   describe("TestRecord", function () {
-    const $TestRecord: RecordIoType<any> = new RecordType({
+    interface TestRecord {
+      dateProp: Date;
+      optIntProp?: number;
+      nestedDoc?: {id?: number};
+    }
+
+    const $TestRecord: RecordIoType<TestRecord> = new RecordType({
       noExtraKeys: false,
       properties: {
         dateProp: {
@@ -50,7 +60,10 @@ describe("kryo-search-params | Record", function () {
             reader: SEARCH_PARAMS_READER,
             raw: "dateProp=1970-01-01T00%3A00%3A00.000Z&optIntProp=50&nestedDoc=%7B%22id%22%3A10%7D"
           },
-          {reader: SEARCH_PARAMS_READER, raw: "dateProp=1970-01-01T00%3A00%3A00.000Z&optIntProp=50&nestedDoc=\{\"id\":10\}"},
+          {
+            reader: SEARCH_PARAMS_READER,
+            raw: "dateProp=1970-01-01T00%3A00%3A00.000Z&optIntProp=50&nestedDoc={\"id\":10}"
+          },
         ],
       },
       {
@@ -61,8 +74,12 @@ describe("kryo-search-params | Record", function () {
           },
         },
         io: [
-          {writer: SEARCH_PARAMS_WRITER, reader: SEARCH_PARAMS_READER, raw: "dateProp=1970-01-01T00%3A00%3A00.000Z&nestedDoc=%7B%22id%22%3A10%7D"},
-          {reader: SEARCH_PARAMS_READER, raw: "dateProp=1970-01-01T00%3A00%3A00.000Z&nestedDoc=\{\"id\":10\}"},
+          {
+            writer: SEARCH_PARAMS_WRITER,
+            reader: SEARCH_PARAMS_READER,
+            raw: "dateProp=1970-01-01T00%3A00%3A00.000Z&nestedDoc=%7B%22id%22%3A10%7D"
+          },
+          {reader: SEARCH_PARAMS_READER, raw: "dateProp=1970-01-01T00%3A00%3A00.000Z&nestedDoc={\"id\":10}"},
         ],
       },
     ];

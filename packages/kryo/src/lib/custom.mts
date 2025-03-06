@@ -1,5 +1,5 @@
-import { lazyProperties } from "./_helpers/lazy-properties.mjs";
-import {CheckId, KryoContext, Lazy, Reader, Result,Type, Writer} from "./index.mjs";
+import { lazyProperties } from "./_helpers/lazy-properties.mts";
+import type {CheckId, KryoContext, Lazy, Reader, Result,Type, Writer} from "./index.mts";
 
 export type Name = "custom";
 export const name: Name = "custom";

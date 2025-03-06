@@ -1,7 +1,9 @@
-import { assert as chaiAssert } from "chai";
+import * as assert from "node:assert/strict";
+import {describe, test} from "node:test";
 
-import { Float64Type } from "../../lib/float64.mjs";
-import { runTests, TypedValue } from "../helpers/test.mjs";
+import { Float64Type } from "../../lib/float64.mts";
+import type { TypedValue } from "../helpers/test.mts";
+import { runTests } from "../helpers/test.mts";
 
 describe("Float64Type", function () {
   const $Float64: Float64Type = new Float64Type();
@@ -58,8 +60,8 @@ describe("Float64Type", function () {
 
     runTests($Float64WithNan, items);
 
-    it("Should treat two `NaN` values as equal", function () {
-      chaiAssert.isTrue($Float64WithNan.equals(NaN, NaN));
+    test("Should treat two `NaN` values as equal", function () {
+      assert.strictEqual($Float64WithNan.equals(NaN, NaN), true);
     });
   });
 
@@ -80,20 +82,20 @@ describe("Float64Type", function () {
 
     runTests($Float64WithInfinity, items);
 
-    it("should return `true` for `.equals(Infinity, Infinity)`", function () {
-      chaiAssert.isTrue($Float64WithInfinity.equals(Infinity, Infinity));
+    test("should return `true` for `.equals(Infinity, Infinity)`", function () {
+      assert.strictEqual($Float64WithInfinity.equals(Infinity, Infinity), true);
     });
 
-    it("should return `true` for `.equals(-Infinity, -Infinity)`", function () {
-      chaiAssert.isTrue($Float64WithInfinity.equals(-Infinity, -Infinity));
+    test("should return `true` for `.equals(-Infinity, -Infinity)`", function () {
+      assert.strictEqual($Float64WithInfinity.equals(-Infinity, -Infinity), true);
     });
 
-    it("should return `false` for `.equals(-Infinity, Infinity)`", function () {
-      chaiAssert.isFalse($Float64WithInfinity.equals(-Infinity, Infinity));
+    test("should return `false` for `.equals(-Infinity, Infinity)`", function () {
+      assert.strictEqual($Float64WithInfinity.equals(-Infinity, Infinity), false);
     });
 
-    it("should return `false` for `.equals(Infinity, -Infinity)`", function () {
-      chaiAssert.isFalse($Float64WithInfinity.equals(Infinity, -Infinity));
+    test("should return `false` for `.equals(Infinity, -Infinity)`", function () {
+      assert.strictEqual($Float64WithInfinity.equals(Infinity, -Infinity), false);
     });
   });
 
@@ -115,8 +117,8 @@ describe("Float64Type", function () {
     }
 
     for (const {left, right, expected} of testItems) {
-      it(`.lte(${left}, ${right}) should return ${expected}`, function () {
-        chaiAssert.strictEqual($Float64.lte(left, right), expected);
+      test(`.lte(${left}, ${right}) should return ${expected}`, function () {
+        assert.deepStrictEqual($Float64.lte(left, right), expected);
       });
     }
   });

@@ -37,7 +37,7 @@
       "error",
       "unix"
     ],
-    "no-duplicate-imports": "error",
+    "no-duplicate-imports": "off",
     "no-eval": "error",
     "no-label-var": "error",
     "no-tabs": "error",
