@@ -9,6 +9,7 @@
 - **[Internal]** Fix multiple invalid test cases.
 - **[Internal]** Refactor code to be compatible with `erasableSyntaxOnly` TS option.
 - **[Internal]** Switch to built-in Node testing framework.
+- **[Internal]** Replace `private` TypeScript visibility modifier with JavaScript `#` private fields.
 
 # 0.15.3 (2024-11-24)
 

@@ -49,14 +49,14 @@ export class Float64Type implements IoType<number>, VersionedType<number, [numbe
   readonly allowInfinity!: boolean;
   readonly allowNegativeZero!: boolean;
 
-  private _options: Lazy<Float64TypeOptions>;
+  #options: Lazy<Float64TypeOptions>;
 
   constructor(options?: Lazy<Float64TypeOptions>) {
-    this._options = options !== undefined ? options : {};
+    this.#options = options !== undefined ? options : {};
     if (typeof options !== "function") {
-      this._applyOptions();
+      this.#applyOptions();
     } else {
-      lazyProperties(this, this._applyOptions, ["allowNaN", "allowInfinity", "allowNegativeZero"]);
+      lazyProperties(this, this.#applyOptions, ["allowNaN", "allowInfinity", "allowNegativeZero"]);
     }
   }
 
@@ -171,11 +171,11 @@ export class Float64Type implements IoType<number>, VersionedType<number, [numbe
     return this.equals(diff1[0], diff2[1]) ? undefined : [diff1[0], diff2[1]];
   }
 
-  private _applyOptions(): void {
-    if (this._options === undefined) {
+  #applyOptions(): void {
+    if (this.#options === undefined) {
       throw new Error("missing `_options` for lazy initialization");
     }
-    const options: Float64TypeOptions = typeof this._options === "function" ? this._options() : this._options;
+    const options: Float64TypeOptions = typeof this.#options === "function" ? this.#options() : this.#options;
     const allowNaN: boolean = options.allowNaN !== undefined ? options.allowNaN : false;
     const allowInfinity: boolean = options.allowInfinity !== undefined ? options.allowInfinity : false;
     const allowNegativeZero: boolean = options.allowNegativeZero !== undefined ? options.allowNegativeZero : false;

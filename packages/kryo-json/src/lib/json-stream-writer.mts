@@ -15,18 +15,18 @@ export interface WritableStream {
 }
 
 export class JsonStreamWriter implements Writer<boolean> {
-  private readonly stream: WritableStream;
+  readonly #stream: WritableStream;
 
   constructor(stream: WritableStream) {
-    this.stream = stream;
+    this.#stream = stream;
   }
 
   writeAny(value: boolean): boolean {
-    return this.stream.write(JSON.stringify(value));
+    return this.#stream.write(JSON.stringify(value));
   }
 
   writeBoolean(value: boolean): boolean {
-    return this.stream.write(value ? "true" : "false");
+    return this.#stream.write(value ? "true" : "false");
   }
 
   writeBytes(value: Uint8Array): boolean {
@@ -43,18 +43,18 @@ export class JsonStreamWriter implements Writer<boolean> {
     handler: (key: K, fieldWriter: Writer<boolean>) => boolean,
   ): boolean {
     let shouldContinue: boolean = true;
-    shouldContinue = this.stream.write("{") && shouldContinue;
+    shouldContinue = this.#stream.write("{") && shouldContinue;
     let first: boolean = true;
     for (const key of keys) {
       if (!first) {
-        shouldContinue = this.stream.write(",") && shouldContinue;
+        shouldContinue = this.#stream.write(",") && shouldContinue;
       }
       shouldContinue = this.writeString(key) && shouldContinue;
-      shouldContinue = this.stream.write(":") && shouldContinue;
+      shouldContinue = this.#stream.write(":") && shouldContinue;
       shouldContinue = handler(key, this) && shouldContinue;
       first = false;
     }
-    return this.stream.write("}") && shouldContinue;
+    return this.#stream.write("}") && shouldContinue;
   }
 
   writeFloat64(value: number): boolean {
@@ -67,7 +67,7 @@ export class JsonStreamWriter implements Writer<boolean> {
     } else if (Object.is(value, -0)) {
       return this.writeString("-0");
     }
-    return this.stream.write(value.toString(10));
+    return this.#stream.write(value.toString(10));
   }
 
   writeDate(value: Date): boolean {
@@ -76,18 +76,18 @@ export class JsonStreamWriter implements Writer<boolean> {
 
   writeList(size: number, handler: (index: number, itemWriter: Writer<boolean>) => boolean): boolean {
     let shouldContinue: boolean = true;
-    shouldContinue = this.stream.write("[") && shouldContinue;
+    shouldContinue = this.#stream.write("[") && shouldContinue;
     for (let index: number = 0; index < size; index++) {
       if (index > 0) {
-        shouldContinue = this.stream.write(",") && shouldContinue;
+        shouldContinue = this.#stream.write(",") && shouldContinue;
       }
       shouldContinue = handler(index, this) && shouldContinue;
     }
-    return this.stream.write("]") && shouldContinue;
+    return this.#stream.write("]") && shouldContinue;
   }
 
   writeNull(): boolean {
-    return this.stream.write("null");
+    return this.#stream.write("null");
   }
 
   writeMap(
@@ -96,10 +96,10 @@ export class JsonStreamWriter implements Writer<boolean> {
     valueHandler: (index: number, mapValueWriter: Writer<boolean>) => boolean,
   ): boolean {
     let shouldContinue: boolean = true;
-    shouldContinue = this.stream.write("{") && shouldContinue;
+    shouldContinue = this.#stream.write("{") && shouldContinue;
     for (let index: number = 0; index < size; index++) {
       if (index > 0) {
-        shouldContinue = this.stream.write(",") && shouldContinue;
+        shouldContinue = this.#stream.write(",") && shouldContinue;
       }
       const chunks: string[] = [];
       const subStream: JsonStreamWriter = new JsonStreamWriter({
@@ -110,13 +110,13 @@ export class JsonStreamWriter implements Writer<boolean> {
       });
       shouldContinue = keyHandler(index, subStream) && shouldContinue;
       shouldContinue = this.writeString(chunks.join("")) && shouldContinue;
-      shouldContinue = this.stream.write(":") && shouldContinue;
+      shouldContinue = this.#stream.write(":") && shouldContinue;
       shouldContinue = valueHandler(index, this) && shouldContinue;
     }
-    return this.stream.write("}") && shouldContinue;
+    return this.#stream.write("}") && shouldContinue;
   }
 
   writeString(value: string): boolean {
-    return this.stream.write(JSON.stringify(value));
+    return this.#stream.write(JSON.stringify(value));
   }
 }

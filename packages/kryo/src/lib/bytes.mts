@@ -13,14 +13,14 @@ export interface BytesTypeOptions {
 export class BytesType implements IoType<Uint8Array>, VersionedType<Uint8Array, Diff>, Ord<Uint8Array> {
   readonly maxLength!: number;
 
-  private _options: Lazy<BytesTypeOptions>;
+  #options: Lazy<BytesTypeOptions>;
 
   constructor(options: Lazy<BytesTypeOptions>) {
-    this._options = options;
+    this.#options = options;
     if (typeof options !== "function") {
-      this._applyOptions();
+      this.#applyOptions();
     } else {
-      lazyProperties(this, this._applyOptions, ["maxLength"]);
+      lazyProperties(this, this.#applyOptions, ["maxLength"]);
     }
   }
 
@@ -93,11 +93,11 @@ export class BytesType implements IoType<Uint8Array>, VersionedType<Uint8Array, 
     return diff1 !== undefined && diff2 !== undefined ? [diff1[0], diff2[1]] : undefined;
   }
 
-  private _applyOptions(): void {
-    if (this._options === undefined) {
+  #applyOptions(): void {
+    if (this.#options === undefined) {
       throw new Error("missing `_options` for lazy initialization");
     }
-    const options: BytesTypeOptions = typeof this._options === "function" ? this._options() : this._options;
+    const options: BytesTypeOptions = typeof this.#options === "function" ? this.#options() : this.#options;
 
     const maxLength: number = options.maxLength;
 

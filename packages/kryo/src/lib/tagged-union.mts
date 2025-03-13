@@ -45,23 +45,21 @@ implements IoType<T>, TaggedUnionTypeOptions<T, M> {
   readonly name: Name = name;
   readonly variants!: readonly M[];
   readonly tag!: keyof T;
-  private _valueToVariantMap!: Map<unknown, M>;
 
-  private _options?: Lazy<TaggedUnionTypeOptions<T, M>>;
-
-  private _outTag: string | undefined;
-
-  private _tagType: TsEnumType | undefined;
+  #valueToVariantMap!: Map<unknown, M>;
+  #options?: Lazy<TaggedUnionTypeOptions<T, M>>;
+  #outTag: string | undefined;
+  #tagType: TsEnumType | undefined;
 
 
   constructor(options: Lazy<TaggedUnionTypeOptions<T, M>>) {
-    this._options = options;
+    this.#options = options;
     if (typeof options !== "function") {
-      this._applyOptions();
+      this.#applyOptions();
     } else {
       lazyProperties(
         this,
-        this._applyOptions,
+        this.#applyOptions,
         ["variants", "tag"],
       );
     }
@@ -76,13 +74,13 @@ implements IoType<T>, TaggedUnionTypeOptions<T, M> {
     if (tagValue === undefined) {
       return writeError(cx, {check: CheckKind.UnionTagPresent, tag: String(tag)});
     }
-    const variantType: M | undefined = this._valueToVariantMap.get(tagValue); // tagToVariant
+    const variantType: M | undefined = this.#valueToVariantMap.get(tagValue); // tagToVariant
     if (variantType === undefined) {
       return writeError(cx, {
         check: CheckKind.UnionTagValue,
         tag: String(this.tag),
         actual: String(tagValue),
-        allowed: [...this._valueToVariantMap.keys()].map((s) => String(s))
+        allowed: [...this.#valueToVariantMap.keys()].map((s) => String(s))
       } satisfies UnionTagValueCheck);
     }
     return {ok: true, value: variantType};
@@ -120,7 +118,7 @@ implements IoType<T>, TaggedUnionTypeOptions<T, M> {
         keyReader: Reader<RK>,
         valueReader: Reader<RV>,
       ): Result<TypedValue<T, M>, CheckId> => {
-        const outTag: string = this.getOutTag();
+        const outTag: string = this.#getOutTag();
         for (const [rawKey, rawValue] of input) {
           const {ok: okUnecheckedKey, value: outKey} = keyReader.readString(
             cx,
@@ -133,14 +131,14 @@ implements IoType<T>, TaggedUnionTypeOptions<T, M> {
           if (outKey !== outTag) {
             continue;
           }
-          const {ok: tagValueOk, value: tagValue} = this.getTagType().read(cx, valueReader, rawValue);
-          const variant: M | undefined = tagValueOk ? this._valueToVariantMap.get(tagValue) : undefined; // tagToVariant
+          const {ok: tagValueOk, value: tagValue} = this.#getTagType().read(cx, valueReader, rawValue);
+          const variant: M | undefined = tagValueOk ? this.#valueToVariantMap.get(tagValue) : undefined; // tagToVariant
           if (variant === undefined) {
             return writeError(cx, {
               check: CheckKind.UnionTagValue,
               tag: String(this.tag),
               actual: String(tagValue),
-              allowed: [...this._valueToVariantMap.keys()].map((s) => String(s))
+              allowed: [...this.#valueToVariantMap.keys()].map((s) => String(s))
             } satisfies UnionTagValueCheck);
           }
           const {ok, value} = variant.read!(cx, reader, raw);
@@ -175,14 +173,13 @@ implements IoType<T>, TaggedUnionTypeOptions<T, M> {
     return this.matchTrusted(val).clone(val);
   }
 
-  private _applyOptions(): void {
-    if (this._options === undefined) {
+  #applyOptions(): void {
+    if (this.#options === undefined) {
       throw new Error("missing `_options` for lazy initialization");
     }
-    const options: TaggedUnionTypeOptions<T, M> = typeof this._options === "function"
-      ? this._options()
-      : this._options;
-    delete this._options;
+    const options: TaggedUnionTypeOptions<T, M> = typeof this.#options === "function"
+      ? this.#options()
+      : this.#options;
 
     const variants: readonly M[] = options.variants;
     const tag: keyof T = options.tag;
@@ -196,7 +193,8 @@ implements IoType<T>, TaggedUnionTypeOptions<T, M> {
       tagValueToType.set(lit.value, variantType);
     }
 
-    Object.assign(this, {variants, tag, _valueToVariantMap: tagValueToType});
+    this.#valueToVariantMap = tagValueToType;
+    Object.assign(this, {variants, tag});
   }
 
   /**
@@ -205,9 +203,9 @@ implements IoType<T>, TaggedUnionTypeOptions<T, M> {
    * The name is computed on-demand and cached. It is not computed in the constructor (or option application)
    * to avoid throwing if the type is not used for IO.
    */
-  private getOutTag(): string {
+  #getOutTag(): string {
     const tag = this.tag;
-    if (this._outTag === undefined) {
+    if (this.#outTag === undefined) {
       let outTag: string | undefined = undefined;
       for (const variant of this.variants) {
         const cur: string = variant.getOutKey(tag);
@@ -220,9 +218,9 @@ implements IoType<T>, TaggedUnionTypeOptions<T, M> {
       if (outTag === undefined) {
         throw new Error("failed to find out key of the tag property");
       }
-      this._outTag = outTag;
+      this.#outTag = outTag;
     }
-    return this._outTag;
+    return this.#outTag;
   }
 
   /**
@@ -231,8 +229,8 @@ implements IoType<T>, TaggedUnionTypeOptions<T, M> {
    * The type is computed on-demand and cached. It is not computed in the constructor (or option application)
    * to avoid throwing if the type is not used for IO.
    */
-  private getTagType(): TsEnumType {
-    if (this._tagType === undefined) {
+  #getTagType(): TsEnumType {
+    if (this.#tagType === undefined) {
       const tag = this.tag;
       let tagType: TsEnumType | undefined = undefined;
       for (const variant of this.variants) {
@@ -247,8 +245,8 @@ implements IoType<T>, TaggedUnionTypeOptions<T, M> {
       if (tagType === undefined) {
         throw new Error("failed to find type of the tag property");
       }
-      this._tagType = tagType;
+      this.#tagType = tagType;
     }
-    return this._tagType;
+    return this.#tagType;
   }
 }

@@ -8,41 +8,41 @@ import type {Writer} from "kryo";
 import {BsonValueWriter} from "./bson-value-writer.mts";
 
 export class BsonWriter implements Writer<Uint8Array> {
-  private readonly valueWriter: BsonValueWriter;
-  private readonly primitiveWrapper: string;
+  readonly #valueWriter: BsonValueWriter;
+  readonly #primitiveWrapper: string;
 
   constructor(primitiveWrapper: string = "_") {
-    this.primitiveWrapper = primitiveWrapper;
-    this.valueWriter = new BsonValueWriter();
+    this.#primitiveWrapper = primitiveWrapper;
+    this.#valueWriter = new BsonValueWriter();
   }
 
   writeAny(value: number): Uint8Array {
-    return bsonSerialize({[this.primitiveWrapper]: this.valueWriter.writeAny(value)});
+    return bsonSerialize({[this.#primitiveWrapper]: this.#valueWriter.writeAny(value)});
   }
 
   writeBoolean(value: boolean): Uint8Array {
-    return bsonSerialize({[this.primitiveWrapper]: this.valueWriter.writeBoolean(value)});
+    return bsonSerialize({[this.#primitiveWrapper]: this.#valueWriter.writeBoolean(value)});
   }
 
   writeBytes(value: Uint8Array): Uint8Array {
-    return bsonSerialize({[this.primitiveWrapper]: this.valueWriter.writeBytes(value)});
+    return bsonSerialize({[this.#primitiveWrapper]: this.#valueWriter.writeBytes(value)});
   }
 
   writeDate(value: Date): Uint8Array {
-    return bsonSerialize({[this.primitiveWrapper]: this.valueWriter.writeDate(value)});
+    return bsonSerialize({[this.#primitiveWrapper]: this.#valueWriter.writeDate(value)});
   }
 
   writeRecord<K extends string>(keys: Iterable<K>, handler: <FW>(key: K, fieldWriter: Writer<FW>) => FW): Uint8Array {
-    return bsonSerialize(this.valueWriter.writeRecord(keys, handler));
+    return bsonSerialize(this.#valueWriter.writeRecord(keys, handler));
   }
 
   writeFloat64(value: number): Uint8Array {
-    return bsonSerialize({[this.primitiveWrapper]: this.valueWriter.writeFloat64(value)});
+    return bsonSerialize({[this.#primitiveWrapper]: this.#valueWriter.writeFloat64(value)});
   }
 
 
   writeList(size: number, handler: <IW>(index: number, itemWriter: Writer<IW>) => IW): Uint8Array {
-    return bsonSerialize({[this.primitiveWrapper]: this.valueWriter.writeList(size, handler)});
+    return bsonSerialize({[this.#primitiveWrapper]: this.#valueWriter.writeList(size, handler)});
   }
 
   writeMap(
@@ -50,15 +50,15 @@ export class BsonWriter implements Writer<Uint8Array> {
     keyHandler: <KW>(index: number, mapKeyWriter: Writer<KW>) => KW,
     valueHandler: <VW>(index: number, mapValueWriter: Writer<VW>) => VW,
   ): Uint8Array {
-    return bsonSerialize(this.valueWriter.writeMap(size, keyHandler, valueHandler));
+    return bsonSerialize(this.#valueWriter.writeMap(size, keyHandler, valueHandler));
   }
 
   writeNull(): Uint8Array {
-    return bsonSerialize({[this.primitiveWrapper]: this.valueWriter.writeNull()});
+    return bsonSerialize({[this.#primitiveWrapper]: this.#valueWriter.writeNull()});
   }
 
   writeString(value: string): Uint8Array {
-    return bsonSerialize({[this.primitiveWrapper]: this.valueWriter.writeString(value)});
+    return bsonSerialize({[this.#primitiveWrapper]: this.#valueWriter.writeString(value)});
   }
 }
 

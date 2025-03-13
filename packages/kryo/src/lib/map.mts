@@ -22,14 +22,14 @@ export class MapType<K, V> implements IoType<Map<K, V>>, VersionedType<Map<K, V>
   readonly maxSize!: number;
   readonly assumeStringKey!: boolean;
 
-  private _options: Lazy<MapTypeOptions<K, V>>;
+  #options: Lazy<MapTypeOptions<K, V>>;
 
   constructor(options: Lazy<MapTypeOptions<K, V>>) {
-    this._options = options;
+    this.#options = options;
     if (typeof options !== "function") {
-      this._applyOptions();
+      this.#applyOptions();
     } else {
-      lazyProperties(this, this._applyOptions, ["keyType", "valueType", "maxSize", "assumeStringKey"]);
+      lazyProperties(this, this.#applyOptions, ["keyType", "valueType", "maxSize", "assumeStringKey"]);
     }
   }
 
@@ -208,11 +208,11 @@ export class MapType<K, V> implements IoType<Map<K, V>>, VersionedType<Map<K, V>
     return diff1 !== undefined && diff2 !== undefined ? [diff1[0], diff2[1]] : undefined;
   }
 
-  private _applyOptions(): void {
-    if (this._options === undefined) {
+  #applyOptions(): void {
+    if (this.#options === undefined) {
       throw new Error("missing `_options` for lazy initialization");
     }
-    const options: MapTypeOptions<K, V> = typeof this._options === "function" ? this._options() : this._options;
+    const options: MapTypeOptions<K, V> = typeof this.#options === "function" ? this.#options() : this.#options;
 
     const keyType: VersionedType<K, unknown> = options.keyType;
     const valueType: VersionedType<V, unknown> = options.valueType;

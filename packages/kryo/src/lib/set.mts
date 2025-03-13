@@ -18,14 +18,14 @@ export class SetType<T> implements IoType<Set<T>>, VersionedType<Set<T>, Diff> {
   readonly itemType!: VersionedType<T, unknown> & Ord<T>;
   readonly maxSize!: number;
 
-  private _options: Lazy<SetTypeOptions<T>>;
+  #options: Lazy<SetTypeOptions<T>>;
 
   constructor(options: Lazy<SetTypeOptions<T>>) {
-    this._options = options;
+    this.#options = options;
     if (typeof options !== "function") {
-      this._applyOptions();
+      this.#applyOptions();
     } else {
-      lazyProperties(this, this._applyOptions, ["itemType", "maxSize"]);
+      lazyProperties(this, this.#applyOptions, ["itemType", "maxSize"]);
     }
   }
 
@@ -203,11 +203,11 @@ export class SetType<T> implements IoType<Set<T>>, VersionedType<Set<T>, Diff> {
     return diff1 !== undefined && diff2 !== undefined ? [diff1[0], diff2[1]] : undefined;
   }
 
-  private _applyOptions(): void {
-    if (this._options === undefined) {
+  #applyOptions(): void {
+    if (this.#options === undefined) {
       throw new Error("missing `_options` for lazy initialization");
     }
-    const options: SetTypeOptions<T> = typeof this._options === "function" ? this._options() : this._options;
+    const options: SetTypeOptions<T> = typeof this.#options === "function" ? this.#options() : this.#options;
 
     const itemType: VersionedType<T, unknown> & Ord<T> = options.itemType;
     const maxSize: number = options.maxSize;

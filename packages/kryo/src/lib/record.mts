@@ -141,15 +141,15 @@ export const RecordType: RecordTypeConstructor = (class<T> implements IoType<T>,
   readonly properties!: { readonly [P in keyof T]: PropertyDescriptor<T[P], IoType<T[P]>> };
   readonly rename?: { readonly [P in keyof T]?: string };
   readonly changeCase?: CaseStyle;
-  private _options: Lazy<RecordTypeOptions<T>>;
-  private _outKeys: Map<string, keyof T> | undefined;
+  #options: Lazy<RecordTypeOptions<T>>;
+  #outKeys: Map<string, keyof T> | undefined;
 
   constructor(options: Lazy<RecordTypeOptions<T>>) {
-    this._options = options;
+    this.#options = options;
     if (typeof options !== "function") {
-      this._applyOptions();
+      this.#applyOptions();
     } else {
-      lazyProperties(this, this._applyOptions, ["noExtraKeys", "properties", "changeCase", "rename" as keyof this]);
+      lazyProperties(this, this.#applyOptions, ["noExtraKeys", "properties", "changeCase", "rename" as keyof this]);
     }
   }
 
@@ -157,13 +157,13 @@ export const RecordType: RecordTypeConstructor = (class<T> implements IoType<T>,
    * Map from serialized keys to the record keys
    */
   get outKeys(): Map<string, keyof T> {
-    if (this._outKeys === undefined) {
-      this._outKeys = new Map();
+    if (this.#outKeys === undefined) {
+      this.#outKeys = new Map();
       for (const key of Object.keys(this.properties) as (keyof T)[]) {
-        this._outKeys.set(this.getOutKey(key), key);
+        this.#outKeys.set(this.getOutKey(key), key);
       }
     }
-    return this._outKeys;
+    return this.#outKeys;
   }
 
   getOutKey(key: keyof T): string {
@@ -465,13 +465,13 @@ export const RecordType: RecordTypeConstructor = (class<T> implements IoType<T>,
     return diff;
   }
 
-  private _applyOptions(): void {
-    if (this._options === undefined) {
+  #applyOptions(): void {
+    if (this.#options === undefined) {
       throw new Error("missing `_options` for lazy initialization");
     }
-    const options: RecordTypeOptions<T> = typeof this._options === "function" ?
-      this._options() :
-      this._options;
+    const options: RecordTypeOptions<T> = typeof this.#options === "function" ?
+      this.#options() :
+      this.#options;
 
     const noExtraKeys: boolean | undefined = options.noExtraKeys;
     const properties: { [P in keyof T]: PropertyDescriptor<T[P]> } = options.properties;
@@ -485,9 +485,9 @@ export const RecordType: RecordTypeConstructor = (class<T> implements IoType<T>,
     const keySet: ReadonlySet<K> = new Set(keys);
 
     return new RecordType(() => {
-      const parentOptions: RecordTypeOptions<T> = typeof this._options === "function" ?
-        this._options() :
-        this._options;
+      const parentOptions: RecordTypeOptions<T> = typeof this.#options === "function"
+        ? this.#options()
+        : this.#options;
 
       const properties = {};
       for (const key in parentOptions.properties) {
@@ -508,9 +508,9 @@ export const RecordType: RecordTypeConstructor = (class<T> implements IoType<T>,
     const keySet: ReadonlySet<K> = new Set(keys);
 
     return new RecordType(() => {
-      const parentOptions: RecordTypeOptions<T> = typeof this._options === "function" ?
-        this._options() :
-        this._options;
+      const parentOptions: RecordTypeOptions<T> = typeof this.#options === "function"
+        ? this.#options()
+        : this.#options;
 
       const properties = {};
       for (const key in parentOptions.properties) {
@@ -529,12 +529,12 @@ export const RecordType: RecordTypeConstructor = (class<T> implements IoType<T>,
 
   extend<E>(options: Lazy<ExtendRecordTypeOptions<E>>): RecordType<T & E> {
     return new RecordType(() => {
-      const parentOptions: RecordTypeOptions<T> = typeof this._options === "function" ?
-        this._options() :
-        this._options;
-      const extensionOptions: RecordTypeOptions<E> = typeof options === "function" ?
-        options() :
-        options;
+      const parentOptions: RecordTypeOptions<T> = typeof this.#options === "function"
+        ? this.#options()
+        : this.#options;
+      const extensionOptions: RecordTypeOptions<E> = typeof options === "function"
+        ? options()
+        : options;
 
       const properties = {...parentOptions.properties};
       for (const key in extensionOptions.properties) {

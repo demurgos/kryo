@@ -39,24 +39,24 @@ export const GenericType: GenericTypeConstructor = (class<Fn extends (...args: u
   readonly name: Name = name;
   readonly apply!: (...typeArgs: Type<unknown>[]) => Type<ReturnType<Fn>>;
 
-  _options: Lazy<GenericTypeOptions<Fn>>;
+  #options: Lazy<GenericTypeOptions<Fn>>;
 
   constructor(options: Lazy<GenericTypeOptions<Fn>>) {
-    this._options = options;
+    this.#options = options;
     if (typeof options !== "function") {
-      this._applyOptions();
+      this.#applyOptions();
     } else {
-      lazyProperties(this, this._applyOptions, ["apply"]);
+      lazyProperties(this, this.#applyOptions, ["apply"]);
     }
   }
 
-  private _applyOptions(): void {
-    if (this._options === undefined) {
+  #applyOptions(): void {
+    if (this.#options === undefined) {
       throw new Error("missing `_options` for lazy initialization");
     }
-    const options: GenericTypeOptions<Fn> = typeof this._options === "function" ?
-      this._options() :
-      this._options;
+    const options: GenericTypeOptions<Fn> = typeof this.#options === "function"
+      ? this.#options()
+      : this.#options;
 
     const apply: (...typeArgs: Type<unknown>[]) => Type<ReturnType<Fn>> = options.apply;
 

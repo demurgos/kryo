@@ -47,14 +47,14 @@ export const ArrayType: ArrayTypeConstructor = class<T, M extends Type<T> = Type
   readonly minLength?: number;
   readonly maxLength!: number;
 
-  private _options: Lazy<ArrayTypeOptions<T, M>>;
+  readonly #options: Lazy<ArrayTypeOptions<T, M>>;
 
   constructor(options: Lazy<ArrayTypeOptions<T, M>>) {
-    this._options = options;
+    this.#options = options;
     if (typeof options !== "function") {
-      this._applyOptions();
+      this.#applyOptions();
     } else {
-      lazyProperties(this, this._applyOptions, ["itemType", "minLength", "maxLength"]);
+      lazyProperties(this, this.#applyOptions, ["itemType", "minLength", "maxLength"]);
     }
   }
 
@@ -170,11 +170,11 @@ export const ArrayType: ArrayTypeConstructor = class<T, M extends Type<T> = Type
     return val.map((item: T): T => this.itemType.clone(item));
   }
 
-  private _applyOptions(): void {
-    if (this._options === undefined) {
+  #applyOptions(): void {
+    if (this.#options === undefined) {
       throw new Error("missing `_options` for lazy initialization");
     }
-    const options: ArrayTypeOptions<T, M> = typeof this._options === "function" ? this._options() : this._options;
+    const options: ArrayTypeOptions<T, M> = typeof this.#options === "function" ? this.#options() : this.#options;
 
     const itemType: M = options.itemType;
     const minLength: number | undefined = options.minLength;

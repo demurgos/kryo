@@ -110,16 +110,16 @@ export class Ucs2StringType implements IoType<string>, VersionedType<string, Dif
   readonly minLength?: number;
   readonly maxLength!: number;
 
-  private _options: Lazy<Ucs2StringTypeOptions>;
+  #options: Lazy<Ucs2StringTypeOptions>;
 
   constructor(options: Lazy<Ucs2StringTypeOptions>) {
-    this._options = options;
+    this.#options = options;
     if (typeof options !== "function") {
-      this._applyOptions();
+      this.#applyOptions();
     } else {
       lazyProperties(
         this,
-        this._applyOptions,
+        this.#applyOptions,
         ["allowUnicodeRegExp", "pattern", "lowerCase", "trimmed", "minLength", "maxLength"],
       );
     }
@@ -238,11 +238,11 @@ export class Ucs2StringType implements IoType<string>, VersionedType<string, Dif
     return diff1[0] === diff2[1] ? undefined : [diff1[0], diff2[1]];
   }
 
-  private _applyOptions(): void {
-    if (this._options === undefined) {
+  #applyOptions(): void {
+    if (this.#options === undefined) {
       throw new Error("missing `_options` for lazy initialization");
     }
-    const options: Ucs2StringTypeOptions = typeof this._options === "function" ? this._options() : this._options;
+    const options: Ucs2StringTypeOptions = typeof this.#options === "function" ? this.#options() : this.#options;
 
     const allowUnicodeRegExp: boolean = options.allowUnicodeRegExp !== undefined ? options.allowUnicodeRegExp : true;
     const pattern: RegExp | undefined = options.pattern;

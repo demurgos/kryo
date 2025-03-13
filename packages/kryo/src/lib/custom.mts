@@ -26,22 +26,22 @@ export class CustomType<T> implements Type<T> {
   readonly equals!: Equals<T>;
   readonly clone!: Clone<T>;
 
-  private _options?: Lazy<CustomTypeOptions<T>>;
+  #options?: Lazy<CustomTypeOptions<T>>;
 
   constructor(options: Lazy<CustomTypeOptions<T>>) {
-    this._options = options;
+    this.#options = options;
     if (typeof options !== "function") {
-      this._applyOptions();
+      this.#applyOptions();
     } else {
-      lazyProperties(this, this._applyOptions, ["read", "write", "test", "equals", "clone"]);
+      lazyProperties(this, this.#applyOptions, ["read", "write", "test", "equals", "clone"]);
     }
   }
 
-  private _applyOptions(): void {
-    if (this._options === undefined) {
+  #applyOptions(): void {
+    if (this.#options === undefined) {
       throw new Error("missing `_options` for lazy initialization");
     }
-    const options: CustomTypeOptions<T> = typeof this._options === "function" ? this._options() : this._options;
+    const options: CustomTypeOptions<T> = typeof this.#options === "function" ? this.#options() : this.#options;
     Object.assign(
       this,
       {

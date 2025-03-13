@@ -104,16 +104,16 @@ export class UsvStringType implements IoType<string>, VersionedType<string, Diff
   readonly minCodepoints?: number;
   readonly maxCodepoints!: number;
 
-  private _options: Lazy<UsvStringOptions>;
+  #options: Lazy<UsvStringOptions>;
 
   constructor(options: Lazy<UsvStringOptions>) {
-    this._options = options;
+    this.#options = options;
     if (typeof options !== "function") {
-      this._applyOptions();
+      this.#applyOptions();
     } else {
       lazyProperties(
         this,
-        this._applyOptions,
+        this.#applyOptions,
         [
           "normalization",
           "allowUcs2RegExp",
@@ -246,11 +246,11 @@ export class UsvStringType implements IoType<string>, VersionedType<string, Diff
     return diff1[0] === diff2[1] ? undefined : [diff1[0], diff2[1]];
   }
 
-  private _applyOptions(): void {
-    if (this._options === undefined) {
+  #applyOptions(): void {
+    if (this.#options === undefined) {
       throw new Error("missing `_options` for lazy initialization");
     }
-    const options: UsvStringOptions = typeof this._options === "function" ? this._options() : this._options;
+    const options: UsvStringOptions = typeof this.#options === "function" ? this.#options() : this.#options;
 
     const normalization: Normalization = options.normalization ?? Normalization.Nfc;
     const allowUcs2RegExp: boolean = options.allowUcs2RegExp ?? true;

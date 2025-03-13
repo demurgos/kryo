@@ -33,16 +33,16 @@ export class TryUnionType<T, M extends Type<T> = Type<T>> implements IoType<T>, 
   readonly name: Name = name;
   readonly variants!: M[];
 
-  private _options?: Lazy<TryUnionTypeOptions<T, M>>;
+  #options?: Lazy<TryUnionTypeOptions<T, M>>;
 
   constructor(options: Lazy<TryUnionTypeOptions<T, M>>) {
-    this._options = options;
+    this.#options = options;
     if (typeof options !== "function") {
-      this._applyOptions();
+      this.#applyOptions();
     } else {
       lazyProperties(
         this,
-        this._applyOptions,
+        this.#applyOptions,
         ["variants"],
       );
     }
@@ -129,14 +129,13 @@ export class TryUnionType<T, M extends Type<T> = Type<T>> implements IoType<T>, 
     return this.matchTrusted(val).type.clone(val);
   }
 
-  private _applyOptions(): void {
-    if (this._options === undefined) {
+  #applyOptions(): void {
+    if (this.#options === undefined) {
       throw new Error("missing `_options` for lazy initialization");
     }
-    const options: TryUnionTypeOptions<T, M> = typeof this._options === "function"
-      ? this._options()
-      : this._options;
-    delete this._options;
+    const options: TryUnionTypeOptions<T, M> = typeof this.#options === "function"
+      ? this.#options()
+      : this.#options;
     const variants: M[] = options.variants;
     Object.assign(this, {variants});
   }

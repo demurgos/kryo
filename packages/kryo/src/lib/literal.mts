@@ -32,24 +32,19 @@ export interface LiteralIoType<TyLiteral extends ExtractType<TyKryo>, TyKryo ext
   write<W>(writer: Writer<W>, value: TyLiteral): W;
 }
 
-/**
- * You may need to explicitly write the type or inference won't pick it.
- * For example, in the case of enum values, inference will pick the type of the enum instead of
- * the specific property you pass.
- */
 export const LiteralType: LiteralTypeConstructor = class<const TyLiteral extends ExtractType<TyKryo>, TyKryo extends Type<unknown> = Type<unknown>> implements IoType<TyLiteral> {
   readonly name: Name = name;
   readonly type!: TyKryo;
   readonly value!: TyLiteral;
 
-  private _options: Lazy<LiteralTypeOptions<TyLiteral, TyKryo>>;
+  #options: Lazy<LiteralTypeOptions<TyLiteral, TyKryo>>;
 
   constructor(options: Lazy<LiteralTypeOptions<TyLiteral, TyKryo>>) {
-    this._options = options;
+    this.#options = options;
     if (typeof options !== "function") {
-      this._applyOptions();
+      this.#applyOptions();
     } else {
-      lazyProperties(this, this._applyOptions, ["type", "value"]);
+      lazyProperties(this, this.#applyOptions, ["type", "value"]);
     }
   }
 
@@ -111,13 +106,13 @@ export const LiteralType: LiteralTypeConstructor = class<const TyLiteral extends
     return;
   }
 
-  private _applyOptions(): void {
-    if (this._options === undefined) {
+  #applyOptions(): void {
+    if (this.#options === undefined) {
       throw new Error("missing `_options` for lazy initialization");
     }
-    const options: LiteralTypeOptions<TyLiteral, TyKryo> = typeof this._options === "function"
-      ? this._options()
-      : this._options;
+    const options: LiteralTypeOptions<TyLiteral, TyKryo> = typeof this.#options === "function"
+      ? this.#options()
+      : this.#options;
 
     const type: TyKryo = options.type;
     const value: TyLiteral = options.value;

@@ -48,19 +48,19 @@ export class IntegerType implements IoType<number>, VersionedType<number, Diff>,
   readonly min!: number;
   readonly max!: number;
 
-  private _options: Lazy<IntegerTypeOptions>;
+  #options: Lazy<IntegerTypeOptions>;
 
   constructor(options?: Lazy<IntegerTypeOptions>) {
     if (options === undefined) {
-      this._options = {};
-      this._applyOptions();
+      this.#options = {};
+      this.#applyOptions();
       return;
     }
-    this._options = options;
+    this.#options = options;
     if (typeof options !== "function") {
-      this._applyOptions();
+      this.#applyOptions();
     } else {
-      lazyProperties(this, this._applyOptions, ["min", "max"]);
+      lazyProperties(this, this.#applyOptions, ["min", "max"]);
     }
   }
 
@@ -133,11 +133,11 @@ export class IntegerType implements IoType<number>, VersionedType<number, Diff>,
     return diff2 === -diff1 ? undefined : diff1 + diff2;
   }
 
-  private _applyOptions(): void {
-    if (this._options === undefined) {
+  #applyOptions(): void {
+    if (this.#options === undefined) {
       throw new Error("missing `_options` for lazy initialization");
     }
-    const options: IntegerTypeOptions = typeof this._options === "function" ? this._options() : this._options;
+    const options: IntegerTypeOptions = typeof this.#options === "function" ? this.#options() : this.#options;
 
     const min: number = options.min !== undefined ? options.min : DEFAULT_MIN;
     const max: number = options.max !== undefined ? options.max : DEFAULT_MAX;

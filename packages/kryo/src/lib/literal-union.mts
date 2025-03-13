@@ -20,14 +20,14 @@ export class LiteralUnionType<const T extends ExtractType<$T>, const $T extends 
   readonly type!: $T;
   readonly values!: T[];
 
-  private _options: Lazy<LiteralUnionTypeOptions<T, $T>>;
+  #options: Lazy<LiteralUnionTypeOptions<T, $T>>;
 
   constructor(options: Lazy<LiteralUnionTypeOptions<T, $T>>) {
-    this._options = options;
+    this.#options = options;
     if (typeof options !== "function") {
-      this._applyOptions();
+      this.#applyOptions();
     } else {
-      lazyProperties(this, this._applyOptions, ["type", "values"]);
+      lazyProperties(this, this.#applyOptions, ["type", "values"]);
     }
   }
 
@@ -118,11 +118,11 @@ export class LiteralUnionType<const T extends ExtractType<$T>, const $T extends 
     }
   }
 
-  private _applyOptions(): void {
-    if (this._options === undefined) {
+  #applyOptions(): void {
+    if (this.#options === undefined) {
       throw new Error("missing `_options` for lazy initialization");
     }
-    const options: LiteralUnionTypeOptions<T, $T> = typeof this._options === "function" ? this._options() : this._options;
+    const options: LiteralUnionTypeOptions<T, $T> = typeof this.#options === "function" ? this.#options() : this.#options;
 
     const type: $T = options.type;
     const values: T[] = options.values;

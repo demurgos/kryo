@@ -85,52 +85,52 @@ implements IoType<E>, TsEnumTypeOptions<E, EO> {
   readonly changeCase?: CaseStyle;
   readonly rename?: { [P in keyof EO]?: string };
 
-  private _jsToOut: Map<E, string> | undefined;
-  private _outToJs: Map<string, E> | undefined;
+  #jsToOutCache: Map<E, string> | undefined;
+  #outToJsCache: Map<string, E> | undefined;
 
-  private _options: Lazy<TsEnumTypeOptions<E>>;
+  #options: Lazy<TsEnumTypeOptions<E>>;
 
   constructor(options: Lazy<TsEnumTypeOptions<E>>) {
-    this._options = options;
+    this.#options = options;
     if (typeof options !== "function") {
-      this._applyOptions();
+      this.#applyOptions();
     } else {
-      lazyProperties(this, this._applyOptions, ["enum", "changeCase", "rename"]);
+      lazyProperties(this, this.#applyOptions, ["enum", "changeCase", "rename"]);
     }
   }
 
-  private get jsToOut(): Map<E, string> {
-    if (this._jsToOut === undefined) {
-      [this._jsToOut, this._outToJs] = getEnumMaps(this.enum, this.changeCase, this.rename);
+  get #jsToOut(): Map<E, string> {
+    if (this.#jsToOutCache === undefined) {
+      [this.#jsToOutCache, this.#outToJsCache] = getEnumMaps(this.enum, this.changeCase, this.rename);
     }
-    return this._jsToOut;
+    return this.#jsToOutCache;
   }
 
-  private get outToJs(): Map<string, E> {
-    if (this._outToJs === undefined) {
-      [this._jsToOut, this._outToJs] = getEnumMaps(this.enum, this.changeCase, this.rename);
+  get #outToJs(): Map<string, E> {
+    if (this.#outToJsCache === undefined) {
+      [this.#jsToOutCache, this.#outToJsCache] = getEnumMaps(this.enum, this.changeCase, this.rename);
     }
-    return this._outToJs;
+    return this.#outToJsCache;
   }
 
   read<R>(cx: KryoContext, reader: Reader<R>, raw: R): Result<E, CheckId> {
     return reader.readString(cx, raw, readVisitor({
       fromString: (input: string): Result<E, CheckId> => {
-        if (!reader.trustInput && !this.outToJs.has(input)) {
+        if (!reader.trustInput && !this.#outToJs.has(input)) {
           return writeError(cx, {check: CheckKind.LiteralValue});
         }
-        const jsValue = this.outToJs.get(input)!;
+        const jsValue = this.#outToJs.get(input)!;
         return {ok: true, value: jsValue};
       },
     }));
   }
 
   write<W>(writer: Writer<W>, value: E): W {
-    return writer.writeString(this.jsToOut.get(value)!);
+    return writer.writeString(this.#jsToOut.get(value)!);
   }
 
   test(cx: KryoContext | null, value: unknown): Result<E, CheckId> {
-    if ((this.jsToOut as Map<unknown, unknown>).has(value)) {
+    if ((this.#jsToOut as Map<unknown, unknown>).has(value)) {
       return {ok: true, value: value as E};
     } else {
       return writeError(cx, {check: CheckKind.LiteralValue});
@@ -145,11 +145,11 @@ implements IoType<E>, TsEnumTypeOptions<E, EO> {
     return val;
   }
 
-  private _applyOptions(): void {
-    if (this._options === undefined) {
+  #applyOptions(): void {
+    if (this.#options === undefined) {
       throw new Error("missing `_options` for lazy initialization");
     }
-    const options: TsEnumTypeOptions<E> = typeof this._options === "function" ? this._options() : this._options;
+    const options: TsEnumTypeOptions<E> = typeof this.#options === "function" ? this.#options() : this.#options;
 
     const tsEnum: Record<AnyKey, AnyKey> = options.enum as Record<AnyKey, AnyKey>;
     const changeCase: CaseStyle | undefined = options.changeCase;
