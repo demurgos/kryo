@@ -1,6 +1,6 @@
 {
   "name": "kryo-search-params",
-  "version": "0.15.1",
+  "version": "0.16.0",
   "description": "Querystring serializer for Kryo types, using URLSearchParams",
   "license": "MIT",
   "keywords": [],

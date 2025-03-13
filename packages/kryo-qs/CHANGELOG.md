@@ -1,4 +1,4 @@
-# Next
+# 0.16.0 (2025-03-13)
 
 - **[Breaking change]** Update to `kryo@0.16`.
 - **[Breaking change]** `QsReader` reads with a primitive target (not map or record) are now rejecting query strings

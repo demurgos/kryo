@@ -1,4 +1,4 @@
-# Next
+# 0.16.0 (2025-03-13)
 
 - **[Breaking change]** Update to `kryo@0.16`.
 - **[Internal]** Refactor code to be compatible with `erasableSyntaxOnly` TS option.

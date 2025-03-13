@@ -1,4 +1,4 @@
-# Next
+# 0.16.0 (2025-03-13)
 
 - **[Breaking change]** Update to `kryo@0.16`.
 - **[Internal]** Fix multiple invalid test cases.
