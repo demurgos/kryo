@@ -39,6 +39,15 @@ export default [
         "ignoreRestSiblings": true
       }],
 
+      "no-restricted-syntax": [
+        "error",
+        // Ban `private` members
+        {
+          "selector": ":matches(PropertyDefinition, MethodDefinition)[accessibility=\"private\"]",
+          "message": "Use `#private` members instead.",
+        },
+      ],
+
       "block-scoped-var": "error",
       curly: ["error", "all"],
       "dot-location": ["error", "property"],
