@@ -1,5 +1,6 @@
 # Next
 
+- **[Fix]** Include TypeScript sources in package, fix source maps.
 - **[Fix]** Update dependencies.
 
 # 0.16.0 (2025-03-13)

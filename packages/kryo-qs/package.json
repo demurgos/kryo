@@ -37,6 +37,6 @@
   },
   "files": [
     "./lib/**/*.(mjs|map|mts)",
-    "./src/lib/"
+    "./src/lib/**/*.mts"
   ]
 }
