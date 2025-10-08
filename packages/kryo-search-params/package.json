@@ -25,9 +25,9 @@
     "kryo-json": "workspace:^"
   },
   "devDependencies": {
-    "@types/node": "^22.13.9",
+    "@types/node": "^24.7.0",
     "kryo-testing": "workspace:^",
-    "typescript": "^5.8.2"
+    "typescript": "^5.9.3"
   },
   "type": "module",
   "exports": {

@@ -1,3 +1,7 @@
+# Next
+
+- **[Internal]** Update dev dependencies.
+
 # 0.16.0 (2025-03-13)
 
 - **[Breaking change]** Use `Symbol` values instead of integers for opaque enum variant values.

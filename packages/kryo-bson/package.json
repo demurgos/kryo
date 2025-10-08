@@ -21,14 +21,14 @@
     "node": ">=18.13.0"
   },
   "dependencies": {
-    "bson": "^6.2.0",
+    "bson": "^6.10.4",
     "kryo": "workspace:^",
     "kryo-json": "workspace:^"
   },
   "devDependencies": {
-    "@types/node": "^20.11.5",
+    "@types/node": "^24.7.0",
     "kryo-testing": "workspace:^",
-    "typescript": "^5.8.2"
+    "typescript": "^5.9.3"
   },
   "type": "module",
   "exports": {
