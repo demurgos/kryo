@@ -19,6 +19,9 @@
     },
     {
       "path": "./packages/kryo-search-params/src/test"
+    },
+    {
+      "path": "./packages/kryo-toml/src/test"
     }
   ]
 }

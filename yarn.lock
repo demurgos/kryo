@@ -1221,6 +1221,19 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"kryo-toml@workspace:packages/kryo-toml":
+  version: 0.0.0-use.local
+  resolution: "kryo-toml@workspace:packages/kryo-toml"
+  dependencies:
+    "@types/node": "npm:^24.7.0"
+    kryo: "workspace:^"
+    kryo-json: "workspace:^"
+    kryo-testing: "workspace:^"
+    smol-toml: "npm:^1.4.2"
+    typescript: "npm:^5.9.3"
+  languageName: unknown
+  linkType: soft
+
 "kryo@workspace:^, kryo@workspace:packages/kryo":
   version: 0.0.0-use.local
   resolution: "kryo@workspace:packages/kryo"
@@ -1564,6 +1577,13 @@ __metadata:
   version: 4.1.0
   resolution: "signal-exit@npm:4.1.0"
   checksum: 10/c9fa63bbbd7431066174a48ba2dd9986dfd930c3a8b59de9c29d7b6854ec1c12a80d15310869ea5166d413b99f041bfa3dd80a7947bcd44ea8e6eb3ffeabfa1f
+  languageName: node
+  linkType: hard
+
+"smol-toml@npm:^1.4.2":
+  version: 1.4.2
+  resolution: "smol-toml@npm:1.4.2"
+  checksum: 10/00c3c45859b44a8a9624cd15d4210c1b85dfa27cf432ade832d7c8a4ee96a79c415594cafe42a6708299de57d3b56e74e645396a0e0e1076f8f7b6302a5520b3
   languageName: node
   linkType: hard
 

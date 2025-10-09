@@ -1,0 +1,41 @@
+{
+  "name": "kryo-toml",
+  "version": "0.16.0",
+  "description": "TOML serializer for Kryo types",
+  "license": "MIT",
+  "keywords": [],
+  "homepage": "https://demurgos.github.io/kryo",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/demurgos/kryo.git"
+  },
+  "scripts": {
+    "lint": "eslint \"./src/**/*.mts\"",
+    "format": "eslint --fix \"./src/**/*.mts\"",
+    "build": "tsc --build src/lib/tsconfig.json",
+    "prepack": "yarn run build",
+    "test:build": "tsc --build src/test/tsconfig.json",
+    "test": "yarn run test:build && node --test \"src/test/**/*.spec.mts\""
+  },
+  "engines": {
+    "node": ">=18.13.0"
+  },
+  "dependencies": {
+    "kryo": "workspace:^",
+    "kryo-json": "workspace:^",
+    "smol-toml": "^1.4.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.7.0",
+    "kryo-testing": "workspace:^",
+    "typescript": "^5.9.3"
+  },
+  "type": "module",
+  "exports": {
+    "./*": "./lib/*.mjs"
+  },
+  "files": [
+    "./lib/**/*.(mjs|map|mts)",
+    "./src/lib/**/*.mts"
+  ]
+}
