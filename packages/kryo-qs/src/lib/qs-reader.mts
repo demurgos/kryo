@@ -99,7 +99,7 @@ export class QsReader implements Reader<string> {
     const wrapper: ParsedQs = qs.parse(raw);
     const wrapped = Reflect.get(wrapper, this.#primitiveWrapper);
     const hasExtra = Reflect.ownKeys(wrapper).find(k => k !== this.#primitiveWrapper) !== undefined;
-    if (hasExtra || !(wrapped === undefined || typeof wrapped === "string" || Array.isArray(wrapped))) {
+    if (hasExtra) {
       return writeError(cx, {check: CheckKind.PropertyKey} satisfies PropertyKeyCheck);
     }
     return {ok: true, value: wrapped};

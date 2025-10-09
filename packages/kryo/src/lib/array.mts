@@ -75,7 +75,7 @@ export const ArrayType: ArrayTypeConstructor = class<T, M extends Type<T> = Type
           if (itemType.read === undefined) {
             throw new Error(`read is not supported for Array with non-readable type ${itemType.name}`);
           }
-          const {ok, value: item} = itemType.read!(cx, itemReader, rawItem);
+          const {ok, value: item} = cx.enter(i, () => itemType.read!(cx, itemReader, rawItem));
           if (ok) {
             if (failedChecks === undefined) {
               // Happy path: push to the result

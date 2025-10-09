@@ -2,26 +2,26 @@ import * as assert from "node:assert/strict";
 import {describe, test} from "node:test";
 
 import {readOrThrow} from "kryo";
-import {AnyType} from "kryo/any";
-import type {RecordIoType} from "kryo/record";
-import {RecordType} from "kryo/record";
+import {$Any} from "kryo/any";
+import {type RecordIoType, RecordType} from "kryo/record";
 
-import {QsReader} from "../../lib/qs-reader.mts";
-import type {QsValue} from "../../lib/qs-value.mjs";
-import {QsValueReader} from "../../lib/qs-value-reader.mts";
+import {QS_READER} from "../../lib/qs-reader.mts";
+import type {QsValue} from "../../lib/qs-value.mts";
+import {QS_VALUE_READER} from "../../lib/qs-value-reader.mts";
 
 describe("kryo-qs | Any", function () {
-  describe("with JsonReader", function () {
-    test("should read the expected top-level values", function () {
-      const reader: QsReader = new QsReader();
-      const $Any: AnyType = new AnyType();
-      assert.deepStrictEqual(readOrThrow($Any, reader, "0"), "0");
-      assert.deepStrictEqual(readOrThrow($Any, reader, "foo=bar"), "foo=bar");
+  describe("with QsReader", function () {
+    describe("should read the expected top-level values", function () {
+      test("_=0", function () {
+        assert.deepStrictEqual(readOrThrow($Any, QS_READER, "_=0"), "0");
+      });
+      test("foo=bar", function () {
+        assert.deepStrictEqual(readOrThrow($Any, QS_READER, "_[foo]=bar"), Object.assign(Object.create(null), {
+          foo: "bar"
+        }));
+      });
     });
     test("should read the expected nested values", function () {
-      const reader: QsReader = new QsReader();
-      const $Any: AnyType = new AnyType();
-
       interface FooBarQuz {
         foo: QsValue;
       }
@@ -30,16 +30,23 @@ describe("kryo-qs | Any", function () {
         properties: {foo: {type: $Any}},
       });
 
-      assert.deepStrictEqual(readOrThrow($FooBarQuz, reader, "foo[bar]=quz"), {__proto__: null, foo: {bar: "quz"}});
+      assert.deepStrictEqual(
+        readOrThrow($FooBarQuz, QS_READER, "foo[bar]=quz"),
+        Object.assign(Object.create(null), {
+          foo: Object.assign(Object.create(null), {
+            bar: "quz"
+          }),
+        })
+      );
     });
   });
 
-  describe("with JsonValueReader", function () {
+  describe("with QsValueReader", function () {
     test("should read the expected values", function () {
-      const reader: QsValueReader = new QsValueReader();
-      const $Any: AnyType = new AnyType();
-      assert.deepStrictEqual(readOrThrow($Any, reader, "Hello"), "Hello");
-      assert.deepStrictEqual(readOrThrow($Any, reader, {foo: "bar"}), {foo: "bar"});
+      assert.deepStrictEqual(readOrThrow($Any, QS_VALUE_READER, "Hello"), "Hello");
+      assert.deepStrictEqual(readOrThrow($Any, QS_VALUE_READER, {foo: "bar"}), Object.assign(Object.create(null), {
+        foo: "bar"
+      }));
     });
   });
 });

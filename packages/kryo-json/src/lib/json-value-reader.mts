@@ -25,16 +25,23 @@ export class JsonValueReader implements Reader<JsonValue> {
     switch (typeof raw) {
       case "boolean":
         return visitor.fromBoolean(raw as boolean);
+      case "number":
+        return visitor.fromFloat64(raw as number);
       case "string":
         return visitor.fromString(raw as string);
-      case "object":
-        return raw === null
-          ? visitor.fromNull()
-          : visitor.fromMap(new Map(Object.keys(raw).map(k => [k, Reflect.get(raw, k)] as [string, unknown])), this, this);
+      case "object": {
+        if (raw === null) {
+          return visitor.fromNull();
+        } else if (Array.isArray(raw)) {
+          return visitor.fromList(raw, this);
+        } else {
+          return visitor.fromMap(new Map(Object.keys(raw).map(k => [k, Reflect.get(raw, k)] as [string, unknown])), this, this);
+        }
+      }
       default:
         return writeError(cx, {
           check: CheckKind.BaseType,
-          expected: ["Array", "Boolean", "Null", "Object", "UsvString", "Ucs2String"]
+          expected: ["Array", "Boolean", "Float64", "Null", "Object", "Ucs2String"]
         } satisfies BaseTypeCheck);
     }
   }
@@ -130,7 +137,6 @@ export class JsonValueReader implements Reader<JsonValue> {
     if (typeof raw !== "object" || Array.isArray(raw) || raw === null) {
       return writeError(cx, {check: CheckKind.BaseType, expected: ["Record"]} satisfies BaseTypeCheck);
     }
-    const keyReader: JsonValueReader = new JsonValueReader();
 
     const input: Map<JsonValue, unknown> = new Map();
     for (const rawKey of Reflect.ownKeys(raw)) {
@@ -150,7 +156,7 @@ export class JsonValueReader implements Reader<JsonValue> {
       }
       input.set(key, Reflect.get(raw, rawKey));
     }
-    return visitor.fromMap(input, keyReader, this);
+    return visitor.fromMap(input, this, this);
   }
 
   readNull<T>(cx: KryoContext, raw: JsonValue, visitor: ReadVisitor<T>): Result<T, CheckId> {

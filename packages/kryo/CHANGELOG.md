@@ -1,6 +1,7 @@
 # Next
 
 - **[Fix]** Include TypeScript sources in package, fix source maps.
+- **[Fix]** Pass `AnyType` values to readers; all deserialization logic was skipped previously.
 - **[Internal]** Update dev dependencies.
 
 # 0.16.0 (2025-03-13)

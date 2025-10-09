@@ -11,7 +11,7 @@ export interface StructuredRecord<T> {
 export type StructuredValue<T> = T | StructuredValue<T>[] | StructuredRecord<T>;
 
 /**
- * Base class for `json`, `qs` and `bson` writers.
+ * Base class for `json`, `toml`, `qs` and `bson` writers.
  */
 export abstract class StructuredWriter<W> implements Writer<StructuredValue<W>> {
   writeAny(value: unknown): W {

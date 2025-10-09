@@ -122,8 +122,9 @@ export class ReporterContext {
           }
         }).join(".");
         const msg = format(check);
-        lines.push(`${pathStr}#${cur}: ${msg}`);
-        for (const child of (check.children ?? [])) {
+        lines.push(`check#${cur}: at ${pathStr.length === 0 ? "(root)" : pathStr}: ${msg}`);
+        const childChecks: readonly CheckId[] = check.children ?? [];
+        for (const child of [...childChecks].reverse()) {
           pending.push(child);
         }
       }
@@ -242,7 +243,10 @@ export interface IoType<T> extends Type<T>, Readable<T>, Writable<T> {
 }
 
 /**
- * W: Write result type.
+ * A writer is responsible for converting values from the Kryo data model into a "raw" value of type `W`.
+ *
+ * For example, `BSON_WRITER` converts into `Buffer`, `JSON_WRITER` into a string, or `JSON_VALUE_WRITER` into
+ * a simple JSON value (no bytes, dates, or maps with arbitrary keys).
  */
 export interface Writer<W> {
   writeAny(value: unknown): W;

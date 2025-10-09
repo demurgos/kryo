@@ -7,5 +7,5 @@ export interface AggregateCheck {
 }
 
 export function formatAggregateCheck(check: AggregateCheck): string {
-  return `check has ${check.children.length} child checks`;
+  return `aggregate check has ${check.children.length} child checks: ${check.children.join(", ")}`;
 }
