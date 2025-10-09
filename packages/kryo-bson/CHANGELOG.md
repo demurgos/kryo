@@ -1,4 +1,4 @@
-# Next
+# 0.16.1 (2025-10-10)
 
 - **[Fix]** Include TypeScript sources in package, fix source maps.
 - **[Fix]** Fix `AnyType` deserialization.
