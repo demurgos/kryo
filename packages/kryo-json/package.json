@@ -9,6 +9,9 @@
     "type": "git",
     "url": "git://github.com/demurgos/kryo.git"
   },
+  "bugs": {
+    "url": "https://github.com/demurgos/kryo/issues"
+  },
   "scripts": {
     "lint": "eslint \"./src/**/*.mts\"",
     "format": "eslint --fix \"./src/**/*.mts\"",
