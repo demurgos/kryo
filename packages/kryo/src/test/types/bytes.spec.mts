@@ -52,7 +52,7 @@ describe("BytesType", function () {
     },
     {
       name: "new Array()",
-      // eslint-disable-next-line @typescript-eslint/no-array-constructor
+
       value: new Array(),
       valid: false,
     },

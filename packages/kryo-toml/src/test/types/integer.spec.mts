@@ -16,70 +16,70 @@ describe("kryo-toml | Integer", function () {
         name: "0",
         value: 0,
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = 0"},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = 0\n"},
         ],
       },
       {
         name: "1",
         value: 1,
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = 1"},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = 1\n"},
         ],
       },
       {
         name: "-1",
         value: -1,
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = -1"},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = -1\n"},
         ],
       },
       {
         name: "2",
         value: 2,
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = 2"},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = 2\n"},
         ],
       },
       {
         name: "1e3",
         value: 1e3,
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = 1000"},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = 1000\n"},
         ],
       },
       {
         name: "-1e3",
         value: -1e3,
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = -1000"},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = -1000\n"},
         ],
       },
       {
         name: "Number.MIN_SAFE_INTEGER", // -(2**53) + 1
         value: Number.MIN_SAFE_INTEGER,
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = -9007199254740991"},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = -9007199254740991\n"},
         ],
       },
       {
         name: "Number.MIN_SAFE_INTEGER + 1", // -(2**53) + 2
         value: Number.MIN_SAFE_INTEGER + 1,
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = -9007199254740990"},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = -9007199254740990\n"},
         ],
       },
       {
         name: "Number.MAX_SAFE_INTEGER - 1", // +2**53 - 2
         value: Number.MAX_SAFE_INTEGER - 1,
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = 9007199254740990"},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = 9007199254740990\n"},
         ],
       },
       {
         name: "Number.MAX_SAFE_INTEGER", // +2**53 - 1
         value: Number.MAX_SAFE_INTEGER,
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = 9007199254740991"},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = 9007199254740991\n"},
         ],
       },
     ];

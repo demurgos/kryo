@@ -14,25 +14,25 @@ describe("kryo-toml | CodepointString", function () {
     {
       value: "",
       io: [
-        {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"\""},
+        {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"\"\n"},
       ],
     },
     {
       value: "Hello World!",
       io: [
-        {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"Hello World!\""},
+        {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"Hello World!\"\n"},
       ],
     },
     {
       value: "ԂЯØǷ Łƕ੬ ɃɅϨϞ",
       io: [
-        {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"ԂЯØǷ Łƕ੬ ɃɅϨϞ\""},
+        {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"ԂЯØǷ Łƕ੬ ɃɅϨϞ\"\n"},
       ],
     },
     {
       value: "1970-01-01T00:00:00.000Z",
       io: [
-        {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"1970-01-01T00:00:00.000Z\""},
+        {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"1970-01-01T00:00:00.000Z\"\n"},
       ],
     },
   ];

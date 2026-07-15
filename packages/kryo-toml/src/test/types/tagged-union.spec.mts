@@ -88,7 +88,8 @@ describe("kryo-toml | TaggedUnion", function () {
         io: [
           {writer: TOML_WRITER, reader: TOML_READER, raw: `type = "rectangle"
 width = 10
-height = 20`},
+height = 20
+`},
         ],
       },
       {
@@ -99,7 +100,8 @@ height = 20`},
         },
         io: [
           {writer: TOML_WRITER, reader: TOML_READER, raw: `type = "circle"
-radius = 15`},
+radius = 15
+`},
         ],
       },
     ];

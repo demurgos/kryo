@@ -104,28 +104,28 @@ describe("kryo-toml | Custom", function () {
         name: "Complex {real: 0, imaginary: 0}",
         value: new Complex(0, 0),
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"0\""},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"0\"\n"},
         ],
       },
       {
         name: "Complex {real: 1, imaginary: 0}",
         value: new Complex(1, 0),
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"1\""},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"1\"\n"},
         ],
       },
       {
         name: "Complex {real: 0, imaginary: 2}",
         value: new Complex(0, 2),
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"2j\""},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"2j\"\n"},
         ],
       },
       {
         name: "Complex {real: 3, imaginary: 4}",
         value: new Complex(3, 4),
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"3 + 4j\""},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"3 + 4j\"\n"},
         ],
       },
     ];

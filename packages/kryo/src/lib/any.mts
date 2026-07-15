@@ -16,7 +16,7 @@ export type Diff = unknown;
 /**
  * Type representing an opaque value.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 export class AnyType<T = any> implements IoType<T> {
   read<R>(cx: KryoContext, reader: Reader<R>, raw: R): Result<T, CheckId> {
     return reader.readAny(cx, raw, {

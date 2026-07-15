@@ -9,19 +9,17 @@
     "checkJs": false,
     "declaration": true,
     "disableSizeLimit": false,
-    "downlevelIteration": false,
     "emitBOM": false,
     "emitDecoratorMetadata": true,
     "erasableSyntaxOnly": true,
-    "esModuleInterop": false,
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
-    "importHelpers": false,
+    "importHelpers": true,
     "inlineSourceMap": false,
     "inlineSources": false,
     "isolatedModules": false,
     "lib": [
-      "es2021"
+      "es2023"
     ],
     "module": "node16",
     "moduleResolution": "node16",
@@ -50,8 +48,11 @@
     "strictNullChecks": true,
     "suppressExcessPropertyErrors": false,
     "suppressImplicitAnyIndexErrors": false,
-    "target": "es2021",
+    "target": "es2023",
     "traceResolution": false,
+    "types": [
+      "node"
+    ],
     "verbatimModuleSyntax": true
   }
 }

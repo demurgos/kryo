@@ -17,21 +17,21 @@ describe("kryo-toml | Bytes", function () {
       name: "Uint8Array.from([])",
       value: Uint8Array.from([]),
       io: [
-        {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"\""},
+        {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"\"\n"},
       ],
     },
     {
       name: "Uint8Array.from([1])",
       value: Uint8Array.from([1]),
       io: [
-        {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"01\""},
+        {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"01\"\n"},
       ],
     },
     {
       name: "Uint8Array.from([2, 3])",
       value: Uint8Array.from([2, 3]),
       io: [
-        {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"0203\""},
+        {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"0203\"\n"},
       ],
     },
   ];

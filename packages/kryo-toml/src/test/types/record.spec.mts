@@ -58,7 +58,7 @@ describe("kryo-toml | Record", function () {
           {
             writer: TOML_WRITER,
             reader: TOML_READER,
-            raw: "dateProp = 1970-01-01T00:00:00.000Z\noptIntProp = 50\n\n[nestedDoc]\nid = 10",
+            raw: "dateProp = 1970-01-01T00:00:00.000Z\noptIntProp = 50\n\n[nestedDoc]\nid = 10\n",
           },
         ],
       },
@@ -73,7 +73,7 @@ describe("kryo-toml | Record", function () {
           {
             writer: TOML_WRITER,
             reader: TOML_READER,
-            raw: "dateProp = 1970-01-01T00:00:00.000Z\n\n[nestedDoc]\nid = 10",
+            raw: "dateProp = 1970-01-01T00:00:00.000Z\n\n[nestedDoc]\nid = 10\n",
           },
         ],
       },
@@ -122,7 +122,7 @@ describe("kryo-toml | Record", function () {
 
     const items: TestItem[] = [
       {
-        name: "Rect {xMin: 0, xMax: 10, yMin: 20, yMax: 30}",
+        name: "Rect {xMin: 0, xMax: 10, yMin: 20, yMax: 30}\n",
         value: {
           xMin: 0,
           xMax: 10,
@@ -136,7 +136,8 @@ describe("kryo-toml | Record", function () {
             raw: `xmin = 0
 X_MAX = 10
 __yMin = 20
-y-max = 30`,
+y-max = 30
+`,
           },
         ],
       },

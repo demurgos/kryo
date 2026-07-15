@@ -21,12 +21,13 @@
     "node": ">=18.13.0"
   },
   "dependencies": {
-    "kryo": "workspace:^"
+    "kryo": "workspace:^",
+    "tslib": "^2.8.1"
   },
   "devDependencies": {
-    "@types/node": "^24.7.0",
+    "@types/node": "^26.1.1",
     "kryo-testing": "workspace:^",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.3"
   },
   "type": "module",
   "exports": {

@@ -21,23 +21,23 @@ describe("kryo-toml | Set", function () {
         name: "new Set([])",
         value: new Set([]),
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = []"},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = []\n"},
         ],
       },
       {
         name: "new Set([1])",
         value: new Set([1]),
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = [ 1 ]"},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = [ 1 ]\n"},
         ],
       },
       {
         name: "new Set([2, 3])",
         value: new Set([2, 3]),
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = [ 2, 3 ]"},
-          {reader: TOML_READER, raw: "\"\" = [3,2]"},
-          {reader: TOML_READER, raw: "\"\" = [2,2,3,3]"},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = [ 2, 3 ]\n"},
+          {reader: TOML_READER, raw: "\"\" = [3,2]\n"},
+          {reader: TOML_READER, raw: "\"\" = [2,2,3,3]\n"},
         ],
       },
     ];
@@ -88,32 +88,32 @@ describe("kryo-toml | Set", function () {
       {
         value: new Set(),
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = []"},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = []\n"},
         ],
       },
       {
         value: new Set([0]),
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = [ 0 ]"},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = [ 0 ]\n"},
         ],
       },
       {
         value: new Set([0, 1]),
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = [ 0, 1 ]"},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = [ 0, 1 ]\n"},
         ],
       },
       {
         value: new Set([0, 1, 2]),
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = [ 0, 1, 2 ]"},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = [ 0, 1, 2 ]\n"},
         ],
       },
       {
         value: new Set([0, 1, 2, 3]),
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = [ 0, 1, 2, 3 ]"},
-          {reader: TOML_READER, raw: "\"\" = [0,1,2,3,3,3]"},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = [ 0, 1, 2, 3 ]\n"},
+          {reader: TOML_READER, raw: "\"\" = [0,1,2,3,3,3]\n"},
         ],
       },
     ];
@@ -169,23 +169,23 @@ describe("kryo-toml | Set", function () {
         name: "new Set([])",
         value: new Set([]),
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = []"},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = []\n"},
         ],
       },
       {
         name: "new Set([new Set([])])",
         value: new Set([new Set([])]),
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = [ [] ]"},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = [ [] ]\n"},
         ],
       },
       {
         name: "new Set([new Set([true]), new Set([false, true])])",
         value: new Set([new Set([true]), new Set([false, true])]),
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = [ [ false, true ], [ true ] ]"},
-          {reader: TOML_READER, raw: "\"\" = [ [ true ], [ false, true ] ]"},
-          {reader: TOML_READER, raw: "\"\" = [ [ true ], [ true ], [ false, true ] ]"},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = [ [ false, true ], [ true ] ]\n"},
+          {reader: TOML_READER, raw: "\"\" = [ [ true ], [ false, true ] ]\n"},
+          {reader: TOML_READER, raw: "\"\" = [ [ true ], [ true ], [ false, true ] ]\n"},
         ],
       },
     ];

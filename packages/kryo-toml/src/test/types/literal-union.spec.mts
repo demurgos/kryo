@@ -21,19 +21,19 @@ describe("kryo-toml | LiteralUnion", function () {
       {
         value: "foo",
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"foo\""},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"foo\"\n"},
         ],
       },
       {
         value: "bar",
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"bar\""},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"bar\"\n"},
         ],
       },
       {
         value: "baz",
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"baz\""},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"baz\"\n"},
         ],
       },
     ];

@@ -545,7 +545,7 @@ export const RecordType: RecordTypeConstructor = (class<T> implements IoType<T>,
       }
 
       type ResultRename = { [P in keyof (T & E)]?: string };
-      let rename: ResultRename | undefined = undefined;
+      let rename: ResultRename | undefined;
       if (parentOptions.rename === undefined) {
         if (extensionOptions.rename === undefined) {
           rename = undefined;

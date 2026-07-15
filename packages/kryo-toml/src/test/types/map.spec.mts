@@ -21,13 +21,13 @@ describe("kryo-toml | Map", function () {
       {
         value: new Map([[1, 100], [2, 200]]),
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "1 = 100\n2 = 200"},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "1 = 100\n2 = 200\n"},
         ],
       },
       {
         value: new Map(),
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: ""},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\n"},
         ],
       },
     ];
@@ -77,13 +77,13 @@ describe("kryo-toml | Map", function () {
       {
         value: new Map([["a", 100], ["aa", 200]]),
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "a = 100\naa = 200"},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "a = 100\naa = 200\n"},
         ],
       },
       {
         value: new Map(),
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: ""},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\n"},
         ],
       },
     ];

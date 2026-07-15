@@ -50,7 +50,8 @@ describe("kryo-toml | TryUnion", function () {
         },
         io: [
           {writer: TOML_WRITER, reader: TOML_READER, raw: `width = 10
-height = 20`},
+height = 20
+`},
         ],
       },
       {
@@ -59,7 +60,7 @@ height = 20`},
           radius: 15,
         },
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "radius = 15"},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "radius = 15\n"},
         ],
       },
     ];

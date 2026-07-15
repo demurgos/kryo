@@ -53,42 +53,42 @@ describe("kryo-toml | TsEnum", function () {
         name: "Color.Red",
         value: Color.Red,
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"Red\""},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"Red\"\n"},
         ],
       },
       {
         name: "Color.Green",
         value: Color.Green,
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"Green\""},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"Green\"\n"},
         ],
       },
       {
         name: "Color.Blue",
         value: Color.Blue,
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"Blue\""},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"Blue\"\n"},
         ],
       },
       {
         name: "Symbol(Red)",
         value: Red,
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"Red\""},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"Red\"\n"},
         ],
       },
       {
         name: "Symbol(Green)",
         value: Green,
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"Green\""},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"Green\"\n"},
         ],
       },
       {
         name: "Symbol(Blue)",
         value: Blue,
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"Blue\""},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"Blue\"\n"},
         ],
       },
     ];
@@ -137,42 +137,42 @@ describe("kryo-toml | TsEnum", function () {
         name: "Node.Expression",
         value: Node.Expression,
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"expression\""},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"expression\"\n"},
         ],
       },
       {
         name: "Node.BinaryOperator",
         value: Node.BinaryOperator,
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"binary-operator\""},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"binary-operator\"\n"},
         ],
       },
       {
         name: "Node.BlockStatement",
         value: Node.BlockStatement,
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"block-statement\""},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"block-statement\"\n"},
         ],
       },
       {
         name: "Symbol(Expression)",
         value: Expression,
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"expression\""},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"expression\"\n"},
         ],
       },
       {
         name: "Symbol(BinaryOperator)",
         value: BinaryOperator,
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"binary-operator\""},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"binary-operator\"\n"},
         ],
       },
       {
         name: "Symbol(BlockStatement)",
         value: BlockStatement,
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"block-statement\""},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"block-statement\"\n"},
         ],
       },
     ];

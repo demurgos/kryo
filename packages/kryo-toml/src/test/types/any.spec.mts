@@ -13,14 +13,14 @@ describe("kryo-toml | Any", function () {
   describe("with TomlReader", function () {
     test("should read the expected top-level values", function () {
       const $Any: AnyType = new AnyType();
-      assert.deepStrictEqual(readOrThrow($Any, TOML_READER, "'' = 0"), 0);
-      assert.deepStrictEqual(readOrThrow($Any, TOML_READER, "'' = {\"foo\" = \"bar\"}"), Object.assign(Object.create(null), {
+      assert.deepStrictEqual(readOrThrow($Any, TOML_READER, "'' = 0\n"), 0);
+      assert.deepStrictEqual(readOrThrow($Any, TOML_READER, "'' = {\"foo\" = \"bar\"}\n"), Object.assign(Object.create(null), {
         foo: "bar"
       }));
-      assert.deepStrictEqual(readOrThrow($Any, TOML_READER, "'' = {\"foo\" = [1, 2, 3]}"), Object.assign(Object.create(null), {
+      assert.deepStrictEqual(readOrThrow($Any, TOML_READER, "'' = {\"foo\" = [1, 2, 3]}\n"), Object.assign(Object.create(null), {
         foo: [1, 2, 3]
       }));
-      assert.deepStrictEqual(readOrThrow($Any, TOML_READER, "'' = [1, 2, 3]"), [1, 2, 3]);
+      assert.deepStrictEqual(readOrThrow($Any, TOML_READER, "'' = [1, 2, 3]\n"), [1, 2, 3]);
     });
     test("should read the expected nested values", function () {
       const $Any: AnyType = new AnyType();
@@ -37,7 +37,7 @@ describe("kryo-toml | Any", function () {
         readOrThrow(
           $FooBarQuz,
           TOML_READER,
-          "foo = {bar = \"quz\"}",
+          "foo = {bar = \"quz\"}\n",
         ),
         Object.assign(Object.create(null), {
           foo: Object.assign(Object.create(null), {

@@ -15,79 +15,79 @@ describe("kryo-toml | Ucs2StringType", function () {
       {
         value: "",
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"\""},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"\"\n"},
         ],
       },
       {
         value: "Hello World!",
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"Hello World!\""},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"Hello World!\"\n"},
         ],
       },
       {
         value: "ԂЯØǷ Łƕ੬ ɃɅϨϞ",
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"ԂЯØǷ Łƕ੬ ɃɅϨϞ\""},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"ԂЯØǷ Łƕ੬ ɃɅϨϞ\"\n"},
         ],
       },
       {
         value: "0",
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"0\""},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"0\"\n"},
         ],
       },
       {
         value: "1",
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"1\""},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"1\"\n"},
         ],
       },
       {
         value: "null",
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"null\""},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"null\"\n"},
         ],
       },
       {
         value: "true",
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"true\""},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"true\"\n"},
         ],
       },
       {
         value: "false",
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"false\""},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"false\"\n"},
         ],
       },
       {
         value: "undefined",
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"undefined\""},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"undefined\"\n"},
         ],
       },
       {
         value: "NaN",
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"NaN\""},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"NaN\"\n"},
         ],
       },
       {
         value: "Infinity",
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"Infinity\""},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"Infinity\"\n"},
         ],
       },
       {
         value: "-Infinity",
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"-Infinity\""},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"-Infinity\"\n"},
         ],
       },
       {
         value: "0123456789abcde",
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"0123456789abcde\""},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"0123456789abcde\"\n"},
         ],
       },
     ];

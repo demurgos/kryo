@@ -10,8 +10,8 @@ import {TOML_WRITER} from "../../lib/toml-writer.mts";
 describe("kryo-toml | Boolean", function () {
   describe("Default", function () {
     const items: TestItem[] = [
-      {name: "true", value: true, io: [{writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = true"}]},
-      {name: "false", value: false, io: [{writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = false"}]},
+      {name: "true", value: true, io: [{writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = true\n"}]},
+      {name: "false", value: false, io: [{writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = false\n"}]},
     ];
 
     registerMochaSuites($Boolean, items);

@@ -39,7 +39,7 @@ describe("kryo-toml | Literal", function () {
       {
         value: "foo",
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"foo\""},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"foo\"\n"},
         ],
       },
     ];
@@ -89,14 +89,14 @@ describe("kryo-toml | Literal", function () {
         name: "Color.Red",
         value: Color.Red,
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"Red\""},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"Red\"\n"},
         ],
       },
       {
         name: "Symbol(Red)",
         value: Red,
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"Red\""},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"Red\"\n"},
         ],
       },
     ];

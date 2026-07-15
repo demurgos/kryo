@@ -21,19 +21,19 @@ describe("kryo-toml | Array", function () {
       {
         value: [],
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = []"},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = []\n"},
         ],
       },
       {
         value: [1],
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = [ 1 ]"},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = [ 1 ]\n"},
         ],
       },
       {
         value: [2, 3],
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = [ 2, 3 ]"},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = [ 2, 3 ]\n"},
         ],
       },
     ];
@@ -85,19 +85,19 @@ describe("kryo-toml | Array", function () {
       {
         value: [0, 1],
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = [ 0, 1 ]"},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = [ 0, 1 ]\n"},
         ],
       },
       {
         value: [0, 1, 2],
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = [ 0, 1, 2 ]"},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = [ 0, 1, 2 ]\n"},
         ],
       },
       {
         value: [0, 1, 2, 3],
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = [ 0, 1, 2, 3 ]"},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = [ 0, 1, 2, 3 ]\n"},
         ],
       },
     ];
@@ -153,19 +153,19 @@ describe("kryo-toml | Array", function () {
       {
         value: [],
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = []"},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = []\n"},
         ],
       },
       {
         value: [[]],
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = [ [] ]"},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = [ [] ]\n"},
         ],
       },
       {
         value: [[true], [false, true]],
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = [ [ true ], [ false, true ] ]"},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = [ [ true ], [ false, true ] ]\n"},
         ],
       },
     ];

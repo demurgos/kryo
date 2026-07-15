@@ -15,84 +15,84 @@ describe("kryo-toml | Float64", function () {
       name: "0",
       value: 0,
       io: [
-        {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = 0"},
+        {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = 0\n"},
       ],
     },
     {
       name: "1",
       value: 1,
       io: [
-        {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = 1"},
+        {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = 1\n"},
       ],
     },
     {
       name: "-1",
       value: -1,
       io: [
-        {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = -1"},
+        {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = -1\n"},
       ],
     },
     {
       name: "1e3",
       value: 1e3,
       io: [
-        {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = 1000"},
+        {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = 1000\n"},
       ],
     },
     {
       name: "-1e3",
       value: -1e3,
       io: [
-        {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = -1000"},
+        {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = -1000\n"},
       ],
     },
     {
       name: "Number.MAX_SAFE_INTEGER",
       value: Number.MAX_SAFE_INTEGER,
       io: [
-        {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = 9007199254740991"},
+        {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = 9007199254740991\n"},
       ],
     },
     {
       name: "Number.MIN_SAFE_INTEGER",
       value: Number.MIN_SAFE_INTEGER,
       io: [
-        {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = -9007199254740991"},
+        {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = -9007199254740991\n"},
       ],
     },
     {
       name: "Number.MAX_VALUE",
       value: Number.MAX_VALUE,
       io: [
-        {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = 1.7976931348623157e+308"},
+        {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = 1.7976931348623157e+308\n"},
       ],
     },
     {
       name: "Number.MIN_VALUE",
       value: Number.MIN_VALUE,
       io: [
-        {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = 5e-324"},
+        {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = 5e-324\n"},
       ],
     },
     {
       name: "0.5",
       value: 0.5,
       io: [
-        {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = 0.5"},
+        {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = 0.5\n"},
       ],
     },
     {
       name: "0.0001",
       value: 0.0001,
       io: [
-        {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = 0.0001"},
+        {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = 0.0001\n"},
       ],
     },
     {
       name: "Number.EPSILON",
       value: Number.EPSILON,
       io: [
-        {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = 2.220446049250313e-16"},
+        {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = 2.220446049250313e-16\n"},
       ],
     },
   ];
@@ -126,19 +126,19 @@ describe("kryo-toml | Float64", function () {
       {
         value: 0,
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = 0"},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = 0\n"},
         ],
       },
       {
         value: 1,
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = 1"},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = 1\n"},
         ],
       },
       {
         value: NaN,
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"NaN\""},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"NaN\"\n"},
         ],
       },
     ];
@@ -160,26 +160,26 @@ describe("kryo-toml | Float64", function () {
       {
         value: 0,
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = 0"},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = 0\n"},
         ],
       },
       {
         value: 1,
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = 1"},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = 1\n"},
         ],
       },
       {
         value: Infinity,
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"+Infinity\""},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"+Infinity\"\n"},
           {reader: TOML_READER, raw: "\"\" = \"Infinity\""},
         ],
       },
       {
         value: -Infinity,
         io: [
-          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"-Infinity\""},
+          {writer: TOML_WRITER, reader: TOML_READER, raw: "\"\" = \"-Infinity\"\n"},
         ],
       },
     ];
